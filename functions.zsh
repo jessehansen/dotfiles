@@ -105,3 +105,48 @@ function myip() {
   ifconfig en1 | grep 'inet ' | sed -e 's/:/ /' | awk '{print "en1 (IPv4): " $2 " " $3 " " $4 " " $5 " " $6}'
   ifconfig en1 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "en1 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
 }
+
+watch-logspout() {
+  local which=$1
+  which=${which:-dev}
+
+  current=$(docker-machine active)
+  if [ "$current" != "$which" ] ; then
+    eval "$(docker-machine env $which)"
+  fi
+
+  ip=$(docker-machine ip $which)
+  [ -z $ip ] && \
+    echo "Unable to find the IP address for a docker-machine named $which" >&2 && \
+    return
+
+  local running=$(docker inspect logspout 2>/dev/null | json -a State.Running)
+  if [ -z $running ]; then
+    echo "Creating logspout container"
+    docker run -d -P --name logspout -v /var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout
+  elif [ "$running" != "true" ]; then
+    echo "Starting logspout container"
+    docker start logspout
+  fi
+
+  port=$(docker port logspout | cut -d ':' -f 2)
+  [ -z $port ] && \
+    echo "Unable to find port for a running logspout on $which" >&2 && \
+    return
+
+  echo "Logspout at: http://${ip}:${port}/logs"
+  curl http://${ip}:${port}/logs
+}
+
+mod-login() {
+  modulus config set api_uri https://api-leisure-link.mod.ec
+  modulus login --username jhansen --password cH7fGH9cgu
+}
+
+docker-ps-all-par() {
+  curl -s http://10.250.0.10:8500/v1/catalog/service/docker-host | jq -Mr '.[] | .Address | @uri' | \
+    parallel "ssh -o ConnectTimeout=3 {} 'docker ps --format \"{}\t{{.ID}}\t{{.Names}}\t{{.Image}}\tUp {{.RunningFor}}\"'"
+}
+docker-ps-all() {
+  docker-ps-all-par | sort -k1 | column -t
+}

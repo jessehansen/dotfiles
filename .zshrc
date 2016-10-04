@@ -6,8 +6,8 @@ export ZSH=/Users/jessehansen/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(history dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(longstatus time)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
 POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S \uE868  %Y-%m-%d}"
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_MODE='awesome-patched'
@@ -29,11 +29,10 @@ ENABLE_CORRECTION="false"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-completions zsh-syntax-highlighting bgnotify)
+plugins=(git zsh-completions zsh-syntax-highlighting bgnotify zsh-nvm zsh-better-npm-completion)
 autoload -U compinit && compinit
 
 # User configuration
-export PATH="/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 source "$ZSH/oh-my-zsh.sh"
 
@@ -48,8 +47,6 @@ source ~/.zsh/functions.zsh
 # source ~/.zsh/zsh_hooks.zsh
 # source ~/.zsh/hitch.zsh
 
-export NVM_DIR="/Users/jessehansen/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 
@@ -58,3 +55,4 @@ source '/Users/jessehansen/google-cloud-sdk/path.zsh.inc'
 
 # The next line enables shell command completion for gcloud.
 source '/Users/jessehansen/google-cloud-sdk/completion.zsh.inc'
+
