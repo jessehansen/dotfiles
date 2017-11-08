@@ -36,10 +36,6 @@ mans () {
     man $1 | grep -iC2 --color=always $2 | less
 }
 
-#   showa: to remind yourself of an alias (given some part of it)
-#   ------------------------------------------------------------
-showa () { /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.bash | grep -v '^\s*$' | less -FSRXc ; }
-
 #   cdf:  'Cd's to frontmost window of MacOS Finder
 #   ------------------------------------------------------
 cdf () {
@@ -106,47 +102,69 @@ function myip() {
   ifconfig en1 | grep 'inet6 ' | sed -e 's/ / /' | awk '{print "en1 (IPv6): " $2 " " $3 " " $4 " " $5 " " $6}'
 }
 
-watch-logspout() {
-  local which=$1
-  which=${which:-dev}
+# watch-logspout() {
+#   local which=$1
+#   which=${which:-dev}
 
-  current=$(docker-machine active)
-  if [ "$current" != "$which" ] ; then
-    eval "$(docker-machine env $which)"
+#   current=$(docker-machine active)
+#   if [ "$current" != "$which" ] ; then
+#     eval "$(docker-machine env $which)"
+#   fi
+
+#   ip=$(docker-machine ip $which)
+#   [ -z $ip ] && \
+#     echo "Unable to find the IP address for a docker-machine named $which" >&2 && \
+#     return
+
+#   local running=$(docker inspect logspout 2>/dev/null | json -a State.Running)
+#   if [ -z $running ]; then
+#     echo "Creating logspout container"
+#     docker run -d -P --name logspout -v /var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout
+#   elif [ "$running" != "true" ]; then
+#     echo "Starting logspout container"
+#     docker start logspout
+#   fi
+
+#   port=$(docker port logspout | cut -d ':' -f 2)
+#   [ -z $port ] && \
+#     echo "Unable to find port for a running logspout on $which" >&2 && \
+#     return
+
+#   echo "Logspout at: http://${ip}:${port}/logs"
+#   curl http://${ip}:${port}/logs
+# }
+
+# docker-ps-all-par() {
+#   curl -s http://10.250.0.10:8500/v1/catalog/service/docker-host | jq -Mr '.[] | .Address | @uri' | \
+#     parallel "ssh -o ConnectTimeout=3 {} 'docker ps --format \"{}\t{{.ID}}\t{{.Names}}\t{{.Image}}\tUp {{.RunningFor}}\"'"
+# }
+# docker-ps-all() {
+#   docker-ps-all-par | sort -k1 | column -t
+# }
+
+command_not_found_handler() {
+  # Do not run within a pipe
+  if test ! -t 1; then
+    >&2 echo "command not found: $1"
+    return 127
+  fi
+  if [ `echo $1 | cut -b1-3` = "git" ]
+  then
+    first=$1
+    shift
+    echo Autocorrecting to: git `echo $first | sed 's/git//'`$*
+    git `echo $first | sed 's/git//'`$*
+    return 0
   fi
 
-  ip=$(docker-machine ip $which)
-  [ -z $ip ] && \
-    echo "Unable to find the IP address for a docker-machine named $which" >&2 && \
-    return
-
-  local running=$(docker inspect logspout 2>/dev/null | json -a State.Running)
-  if [ -z $running ]; then
-    echo "Creating logspout container"
-    docker run -d -P --name logspout -v /var/run/docker.sock:/tmp/docker.sock gliderlabs/logspout
-  elif [ "$running" != "true" ]; then
-    echo "Starting logspout container"
-    docker start logspout
-  fi
-
-  port=$(docker port logspout | cut -d ':' -f 2)
-  [ -z $port ] && \
-    echo "Unable to find port for a running logspout on $which" >&2 && \
-    return
-
-  echo "Logspout at: http://${ip}:${port}/logs"
-  curl http://${ip}:${port}/logs
+  return 1
 }
 
-mod-login() {
-  modulus config set api_uri https://api-leisure-link.mod.ec
-  modulus login --username jhansen --password cH7fGH9cgu
-}
-
-docker-ps-all-par() {
-  curl -s http://10.250.0.10:8500/v1/catalog/service/docker-host | jq -Mr '.[] | .Address | @uri' | \
-    parallel "ssh -o ConnectTimeout=3 {} 'docker ps --format \"{}\t{{.ID}}\t{{.Names}}\t{{.Image}}\tUp {{.RunningFor}}\"'"
-}
-docker-ps-all() {
-  docker-ps-all-par | sort -k1 | column -t
+gitsetupall() {
+  origin=$(git remote get-url --push origin)
+  google=$(git remote get-url --push google)
+  git remote add all $origin
+  git remote set-url all --push --add $origin
+  git remote set-url all --push --add $google
+  git remote -v
 }

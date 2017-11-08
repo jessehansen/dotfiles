@@ -21,7 +21,6 @@ alias ~="cd ~"                              # ~:            Go Home
 alias c='clear'                             # c:            Clear terminal display
 alias which='type -a'                       # which:        Find executables
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
-alias show_options='shopt'                  # Show_options: display bash options settings
 alias fix_stty='stty sane'                  # fix_stty:     Restore terminal settings when screwed up
 alias ss="/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &"
 alias zshconfig="sublime ~/.zshrc"
@@ -45,8 +44,8 @@ alias lsockT='sudo /usr/sbin/lsof -nP | grep TCP'   # lsockT:       Display only
 alias ipInfo0='ipconfig getpacket en0'              # ipInfo0:      Get info on connections for en0
 alias ipInfo1='ipconfig getpacket en1'              # ipInfo1:      Get info on connections for en1
 alias openPorts='sudo lsof -i | grep LISTEN'        # openPorts:    All listening connections
-alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IPs
-
+alias showBlocked='sudo ipfw list'                  # showBlocked:  All ipfw rules inc/ blocked IP
+alias curl='curl -sS'
 
 alias editHosts='sudo edit /etc/hosts'                  # editHosts:        Edit /etc/hosts file
 alias reload='clear && source ~/.zshrc'
