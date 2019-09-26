@@ -11,4 +11,4 @@ export LESS="-FRX"
 # export TERM="xterm-256color"
 export KEYTIMEOUT=1
 
-[[ -e ./exports.local.zsh ]] && source ./exports.local.zsh
+[[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
