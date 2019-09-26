@@ -1,6 +1,5 @@
 # This is Git's per-user configuration file.
 [core]
-# Please adapt and uncomment the following lines:
 	user = Jesse Hansen
 	email = twindagger@gmail.com
 	excludesfile = /Users/jessehansen/.gitignore-global
@@ -8,12 +7,16 @@
 [user]
 	name = Jesse Hansen
 	email = twindagger@gmail.com
-[difftool "sourcetree"]
+[difftool "kdiff"]
 	cmd = /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$LOCAL\" \"$REMOTE\"
 	path =
-[mergetool "sourcetree"]
+[merge]
+	tool = "Sublime Merge"
+[mergetool "kdiff"]
 	cmd = /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
 	trustExitCode = true
+[mergetool "Sublime Merge"]
+	cmd = smerge mergetool \"$BASE\" \"$REMOTE\" \"$LOCAL\" -o \"$MERGED\"
 [push]
 	default = simple
 [alias]
@@ -33,13 +36,12 @@
 	out = outgoing
 	co = checkout
 	unstage = reset HEAD --
-	filelog = log -u
-	fl = log -u
 	f = "!git ls-files | grep -i"
 	push-up = "!gitbranchname() { git symbolic-ref --short HEAD; }; gitpushupstream() { git push --set-upstream origin `gitbranchname`; }; gitpushupstream"
 	push-tags = "!gitbranchname() { git symbolic-ref --short HEAD; }; gitpushtags() { git push origin `gitbranchname` --tags; }; gitpushtags"
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustexitcode = true
+	pushf = push --force-with-lease
+	push-force = push --force-with-lease
+	prune-branches = !git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}'
+	prune-branches-ok = !git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
+[credential]
+	helper = osxkeychain

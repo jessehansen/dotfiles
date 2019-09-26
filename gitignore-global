@@ -1,0 +1,3 @@
+.golangci-*
+.golangcilint-*
+.gometalinter-*
