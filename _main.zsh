@@ -45,6 +45,8 @@ source "$DOTFILES/aliases.zsh"
 source "$DOTFILES/bindkeys.zsh"
 source "$DOTFILES/functions.zsh"
 
+[[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
+
 if [[ "$TERM" = "xterm-kitty" ]]; then
     kitty + complete setup zsh | source /dev/stdin
 else
