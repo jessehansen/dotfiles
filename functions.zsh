@@ -145,3 +145,11 @@ rmake () {
   fi
   cd $origdir
 }
+
+get_mysql_creds() {
+  secrets=`aws-okta exec pay-prod-hippa -- kubectl --context=prod --namespace=pay-prod get secret backend -o yaml`
+  host=`echo $secrets | grep BACKEND_MYSQL_HOST | cut -d':' -f 2 | base64 -D`
+  pass=`echo $secrets | grep BACKEND_MYSQL_PASSWORD | cut -d':' -f 2 | base64 -D`
+
+  echo "Host: $host\nPass: $pass"
+}

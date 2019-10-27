@@ -1,4 +1,4 @@
-export EDITOR='vim'
+export EDITOR='nvim'
 
 # Enable color in grep
 export GREP_OPTIONS='--color=auto'

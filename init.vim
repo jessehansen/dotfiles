@@ -2,7 +2,7 @@
 call plug#begin(stdpath('data') . './plugged')
 
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'fatih/vim-go', { 'do': '!GoInstallBinaries' }
+Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
@@ -18,6 +18,9 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'patstockwell/vim-monokai-tasty'
 Plug 'tpope/vim-eunuch'
+Plug 'Asheq/close-buffers.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'terryma/vim-multiple-cursors'
 
 call plug#end()
 
@@ -26,16 +29,19 @@ let g:vim_monokai_tasty_italic = 1
 colorscheme vim-monokai-tasty
 
 if executable('rg') 
-    " Note we extract the column as well as the file and line number
-    let g:ackprg = 'rg --vimgrep --no-heading'
-    let g:ctrlp_user_command = 'rg --files %s'
-    let g:ctrlp_use_caching = 0
-    let g:ctrlp_working_path_mode = 'ra'
-    let g:ctrlp_switch_buffer = 'et'
+  " Note we extract the column as well as the file and line number
+  let g:ackprg = 'rg --vimgrep --no-heading'
+  let g:ctrlp_user_command = 'rg --files %s'
+  let g:ctrlp_use_caching = 0
+  let g:ctrlp_working_path_mode = 'ra'
+  let g:ctrlp_switch_buffer = 'et'
 endif
 
 " Don't require jsx extension for jsx features
 let g:jsx_ext_required = 0
+
+" Use goimports instead of go fmt
+let g:go_fmt_command = "goimports"
 
 " show hidden chars
 set list
@@ -75,11 +81,15 @@ nnoremap <leader>e :NERDTreeFind<CR>
 nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
 nnoremap <leader>vr :vsp ~/.config/nvim/init.vim<CR>
 " %% in command mode inserts dir of current file
-cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Find word under cursor
 noremap <leader>g :Ack<space><C-r><C-w><CR>
 " clear current search highlight
 map <leader>/ :noh<CR>
+" close other buffers
+map <leader>q :CloseHiddenBuffers<CR>
+" close location list and quick fix windows
+nnoremap <leader>x :ccl <bar> lcl<CR>
 
 "go to xth buffer
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
@@ -94,27 +104,35 @@ nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 "go to next/prev buffer
-nmap <Leader>h :bp<CR>
-nmap <Leader>l :bn<CR>
+nnoremap <Leader>h :bp<CR>
+nnoremap <Leader>l :bn<CR>
 
-" NerdTree when opened without args
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"select all
+nnoremap <leader>a ggVG
+
+" visual mode mappings
+vmap <Tab> >gv
+vmap <S-Tab> <gv
+
+" insert mode mappings
+imap <C-s> <ESC>:w<CR>a
+imap <C-b> <ESC>,ba
+inoremap <S-Tab> <C-D>
 
 " always open help in right vertical pane
 autocmd FileType help wincmd L
 
 " Lightline config
 let g:lightline = {
-      \ 'colorscheme': 'monokai_tasty',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
+  \ 'colorscheme': 'monokai_tasty',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'fugitive#head'
+  \ },
+\ }
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [[]]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
@@ -123,3 +141,19 @@ let g:lightline#bufferline#show_number = 2
 let g:lightline#bufferline#unicode_symbols = 1
 " always show tab line so that buffers are always available
 set showtabline=2
+
+" coc config
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
