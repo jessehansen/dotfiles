@@ -145,3 +145,4 @@ rmake () {
   fi
   cd $origdir
 }
+alias m=rmake
