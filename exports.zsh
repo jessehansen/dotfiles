@@ -10,5 +10,7 @@ export PATH=$PATH:$(go env GOPATH)/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global
 export LESS="-FRX"
 # export TERM="xterm-256color"
 export KEYTIMEOUT=1
+#ripgreprc
+export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
 
 [[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
