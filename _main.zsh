@@ -56,3 +56,7 @@ else
         echo "$ brew install antigen"
     fi
 fi
+
+# some aliases need to be set again because they are overridden by zsh
+# plugins. Always prefer our aliases
+source "$DOTFILES/aliases.zsh"
