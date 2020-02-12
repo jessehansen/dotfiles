@@ -8,7 +8,6 @@ gettext
 go
 golangci-lint
 govendor
-hub
 jq
 kubernetes-cli
 lazydocker
