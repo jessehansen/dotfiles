@@ -31,10 +31,15 @@ load_antigen() {
     antigen apply
 }
 
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 source "$DOTFILES/exports.zsh"
 source "$DOTFILES/aliases.zsh"
 source "$DOTFILES/bindkeys.zsh"
 source "$DOTFILES/functions.zsh"
+source "$DOTFILES/p10k.zsh"
 
 [[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
 
