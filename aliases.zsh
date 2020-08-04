@@ -17,6 +17,7 @@ alias f='open -a Finder ./'                 # f:            Opens current direct
 alias ~="cd ~"                              # ~:            Go Home
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
 alias ss="/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &"
+alias grep='grep --color'
 
 alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
 
