@@ -1,5 +1,18 @@
 load_antigen() {
-    source /usr/local/share/antigen/antigen.zsh
+    if [[ -e /usr/local/share/antigen/antigen.zsh ]]; then
+        source /usr/local/share/antigen/antigen.zsh
+    elif [[ -e "${HOME}/antigen.zsh" ]]; then
+	source "${HOME}/antigen.zsh"
+    else
+	echo "Install antigen"
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+	    echo "$ curl -L git.io/antigen > ~/antigen.zsh"
+	    echo "$ chmod +x ~/antigen.zsh"
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+	    echo "$ brew install antigen"
+	fi
+	return
+    fi
 
     source "$DOTFILES/plugin_config.zsh"
 
@@ -11,7 +24,7 @@ load_antigen() {
     antigen bundle vi-mode
     antigen bundle zsh-users/zsh-autosuggestions
 
-    antigen theme bhilburn/powerlevel9k
+    antigen theme romkatv/powerlevel10k
 
     antigen bundle zsh-users/zsh-syntax-highlighting
 
@@ -31,30 +44,37 @@ else
     export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=YES
 fi
 
-if (( ! $+commands[brew] )); then
-    echo "Install brew"
-    echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
-else
-    if [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]]; then
-      source $(brew --prefix)/etc/profile.d/autojump.sh
-    else
-      echo "Install autojump"
-      echo "$ brew install autojump"
-    fi
-    if (( ! $+commands[terminal-notifier] )); then
-      echo "Install terminal-notifier"
-      echo "$ brew install terminal-notifier"
-    fi
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+	if [[ -e /usr/share/autojump/autojump.sh ]]; then
+		source /usr/share/autojump/autojump.sh
+	else
+		echo "Install autojump"
+		echo "$ sudo apt install autojump"
+	fi
 
-    # Loading antigen must be last, because zsh-syntax-highlighting
-    # needs to be loaded after all aliases, plugins, etc
-    if [[ -s "/usr/local/share/antigen/antigen.zsh" ]]; then
-        load_antigen
-        unset -f load_antigen
-    else
-        echo "Install antigen"
-        echo "$ brew install antigen"
-    fi
+	load_antigen
+	unset -f load_antigen
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+	if (( ! $+commands[brew] )); then
+	    echo "Install brew"
+	    echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+	else
+	    if [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]]; then
+	      source $(brew --prefix)/etc/profile.d/autojump.sh
+	    else
+	      echo "Install autojump"
+	      echo "$ brew install autojump"
+	    fi
+	    if (( ! $+commands[terminal-notifier] )); then
+	      echo "Install terminal-notifier"
+	      echo "$ brew install terminal-notifier"
+	    fi
+
+	    # Loading antigen must be last, because zsh-syntax-highlighting
+	    # needs to be loaded after all aliases, plugins, etc
+	    load_antigen
+	    unset -f load_antigen
+	fi
 fi
 
 # some aliases need to be set again because they are overridden by zsh
