@@ -31,3 +31,4 @@ alias gcan="git commit -a --amend --no-edit --date=now"
 alias gst="git status -s"
 alias gpb="git prune-branches-ok"
 alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
+alias grbom="git fetch && git rebase origin/master"
