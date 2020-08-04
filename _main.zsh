@@ -39,7 +39,6 @@ source "$DOTFILES/exports.zsh"
 source "$DOTFILES/aliases.zsh"
 source "$DOTFILES/bindkeys.zsh"
 source "$DOTFILES/functions.zsh"
-source "$DOTFILES/p10k.zsh"
 
 [[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
 
@@ -81,6 +80,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 	    unset -f load_antigen
 	fi
 fi
+
+source "$DOTFILES/p10k.zsh"
 
 # some aliases need to be set again because they are overridden by zsh
 # plugins. Always prefer our aliases
