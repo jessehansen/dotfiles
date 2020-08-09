@@ -21,6 +21,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'Asheq/close-buffers.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'AndrewRadev/splitjoin.vim'
 
 call plug#end()
 
@@ -28,13 +29,13 @@ syntax enable
 let g:vim_monokai_tasty_italic = 1
 colorscheme vim-monokai-tasty
 
-if executable('rg') 
-  " Note we extract the column as well as the file and line number
-  let g:ackprg = 'rg --vimgrep --no-heading'
-  let g:ctrlp_user_command = 'rg --files %s'
-  let g:ctrlp_use_caching = 0
-  let g:ctrlp_working_path_mode = 'ra'
-  let g:ctrlp_switch_buffer = 'et'
+if executable('rg')
+    " Note we extract the column as well as the file and line number
+    let g:ackprg = 'rg --vimgrep --no-heading'
+    let g:ctrlp_user_command = 'rg --files %s'
+    let g:ctrlp_use_caching = 0
+    let g:ctrlp_working_path_mode = 'ra'
+    let g:ctrlp_switch_buffer = 'et'
 endif
 
 " Don't require jsx extension for jsx features
@@ -42,6 +43,8 @@ let g:jsx_ext_required = 0
 
 " Use goimports instead of go fmt
 let g:go_fmt_command = "goimports"
+
+let g:splitjoin_html_attributes_bracket_on_new_line = 1
 
 " show hidden chars
 set list
@@ -124,15 +127,15 @@ autocmd FileType help wincmd L
 
 " Lightline config
 let g:lightline = {
-  \ 'colorscheme': 'monokai_tasty',
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'fugitive#head'
-  \ },
-\ }
+            \ 'colorscheme': 'monokai_tasty',
+            \ 'active': {
+            \   'left': [ [ 'mode', 'paste' ],
+            \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+            \ },
+            \ 'component_function': {
+            \   'gitbranch': 'fugitive#head'
+            \ },
+            \ }
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [[]]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
@@ -145,14 +148,14 @@ set showtabline=2
 " coc config
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
