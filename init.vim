@@ -22,29 +22,41 @@ Plug 'Asheq/close-buffers.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
+Plug 'svermeulen/vim-subversive'
+if has('nvim') || has('patch-8.0.902')
+  Plug 'mhinz/vim-signify'
+else
+  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
 
 call plug#end()
+
+" better update time for async
+set updatetime=100
 
 syntax enable
 let g:vim_monokai_tasty_italic = 1
 colorscheme vim-monokai-tasty
 
-if executable('rg')
-    " Note we extract the column as well as the file and line number
-    let g:ackprg = 'rg --vimgrep --no-heading'
-    let g:ctrlp_user_command = 'rg --files %s'
-    let g:ctrlp_use_caching = 0
-    let g:ctrlp_working_path_mode = 'ra'
-    let g:ctrlp_switch_buffer = 'et'
+if executable('rg') 
+  " Note we extract the column as well as the file and line number
+  let g:ackprg = 'rg --vimgrep --no-heading'
+  let g:ctrlp_user_command = 'rg --files %s'
+  let g:ctrlp_use_caching = 0
+  let g:ctrlp_working_path_mode = 'ra'
+  let g:ctrlp_switch_buffer = 'et'
 endif
+
+" NERDCommenter defaults
+let g:NERDSpaceDelims = 1
 
 " Don't require jsx extension for jsx features
 let g:jsx_ext_required = 0
 
 " Use goimports instead of go fmt
 let g:go_fmt_command = "goimports"
-
-let g:splitjoin_html_attributes_bracket_on_new_line = 1
 
 " show hidden chars
 set list
@@ -58,6 +70,8 @@ set novisualbell
 set nu
 " Duplicated in lightline
 set noshowmode
+" live substitution
+set inccommand=nosplit
 
 " Mouse support
 set mouse=a
@@ -90,7 +104,7 @@ noremap <leader>g :Ack<space><C-r><C-w><CR>
 " clear current search highlight
 map <leader>/ :noh<CR>
 " close other buffers
-map <leader>q :CloseHiddenBuffers<CR>
+map <leader>q :Bdelete hidden<CR>
 " close location list and quick fix windows
 nnoremap <leader>x :ccl <bar> lcl<CR>
 
@@ -110,8 +124,13 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 nnoremap <Leader>h :bp<CR>
 nnoremap <Leader>l :bn<CR>
 
+"close current buffer, switch to another
+nmap <Leader>w :b#<bar>bd#<CR>
+
 "select all
 nnoremap <leader>a ggVG
+"copy current buffer name to system clipboard
+nnoremap <leader>p :let @+ = expand("%")<cr>
 
 " visual mode mappings
 vmap <Tab> >gv
@@ -127,15 +146,15 @@ autocmd FileType help wincmd L
 
 " Lightline config
 let g:lightline = {
-            \ 'colorscheme': 'monokai_tasty',
-            \ 'active': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-            \ },
-            \ 'component_function': {
-            \   'gitbranch': 'fugitive#head'
-            \ },
-            \ }
+  \ 'colorscheme': 'monokai_tasty',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'fugitive#head'
+  \ },
+\ }
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [[]]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
@@ -148,15 +167,46 @@ set showtabline=2
 " coc config
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+nmap <leader>rn <Plug>(coc-rename)
+nmap <F2> <Plug>(coc-rename)
+
+" Create mappings for function text object, requires document symbols feature of languageserver.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
