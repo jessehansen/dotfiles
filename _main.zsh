@@ -31,16 +31,25 @@ load_antigen() {
     antigen apply
 }
 
+load_all() {
+    source "$DOTFILES/exports.zsh"
+    source "$DOTFILES/aliases.zsh"
+    source "$DOTFILES/bindkeys.zsh"
+    source "$DOTFILES/functions.zsh"
+
+    [[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
+}
+
+reload() {
+    clear
+    load_all
+}
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source "$DOTFILES/exports.zsh"
-source "$DOTFILES/aliases.zsh"
-source "$DOTFILES/bindkeys.zsh"
-source "$DOTFILES/functions.zsh"
-
-[[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
+load_all
 
 if [[ "$TERM" = "xterm-kitty" ]]; then
     kitty + complete setup zsh | source /dev/stdin

@@ -1,5 +1,3 @@
-[[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
-
 export EDITOR='nvim'
 
 export BUILDER_ID_RSA=~/.ssh/id_rsa
@@ -15,4 +13,6 @@ export LESS="-FRX"
 export KEYTIMEOUT=1
 #ripgreprc
 export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
+
+[[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
 

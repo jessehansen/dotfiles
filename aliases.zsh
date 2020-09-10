@@ -23,7 +23,6 @@ alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\
 
 alias curl='curl -sS'
 
-alias reload='clear && source ~/.zshrc'
 alias add='sublime --add '
 alias a='sublime --add .'
 
@@ -32,4 +31,18 @@ alias gcan="git commit -a --amend --no-edit --date=now"
 alias gst="git status -s"
 alias gpb="git prune-branches-ok"
 alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
-alias grbom="git fetch && git rebase origin/master"
+
+# master -> main
+alias gcm="git checkout main"
+alias gcms="git checkout master"
+alias gbda='git branch --no-color --merged | command grep -vE "^(\+|\*|\s*(master|main|develop|dev)\s*$)" | command xargs -n 1 git branch -d'
+alias glum='git pull upstream main'
+alias glums='git pull upstream master'
+alias gmom='git merge origin/main'
+alias gmoms='git merge origin/master'
+alias gmum='git merge upstream/main'
+alias gmums='git merge upstream/master'
+alias grbm='git rebase main'
+alias grbms='git rebase master'
+alias grbom="git fetch && git rebase origin/main"
+alias grboms="git fetch && git rebase origin/master"
