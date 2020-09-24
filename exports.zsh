@@ -13,6 +13,7 @@ export LESS="-FRX"
 export KEYTIMEOUT=1
 #ripgreprc
 export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
+export FZF_DEFAULT_COMMAND="rg --files"
 
 [[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
 

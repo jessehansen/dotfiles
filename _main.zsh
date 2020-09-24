@@ -89,6 +89,16 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 	    unset -f load_antigen
 	fi
 fi
+if (( ! $+commands[fzf] )); then
+    echo "Install fzf"
+    [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install fzf"
+    [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install fzf"
+fi
+if (( ! $+commands[rg] )); then
+    echo "Install ripgrep"
+    [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install ripgrep"
+    [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install ripgrep"
+fi
 
 source "$DOTFILES/p10k.zsh"
 

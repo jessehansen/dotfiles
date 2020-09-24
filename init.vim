@@ -7,7 +7,8 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'jparise/vim-graphql'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'mileszs/ack.vim'
 Plug 'itchyny/lightline.vim'
@@ -41,12 +42,9 @@ let g:vim_monokai_tasty_italic = 1
 colorscheme vim-monokai-tasty
 
 if executable('rg') 
-  " Note we extract the column as well as the file and line number
   let g:ackprg = 'rg --vimgrep --no-heading'
-  let g:ctrlp_user_command = 'rg --files %s'
-  let g:ctrlp_use_caching = 0
-  let g:ctrlp_working_path_mode = 'ra'
-  let g:ctrlp_switch_buffer = 'et'
+  set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+  map <M-f> :Rg<CR>
 endif
 
 " NERDCommenter defaults
@@ -100,13 +98,26 @@ nnoremap <leader>vr :vsp ~/.config/nvim/init.vim<CR>
 " %% in command mode inserts dir of current file
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Find word under cursor
-noremap <leader>g :Ack<space><C-r><C-w><CR>
+noremap <leader>g :Rg<space><C-r><C-w><CR>
 " clear current search highlight
 map <leader>/ :noh<CR>
 " close other buffers
 map <leader>q :Bdelete hidden<CR>
 " close location list and quick fix windows
 nnoremap <leader>x :ccl <bar> lcl<CR>
+
+" fzf
+map <C-p> :Files<CR>
+map <M-p> :Commands<CR>
+map <C-s> :GFiles?<CR>
+map <M-s> :GFiles<CR>
+map <C-b> :Buffers<CR>
+map <C-f> :BLines<CR>
+map <M-t> :History<CR>
+nnoremap <leader>m :Maps<CR>
+
+map <M-b>   :echo "ctrl-shift-b received"<CR>
+map <C-b>         :echo "ctrl-b received"<CR>
 
 "go to xth buffer
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
@@ -138,7 +149,6 @@ vmap <S-Tab> <gv
 
 " insert mode mappings
 imap <C-s> <ESC>:w<CR>a
-imap <C-b> <ESC>,ba
 inoremap <S-Tab> <C-D>
 
 " always open help in right vertical pane
@@ -210,3 +220,8 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
