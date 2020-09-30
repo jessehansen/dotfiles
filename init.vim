@@ -2,7 +2,6 @@
 call plug#begin(stdpath('data') . './plugged')
 
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
@@ -26,10 +25,20 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'svermeulen/vim-subversive'
+
 if has('nvim') || has('patch-8.0.902')
   Plug 'mhinz/vim-signify'
 else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
+
+if executable('go')
+  Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
+endif
+
+if executable('xo')
+  Plug 'Chiel92/vim-autoformat'
+  Plug 'xojs/vim-xo'
 endif
 
 call plug#end()
@@ -41,7 +50,7 @@ syntax enable
 let g:vim_monokai_tasty_italic = 1
 colorscheme vim-monokai-tasty
 
-if executable('rg') 
+if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
   map <M-f> :Rg<CR>
@@ -56,9 +65,12 @@ let g:jsx_ext_required = 0
 " Use goimports instead of go fmt
 let g:go_fmt_command = "goimports"
 
+" Put HTML attribute brace on new line
+let g:splitjoin_html_attributes_bracket_on_new_line = 1
+
 " show hidden chars
 set list
-set ts=4 sts=4 sw=4 noexpandtab
+set ts=4 sts=4 sw=4 expandtab
 set listchars=tab:▸\ ,eol:¬,space:·
 " work with hidden buffers
 set hidden
@@ -74,7 +86,7 @@ set inccommand=nosplit
 " Mouse support
 set mouse=a
 if has('mouse_sgr')
-    set ttymouse=sgr
+  set ttymouse=sgr
 endif
 
 " disable background color erase (helps kitty and tmux)
@@ -153,18 +165,24 @@ inoremap <S-Tab> <C-D>
 
 " always open help in right vertical pane
 autocmd FileType help wincmd L
+autocmd FileType vim set ts=2 sts=2 sw=2 expandtab
+
+if executable('xo')
+  " format on save
+  autocmd BufWrite * :Autoformat
+endif
 
 " Lightline config
 let g:lightline = {
-  \ 'colorscheme': 'monokai_tasty',
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'fugitive#head'
-  \ },
-\ }
+      \ 'colorscheme': 'monokai_tasty',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [[]]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
@@ -225,3 +243,37 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
+
+" This is an xo formatter that respects local xo configuration by creating the
+" temporary file next to the existing file instead of in a temp folder. XO
+" must still be installed using `npm i -g xo`. XO respsects locally installed
+" configuration defined in package.json
+if executable('xo')
+  if !exists('g:formatdef_xo_local_javascript')
+    function! g:BuildXOTmpFile(path, ext)
+      let l:i = 0
+      let l:result = a:path.'_eslint_tmp_'.l:i.a:ext
+      while filereadable(l:result) && l:i < 100000
+        let l:i = l:i + 1
+        let l:result = a:path.'_eslint_tmp_'.l:i.a:ext
+      endwhile
+      if filereadable(l:result)
+        echoerr "Temporary file could not be created for ".a:path
+        echoerr "Tried from ".a:path.'_eslint_tmp_0'.a:ext." to ".a:path.'_eslint_tmp_'.l:i.a:ext
+        return ''
+      endif
+      return l:result
+    endfunction
+    function! g:BuildFixedXOCmd()
+      let l:path = fnamemodify(expand('%'), ':p')
+      let l:xo_js_tmp_file = g:BuildXOTmpFile(l:path, ".js")
+      let content = getline('1', '$')
+      call writefile(content, l:xo_js_tmp_file)
+      return "xo --fix ".l:xo_js_tmp_file." 1> /dev/null; exit_code=$?
+            \ cat ".l:xo_js_tmp_file."; rm -f ".l:xo_js_tmp_file."; exit $exit_code"
+    endfunction
+    let g:formatdef_xo_local_javascript = "g:BuildFixedXOCmd()"
+  endif
+  let g:formatters_javascript = ['xo_local_javascript']
+endif
+
