@@ -53,17 +53,19 @@ colorscheme vim-monokai-tasty
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-  map <M-f> :Rg<CR>
+  map <M-f> :Rg 
 endif
 
 " NERDCommenter defaults
 let g:NERDSpaceDelims = 1
 
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
 " Don't require jsx extension for jsx features
 let g:jsx_ext_required = 0
 
-" Use goimports instead of go fmt
-let g:go_fmt_command = "goimports"
+" Use gofumpt
+let g:go_fmt_command = "gofumports"
 
 " Put HTML attribute brace on new line
 let g:splitjoin_html_attributes_bracket_on_new_line = 1
