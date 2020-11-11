@@ -1,37 +1,53 @@
-load_antigen() {
-    if [[ -e /usr/local/share/antigen/antigen.zsh ]]; then
-        source /usr/local/share/antigen/antigen.zsh
-    elif [[ -e "${HOME}/antigen.zsh" ]]; then
-	source "${HOME}/antigen.zsh"
+load_zinit() {
+    if [[ -e "${HOME}/.zinit/bin/zinit.zsh" ]]; then
+        source "${HOME}/.zinit/bin/zinit.zsh"
     else
-	echo "Install antigen"
-        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	    echo "$ curl -L git.io/antigen > ~/antigen.zsh"
-	    echo "$ chmod +x ~/antigen.zsh"
-        elif [[ "$OSTYPE" == "darwin"* ]]; then
-	    echo "$ brew install antigen"
-	fi
-	return
+        echo "Install zinit"
+        echo "$ mkdir ~/.zinit"
+        echo "$ git clone https://github.com/zdharma/zinit.git ~/.zinit/bin"
     fi
 
-    source "$DOTFILES/plugin_config.zsh"
+    # oh-my-zsh plugins/libs
+    #   OMZL::git.zsh - git common functions
+    #   OMZP::git - git aliases
+    #   OMZP::bgnotify - notifier when commands run long
+    #   OMZP::vi-mode - set vi-mode and keybindings
+    #   OMZP::fzf - fzf keybindings
+    #   OMSL::history - primarily imported for omz's history command, which prints
+    #       all history instead of just the last 30
+    #   OMZL::termsupport - imported so tab title gets set correctly
+    # TODO: could probably just re-implement these myself to avoid oh-my-zsh
+    #  dependencies, but this might be faster since zinit compiles them
+    zinit wait lucid for \
+        OMZL::git.zsh \
+        OMZP::git \
+        OMZP::bgnotify \
+        OMZP::vi-mode \
+        OMZP::fzf \
+        OMZL::history.zsh \
+        OMZL::termsupport.zsh
 
-    antigen use oh-my-zsh
+    # p10k theme
+    zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-    antigen bundle git
-    antigen bundle zsh-users/zsh-completions
-    antigen bundle bgnotify
-    antigen bundle vi-mode
-    antigen bundle zsh-users/zsh-autosuggestions
-
-    antigen theme romkatv/powerlevel10k
-
-    antigen bundle zsh-users/zsh-syntax-highlighting
-
-    antigen apply
-}
+    # ordering here is deliberate - syntax highlighting must come last or it
+    # complains about widget binding
+    #   zsh-autosuggestions - autosuggest
+    #   zsh-completions - completions library
+    #   fast-syntax-highlighting - easily see syntax errors while typing cmds
+    zinit wait lucid for \
+        blockf \
+        zsh-users/zsh-completions \
+        atload"!_zsh_autosuggest_start" \
+        zsh-users/zsh-autosuggestions \
+        atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+        zdharma/fast-syntax-highlighting
+    }
 
 load_all() {
+    source "$DOTFILES/plugin_config.zsh"
+    source "$DOTFILES/history.zsh"
+    source "$DOTFILES/setopt.zsh"
     source "$DOTFILES/exports.zsh"
     source "$DOTFILES/aliases.zsh"
     source "$DOTFILES/bindkeys.zsh"
@@ -46,7 +62,7 @@ reload() {
 }
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 load_all
@@ -58,36 +74,36 @@ else
 fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	if [[ -e /usr/share/autojump/autojump.sh ]]; then
-		source /usr/share/autojump/autojump.sh
-	else
-		echo "Install autojump"
-		echo "$ sudo apt install autojump"
-	fi
+    if [[ -e /usr/share/autojump/autojump.sh ]]; then
+        source /usr/share/autojump/autojump.sh
+    else
+        echo "Install autojump"
+        echo "$ sudo apt install autojump"
+    fi
 
-	load_antigen
-	unset -f load_antigen
+    load_zinit
+    unset -f load_zinit
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-	if (( ! $+commands[brew] )); then
-	    echo "Install brew"
-	    echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
-	else
-	    if [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]]; then
-	      source $(brew --prefix)/etc/profile.d/autojump.sh
-	    else
-	      echo "Install autojump"
-	      echo "$ brew install autojump"
-	    fi
-	    if (( ! $+commands[terminal-notifier] )); then
-	      echo "Install terminal-notifier"
-	      echo "$ brew install terminal-notifier"
-	    fi
+    if (( ! $+commands[brew] )); then
+        echo "Install brew"
+        echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+    else
+        if [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]]; then
+            source $(brew --prefix)/etc/profile.d/autojump.sh
+        else
+            echo "Install autojump"
+            echo "$ brew install autojump"
+        fi
+        if (( ! $+commands[terminal-notifier] )); then
+            echo "Install terminal-notifier"
+            echo "$ brew install terminal-notifier"
+        fi
 
-	    # Loading antigen must be last, because zsh-syntax-highlighting
-	    # needs to be loaded after all aliases, plugins, etc
-	    load_antigen
-	    unset -f load_antigen
-	fi
+        # Loading zinit must be last, because zsh-syntax-highlighting
+        # needs to be loaded after all aliases, plugins, etc
+        load_zinit
+        unset -f load_zinit
+    fi
 fi
 if (( ! $+commands[fzf] )); then
     echo "Install fzf"
