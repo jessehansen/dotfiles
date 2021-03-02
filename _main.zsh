@@ -114,6 +114,14 @@ if (( ! $+commands[rg] )); then
     [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install ripgrep"
     [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install ripgrep"
 fi
+if (( ! $+commands[delta] )); then
+    echo "Install delta"
+	if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+		echo "Get latest version for your platform from https://github.com/dandavison/delta/releases"
+		echo "Example: wget https://github.com/dandavison/delta/releases/download/0.6.0/git-delta_0.6.0_armhf.deb && \\\n  sudo dpkg -i git-delta_0.6.0_armhf.deb && \\\n rm git-delta_0.6.0_armhf.deb"
+	fi 
+    [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install delta"
+fi
 
 source "$DOTFILES/p10k.zsh"
 
