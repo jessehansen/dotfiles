@@ -5,6 +5,7 @@ load_zinit() {
         echo "Install zinit"
         echo "$ mkdir ~/.zinit"
         echo "$ git clone https://github.com/zdharma/zinit.git ~/.zinit/bin"
+        exit
     fi
 
     # oh-my-zsh plugins/libs
