@@ -23,8 +23,9 @@ alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\
 
 alias curl='curl -sS'
 
-alias add='sublime --add '
-alias a='sublime --add .'
+alias xit='exit'
+
+# Git aliases
 
 alias gcn="git commit --amend --no-edit --date=now"
 alias gcan="git commit -a --amend --no-edit --date=now"

@@ -5,27 +5,27 @@ ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in Ma
 #   extract:  Extract most know archives with one command
 #   ---------------------------------------------------------
 extract () {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2) tar xvjf $1;;
-      *.tar.gz) tar xvzf $1;;
-      *.tar.xz) tar xvJf $1;;
-      *.tar.lzma) tar --lzma xvf $1;;
-      *.bz2) bunzip $1;;
-      *.rar) unrar $1;;
-      *.gz) gunzip $1;;
-      *.tar) tar xvf $1;;
-      *.tbz2) tar xvjf $1;;
-      *.tgz) tar xvzf $1;;
-      *.zip) unzip $1;;
-      *.Z) uncompress $1;;
-      *.7z) 7z x $1;;
-      *.dmg) hdiutul mount $1;; # mount OS X disk images
-      *)     echo "'$1' cannot be extracted via extract()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2) tar xvjf $1;;
+            *.tar.gz) tar xvzf $1;;
+            *.tar.xz) tar xvJf $1;;
+            *.tar.lzma) tar --lzma xvf $1;;
+            *.bz2) bunzip $1;;
+            *.rar) unrar $1;;
+            *.gz) gunzip $1;;
+            *.tar) tar xvf $1;;
+            *.tbz2) tar xvjf $1;;
+            *.tgz) tar xvzf $1;;
+            *.zip) unzip $1;;
+            *.Z) uncompress $1;;
+            *.7z) 7z x $1;;
+            *.dmg) hdiutul mount $1;; # mount OS X disk images
+            *)     echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
 }
 
 #   cdf:  'Cd's to frontmost window of MacOS Finder
@@ -37,13 +37,13 @@ cdf () {
         set currFolder to (folder of the front window as alias)
             on error
         set currFolder to (path to desktop folder as alias)
-            end try
+    end try
             POSIX path of currFolder
         end tell
 EOF
-    )
-    echo "cd to \"$currFolderPath\""
-    cd "$currFolderPath"
+)
+echo "cd to \"$currFolderPath\""
+cd "$currFolderPath"
 }
 
 httpHeaders () { /usr/bin/curl -I -L $@ ; }             # httpHeaders:      Grabs headers from web page
@@ -64,22 +64,22 @@ any() {
 }
 
 command_not_found_handler() {
-  # Do not run within a pipe
-  if test ! -t 1; then
-    >&2 echo "command not found: $1"
-    return 127
-  fi
-  if [ `echo $1 | cut -b1-3` = "git" ]
-  then
-    first=$1
-    shift
-    echo Autocorrecting to: git `echo $first | sed 's/git//'`$*
-    git `echo $first | sed 's/git//'`$*
-    return 0
-  fi
+    # Do not run within a pipe
+    if test ! -t 1; then
+        >&2 echo "command not found: $1"
+        return 127
+    fi
+    if [ `echo $1 | cut -b1-3` = "git" ]
+    then
+        first=$1
+        shift
+        echo Autocorrecting to: git `echo $first | sed 's/git//'`$*
+        git `echo $first | sed 's/git//'`$*
+        return 0
+    fi
 
-  >&2 echo "command not found: $1"
-  return 1
+    >&2 echo "command not found: $1"
+    return 1
 }
 
 gocover () {
@@ -97,13 +97,13 @@ gouncover () {
 }
 
 rmake () {
-  origdir=`pwd`
-  while [[ ! -f ./Makefile && ! `pwd` == "/" ]]; do cd ../ ; done
-  if [[ -f ./Makefile ]]; then
-      make $@
-  else
-      echo "Couldn't find a makefile"
-  fi
-  cd $origdir
+    origdir=`pwd`
+    while [[ ! -f ./Makefile && ! `pwd` == "/" ]]; do cd ../ ; done
+    if [[ -f ./Makefile ]]; then
+        make $@
+    else
+        echo "Couldn't find a makefile"
+    fi
+    cd $origdir
 }
 alias m=rmake

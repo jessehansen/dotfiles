@@ -1,20 +1,10 @@
-# This is Git's per-user configuration file.
 [core]
-	user = Jesse Hansen
-	email = twindagger@gmail.com
-	excludesfile = /Users/jessehansen/.gitignore-global
 	autocrlf = false
-[user]
-	name = Jesse Hansen
-	email = twindagger@gmail.com
-[difftool "kdiff"]
-	cmd = /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$LOCAL\" \"$REMOTE\"
-	path =
+	pager = "delta --dark --theme='Monokai Extended'"
+[interactive]
+	diffFilter = delta --color-only
 [merge]
 	tool = "Sublime Merge"
-[mergetool "kdiff"]
-	cmd = /Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
-	trustExitCode = true
 [mergetool "Sublime Merge"]
 	cmd = smerge mergetool \"$BASE\" \"$REMOTE\" \"$LOCAL\" -o \"$MERGED\"
 [push]
@@ -43,5 +33,10 @@
 	push-force = push --force-with-lease
 	prune-branches = !git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}'
 	prune-branches-ok = !git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
-[credential]
-	helper = osxkeychain
+	hide = update-index --assume-unchanged
+	unhide = update-index --no-assume-unchanged
+	unhide-all = "!git ls-files -v | grep '^[a-z]' | cut -c3- | xargs git update-index --no-assume-unchanged --"
+	hidden = "!git ls-files -v | grep '^h' | cut -c3-"
+[delta]
+	features = side-by-side line-numbers decorations
+	whitespace-error-style = 22 reverse
