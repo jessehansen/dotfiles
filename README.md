@@ -6,5 +6,5 @@ echo "export DOTFILES=$(pwd)" > ~/.zprofile
 cat example/zprofile >> ~/.zprofile
 cp example/zshrc ~/.zshrc
 git config --global include.path "$(pwd)/gitconfig"
-git config --global excludesfile "$(pwd)/gitignore-global"
+git config --global core.excludesfile "$(pwd)/gitignore-global"
 ```
