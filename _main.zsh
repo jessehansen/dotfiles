@@ -16,8 +16,6 @@ load_zinit() {
     #   OMSL::history - primarily imported for omz's history command, which prints
     #       all history instead of just the last 30
     #   OMZL::termsupport - imported so tab title gets set correctly
-    # TODO: could probably just re-implement these myself to avoid oh-my-zsh
-    #  dependencies, but this might be faster since zinit compiles them
     zinit wait lucid for \
         OMZL::git.zsh \
         OMZP::git \
