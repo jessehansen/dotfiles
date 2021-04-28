@@ -263,5 +263,10 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 " machine-specific config
 if filereadable($DOTFILES . "/init.local.vim")
-  source $DOTFILES . "/init.local.vim"
+  execute "source " . $DOTFILES . "/init.local.vim"
 endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif

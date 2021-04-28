@@ -33,6 +33,7 @@ fi
 
 
 alias curl='curl -sS'
+alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
 
 alias xit='exit'
 
@@ -42,8 +43,8 @@ alias gcn="git commit --amend --no-edit --date=now"
 alias gcan="git commit -a --amend --no-edit --date=now"
 alias gst="git status -s"
 alias gpb="git prune-branches-ok"
-alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
 alias gs="git status -s"
+alias gdc="git diff --cached"
 
 # master -> main
 alias gcm="git checkout main"
