@@ -1,9 +1,21 @@
+" Install vim-plug if not found
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
 " vim-plug
 call plug#begin(stdpath('data') . './plugged')
 
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+if !empty($GOPATH) {
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+}
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
 Plug 'mxw/vim-jsx'
+Plug 'ianks/vim-tsx'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'jparise/vim-graphql'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -25,21 +37,26 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'svermeulen/vim-subversive'
-
 if has('nvim') || has('patch-8.0.902')
   Plug 'mhinz/vim-signify'
 else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 endif
 
-if executable('go')
-  Plug 'fatih/vim-go', { 'do': 'GoUpdateBinaries' }
-endif
+" Coc handles plugins differently. Define them here instead of relying on its
+" internal store
+let g:coc_global_extensions = ['coc-json', 'coc-eslint', 'coc-tsserver']
 
-if executable('xo')
-  Plug 'Chiel92/vim-autoformat'
-  Plug 'xojs/vim-xo'
-endif
+if !empty($GOPATH) {
+  let g:coc_global_extensions = g:coc_global_extensions + ['coc-go']
+}
+
+" load plugins only on this machine (not checked into dotfiles repo)
+" note - add Coc extensions using
+" let g:coc_global_extensions= g:coc_global_extensions + ['my-extension']
+if filereadable($DOTFILES . "/init-plugins.local.vim") {
+  source $DOTFILES . "init-plugins.local.vim"
+}
 
 call plug#end()
 
@@ -53,7 +70,7 @@ colorscheme vim-monokai-tasty
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-  map <M-f> :Rg 
+  map <M-f> :Rg
 endif
 
 " NERDCommenter defaults
@@ -67,12 +84,9 @@ let g:jsx_ext_required = 0
 " Use gofumpt
 let g:go_fmt_command = "gofumports"
 
-" Put HTML attribute brace on new line
-let g:splitjoin_html_attributes_bracket_on_new_line = 1
-
 " show hidden chars
 set list
-set ts=4 sts=4 sw=4 expandtab
+set ts=4 sts=4 sw=4 noexpandtab
 set listchars=tab:▸\ ,eol:¬,space:·
 " work with hidden buffers
 set hidden
@@ -88,11 +102,15 @@ set inccommand=nosplit
 " Mouse support
 set mouse=a
 if has('mouse_sgr')
-  set ttymouse=sgr
+    set ttymouse=sgr
 endif
 
 " disable background color erase (helps kitty and tmux)
 let &t_ut=''
+
+" let g:chadtree_settings = { "theme.text_colour_set": "nerdtree_syntax_dark"}
+let g:NERDTreeDirArrowExpandable = ' '
+let g:NERDTreeDirArrowCollapsible = ' '
 
 " window navigation
 map <C-h> <C-w>h
@@ -106,6 +124,7 @@ map <C-w>, <C-w><
 let mapleader=","
 nnoremap <leader>d :NERDTreeToggle<CR>
 nnoremap <leader>e :NERDTreeFind<CR>
+" nnoremap <leader>e :NERDTreeFind<CR>
 " edit init.vim (or vertically split with init.vim)
 nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
 nnoremap <leader>vr :vsp ~/.config/nvim/init.vim<CR>
@@ -129,9 +148,6 @@ map <C-b> :Buffers<CR>
 map <C-f> :BLines<CR>
 map <M-t> :History<CR>
 nnoremap <leader>m :Maps<CR>
-
-map <M-b>   :echo "ctrl-shift-b received"<CR>
-map <C-b>         :echo "ctrl-b received"<CR>
 
 "go to xth buffer
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
@@ -167,24 +183,18 @@ inoremap <S-Tab> <C-D>
 
 " always open help in right vertical pane
 autocmd FileType help wincmd L
-autocmd FileType vim set ts=2 sts=2 sw=2 expandtab
-
-if executable('xo')
-  " format on save
-  autocmd BufWrite * :Autoformat
-endif
 
 " Lightline config
 let g:lightline = {
-      \ 'colorscheme': 'monokai_tasty',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
+  \ 'colorscheme': 'monokai_tasty',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'fugitive#head'
+  \ },
+\ }
 let g:lightline.tabline          = {'left': [['buffers']], 'right': [[]]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
@@ -246,36 +256,7 @@ nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
-" This is an xo formatter that respects local xo configuration by creating the
-" temporary file next to the existing file instead of in a temp folder. XO
-" must still be installed using `npm i -g xo`. XO respsects locally installed
-" configuration defined in package.json
-if executable('xo')
-  if !exists('g:formatdef_xo_local_javascript')
-    function! g:BuildXOTmpFile(path, ext)
-      let l:i = 0
-      let l:result = a:path.'_eslint_tmp_'.l:i.a:ext
-      while filereadable(l:result) && l:i < 100000
-        let l:i = l:i + 1
-        let l:result = a:path.'_eslint_tmp_'.l:i.a:ext
-      endwhile
-      if filereadable(l:result)
-        echoerr "Temporary file could not be created for ".a:path
-        echoerr "Tried from ".a:path.'_eslint_tmp_0'.a:ext." to ".a:path.'_eslint_tmp_'.l:i.a:ext
-        return ''
-      endif
-      return l:result
-    endfunction
-    function! g:BuildFixedXOCmd()
-      let l:path = fnamemodify(expand('%'), ':p')
-      let l:xo_js_tmp_file = g:BuildXOTmpFile(l:path, ".js")
-      let content = getline('1', '$')
-      call writefile(content, l:xo_js_tmp_file)
-      return "xo --fix ".l:xo_js_tmp_file." 1> /dev/null; exit_code=$?
-            \ cat ".l:xo_js_tmp_file."; rm -f ".l:xo_js_tmp_file."; exit $exit_code"
-    endfunction
-    let g:formatdef_xo_local_javascript = "g:BuildFixedXOCmd()"
-  endif
-  let g:formatters_javascript = ['xo_local_javascript']
+" machine-specific config
+if filereadable($DOTFILES . "/init.local.vim")
+  source $DOTFILES . "/init.local.vim"
 endif
-

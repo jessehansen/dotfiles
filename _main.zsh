@@ -119,7 +119,7 @@ if (( ! $+commands[delta] )); then
 	if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 		echo "Get latest version for your platform from https://github.com/dandavison/delta/releases"
 		echo "Example: wget https://github.com/dandavison/delta/releases/download/0.6.0/git-delta_0.6.0_armhf.deb && \\\n  sudo dpkg -i git-delta_0.6.0_armhf.deb && \\\n rm git-delta_0.6.0_armhf.deb"
-	fi 
+	fi
     [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install delta"
 fi
 

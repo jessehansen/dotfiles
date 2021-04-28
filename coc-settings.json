@@ -1,0 +1,9 @@
+{
+	"eslint.autoFixOnSave": true,
+	"go.checkForUpdates": "ask",
+	"go.goplsUseDaemon": true,
+	"go.goplsPath": "/Users/jesse.hansen/go/bin/gopls",
+	"go.goplsOptions": {
+		"staticcheck": true
+	}
+}

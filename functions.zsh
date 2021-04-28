@@ -82,6 +82,19 @@ command_not_found_handler() {
     return 1
 }
 
+gotools () {
+  origdir=`pwd`
+
+  go get golang.org/x/tools/cmd/goimports@latest
+  go get golang.or/x/lint/golint@latest
+  go get golang.org/x/tools/gopls@latest
+  go get mvdan.cc/gofumpt@latest
+  go get mvdan.cc/gofumpt/gofumports@latest
+  go get github.com/gregoryv/uncover@latest
+
+  cd $origdir
+}
+
 gocover () {
     t="/tmp/go-cover.$$.tmp"
     go test -coverprofile=$t && go tool cover -html=$t && unlink $t
