@@ -9,9 +9,9 @@ call plug#begin(stdpath('data') . './plugged')
 
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 " Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
-if !empty($GOPATH) {
+if !empty($GOPATH)
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-}
+endif
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'mxw/vim-jsx'
@@ -47,16 +47,16 @@ endif
 " internal store
 let g:coc_global_extensions = ['coc-json', 'coc-eslint', 'coc-tsserver']
 
-if !empty($GOPATH) {
+if !empty($GOPATH)
   let g:coc_global_extensions = g:coc_global_extensions + ['coc-go']
-}
+endif
 
 " load plugins only on this machine (not checked into dotfiles repo)
 " note - add Coc extensions using
 " let g:coc_global_extensions= g:coc_global_extensions + ['my-extension']
-if filereadable($DOTFILES . "/init-plugins.local.vim") {
-  source $DOTFILES . "init-plugins.local.vim"
-}
+if filereadable($DOTFILES . "/init-plugins.local.vim")
+  execute "source " . $DOTFILES . "init-plugins.local.vim"
+endif
 
 call plug#end()
 
@@ -65,7 +65,12 @@ set updatetime=100
 
 syntax enable
 let g:vim_monokai_tasty_italic = 1
-colorscheme vim-monokai-tasty
+
+try
+  colorscheme vim-monokai-tasty
+catch /^Vim\%((\a\+)\)\=:E185/
+  echo "Could not find monokai colorscheme"
+endtry
 
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading'
@@ -126,8 +131,8 @@ nnoremap <leader>d :NERDTreeToggle<CR>
 nnoremap <leader>e :NERDTreeFind<CR>
 " nnoremap <leader>e :NERDTreeFind<CR>
 " edit init.vim (or vertically split with init.vim)
-nnoremap <leader>rc :e ~/.config/nvim/init.vim<CR>
-nnoremap <leader>vr :vsp ~/.config/nvim/init.vim<CR>
+nnoremap <leader>rc :execute "e " . $DOTFILES . "/init.vim"<CR>
+nnoremap <leader>vr :execute "vsp " . $DOTFILES . "/init.vim"<CR>
 " %% in command mode inserts dir of current file
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " Find word under cursor
@@ -144,8 +149,8 @@ map <C-p> :Files<CR>
 map <M-p> :Commands<CR>
 map <C-s> :GFiles?<CR>
 map <M-s> :GFiles<CR>
-map <C-b> :Buffers<CR>
-map <C-f> :BLines<CR>
+" map <C-b> :Buffers<CR>
+" map <C-f> :BLines<CR>
 map <M-t> :History<CR>
 nnoremap <leader>m :Maps<CR>
 
