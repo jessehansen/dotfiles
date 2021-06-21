@@ -73,7 +73,7 @@ catch /^Vim\%((\a\+)\)\=:E185/
 endtry
 
 if executable('rg')
-  let g:ackprg = 'rg --vimgrep --no-heading'
+  let g:ackprg = 'rg --vimgrep --no-heading --hidden'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
   map <M-f> :Rg
 endif
@@ -87,7 +87,8 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 let g:jsx_ext_required = 0
 
 " Use gofumpt
-let g:go_fmt_command = "gofumports"
+let g:go_fmt_command="gopls"
+let g:go_gopls_gofumpt=1
 
 " show hidden chars
 set list
@@ -125,6 +126,10 @@ map <C-l> <C-w>l
 " window sizing
 map <C-w>. <C-w>>
 map <C-w>, <C-w><
+
+"quickfix navigation
+nnoremap <leader>> :cn<CR>
+nnoremap <leader>< :cp<CR>
 
 let mapleader=","
 nnoremap <leader>d :NERDTreeToggle<CR>

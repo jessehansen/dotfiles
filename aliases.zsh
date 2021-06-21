@@ -11,6 +11,10 @@ else
   alias la='ls -AF'
 fi
 
+if (( $+commands[bat] )); then
+  alias cat="bat"
+fi
+
 alias l='ls -F'
 alias lh='ls -d .*'
 alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
