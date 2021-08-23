@@ -55,8 +55,11 @@ endif
 " note - add Coc extensions using
 " let g:coc_global_extensions= g:coc_global_extensions + ['my-extension']
 if filereadable($DOTFILES . "/init-plugins.local.vim")
-  execute "source " . $DOTFILES . "init-plugins.local.vim"
+  execute "source " . $DOTFILES . "/init-plugins.local.vim"
 endif
+
+" include dotfiles
+execute "Plug '" . $DOTFILES . "/nvim'"
 
 call plug#end()
 
