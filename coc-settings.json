@@ -5,5 +5,7 @@
 	"go.goplsPath": "/Users/jesse.hansen/go/bin/gopls",
 	"go.goplsOptions": {
 		"staticcheck": true
-	}
+	},
+  "coc.preferences.formatOnSaveFiletypes": ["rust"],
+  "rust.clippy_preference": "on"
 }

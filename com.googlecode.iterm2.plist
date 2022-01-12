@@ -2281,6 +2281,8 @@ Clear Buffer</string>
 			<string>SauceCodeProNerdFontComplete-Regular 12</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
+			<key>Place Prompt at First Column</key>
+			<false/>
 			<key>Prompt Before Closing 2</key>
 			<integer>0</integer>
 			<key>Right Option Key Sends</key>
@@ -2328,6 +2330,8 @@ Clear Buffer</string>
 			<true/>
 			<key>Shortcut</key>
 			<string></string>
+			<key>Show Mark Indicators</key>
+			<false/>
 			<key>Show Status Bar</key>
 			<false/>
 			<key>Silence Bell</key>
