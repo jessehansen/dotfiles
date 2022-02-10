@@ -4,23 +4,55 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
+let mapleader=","
+
+" Coc handles plugins differently. Define them here instead of relying on its
+" internal store
+let g:coc_config_home = $DOTFILES
+let g:coc_global_extensions = ['coc-json']
+
 " vim-plug
 call plug#begin(stdpath('data') . './plugged')
 
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
-" Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+" language-specific plugins
+" I should probably come up with a better way of doing this
+
+" golang
 if !empty($GOPATH)
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  let g:coc_global_extensions = g:coc_global_extensions + ['coc-go']
+
+  " Use gofumpt
+  let g:go_fmt_command="gopls"
+  let g:go_gopls_gofumpt=1
+
 endif
+
+" rust
 if isdirectory($HOME . "/.cargo")
   Plug 'rust-lang/rust.vim'
+  let g:coc_global_extensions = g:coc_global_extensions + ['coc-rls']
 endif
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'mxw/vim-jsx'
-Plug 'ianks/vim-tsx'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'jparise/vim-graphql'
+
+" python
+if executable('python3')
+  let g:coc_global_extensions = g:coc_global_extensions + ['@yaegassy/coc-pylsp']
+endif
+
+" javascript
+if executable('node')
+  Plug 'pangloss/vim-javascript'
+  Plug 'leafgarland/typescript-vim'
+  Plug 'mxw/vim-jsx'
+  Plug 'ianks/vim-tsx'
+  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+  Plug 'jparise/vim-graphql'
+  let g:coc_global_extensions = g:coc_global_extensions + ['coc-eslint', 'coc-tsserver']
+  " Don't require jsx extension for jsx features
+  let g:jsx_ext_required = 0
+endif
+
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
@@ -35,7 +67,6 @@ Plug 'patstockwell/vim-monokai-tasty'
 Plug 'tpope/vim-eunuch'
 Plug 'Asheq/close-buffers.vim'
 Plug 'scrooloose/nerdcommenter'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
@@ -46,20 +77,6 @@ else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 endif
 
-" Coc handles plugins differently. Define them here instead of relying on its
-" internal store
-let g:coc_config_home = $DOTFILES
-let g:coc_global_extensions = ['coc-json', 'coc-eslint', 'coc-tsserver']
-
-if !empty($GOPATH)
-  let g:coc_global_extensions = g:coc_global_extensions + ['coc-go']
-endif
-
-if isdirectory($HOME . "/.cargo")
-  " let g:rustfmt_autosave = 1
-  let g:coc_global_extensions = g:coc_global_extensions + ['coc-rls']
-endif
-
 " load plugins only on this machine (not checked into dotfiles repo)
 " note - add Coc extensions using
 " let g:coc_global_extensions= g:coc_global_extensions + ['my-extension']
@@ -67,10 +84,15 @@ if filereadable($DOTFILES . "/init-plugins.local.vim")
   execute "source " . $DOTFILES . "/init-plugins.local.vim"
 endif
 
-" include dotfiles
+" include my personal dotfiles plugin
 execute "Plug '" . $DOTFILES . "/nvim'"
 
 call plug#end()
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
 
 " better update time for async
 set updatetime=100
@@ -84,23 +106,18 @@ catch /^Vim\%((\a\+)\)\=:E185/
   echo "Could not find monokai colorscheme"
 endtry
 
+" use ripgrep for fzf and Ack if avialable
 if executable('rg')
   let g:ackprg = 'rg --vimgrep --no-heading --hidden'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
   map <M-f> :Rg
+
+  " Find word under cursor
+  noremap <leader>g :Rg<space><C-r><C-w><CR>
 endif
 
 " NERDCommenter defaults
 let g:NERDSpaceDelims = 1
-
-let g:fzf_history_dir = '~/.local/share/fzf-history'
-
-" Don't require jsx extension for jsx features
-let g:jsx_ext_required = 0
-
-" Use gofumpt
-let g:go_fmt_command="gopls"
-let g:go_gopls_gofumpt=1
 
 " show hidden chars
 set list
@@ -135,42 +152,53 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
 " window sizing
 map <C-w>. <C-w>>
 map <C-w>, <C-w><
+
+" fzf shortcuts
+map <C-p> :Files<CR>
+map <M-p> :Commands<CR>
+map <C-s> :GFiles?<CR>
+map <M-s> :GFiles<CR>
+map <M-t> :History<CR>
+nnoremap <leader>m :Maps<CR>
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" keep fzf history
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
 
 "quickfix navigation
 nnoremap <leader>> :cn<CR>
 nnoremap <leader>< :cp<CR>
 
-let mapleader=","
+" show dir tree/ find current file in dir tree
 nnoremap <leader>d :NERDTreeToggle<CR>
 nnoremap <leader>e :NERDTreeFind<CR>
-" nnoremap <leader>e :NERDTreeFind<CR>
+
 " edit init.vim (or vertically split with init.vim)
 nnoremap <leader>rc :execute "e " . $DOTFILES . "/init.vim"<CR>
 nnoremap <leader>vr :execute "vsp " . $DOTFILES . "/init.vim"<CR>
+
 " %% in command mode inserts dir of current file
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
-" Find word under cursor
-noremap <leader>g :Rg<space><C-r><C-w><CR>
+
 " clear current search highlight
 map <leader>/ :noh<CR>
 " close other buffers
 map <leader>q :Bdelete hidden<CR>
+
 " close location list and quick fix windows
 nnoremap <leader>x :ccl <bar> lcl<CR>
-nnoremap <leader>y "+y
 
-" fzf
-map <C-p> :Files<CR>
-map <M-p> :Commands<CR>
-map <C-s> :GFiles?<CR>
-map <M-s> :GFiles<CR>
-" map <C-b> :Buffers<CR>
-" map <C-f> :BLines<CR>
-map <M-t> :History<CR>
-nnoremap <leader>m :Maps<CR>
+" ,y = copy to clipboard
+nnoremap <leader>y "+y
 
 "go to xth buffer
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
@@ -188,21 +216,21 @@ nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 nnoremap <Leader>h :bp<CR>
 nnoremap <Leader>l :bn<CR>
 
-"close current buffer, switch to another
+" ,w = close current buffer, switch to another
 nmap <Leader>w :b#<bar>bd#<CR>
 
-"select all
+" ,a = select all
 nnoremap <leader>a ggVG
-"copy current buffer name to system clipboard
+
+" ,p = copy current buffer name to system clipboard
 nnoremap <leader>p :let @+ = expand("%")<cr>
 
-" visual mode mappings
+" visual mode indentation should work as expected
 vmap <Tab> >gv
 vmap <S-Tab> <gv
 
-" insert mode mappings
+" ctrl-s saves in insert mode
 imap <C-s> <ESC>:w<CR>a
-inoremap <S-Tab> <C-D>
 
 " always open help in right vertical pane
 autocmd FileType help wincmd L
@@ -227,7 +255,7 @@ let g:lightline#bufferline#unicode_symbols = 1
 " always show tab line so that buffers are always available
 set showtabline=2
 
-" coc config
+" ---- BEGIN coc config & mappings ------
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -355,17 +383,10 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
 
-" machine-specific config
+" ----- END coc config & mappings -----------------
+
+" load machine-specific config last
 if filereadable($DOTFILES . "/init.local.vim")
   execute "source " . $DOTFILES . "/init.local.vim"
 endif
-
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif

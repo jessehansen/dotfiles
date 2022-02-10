@@ -8,7 +8,7 @@ load_zinit() {
   else
     echo "Install zinit"
     echo "$ mkdir ~/.zinit"
-    echo "$ git clone https://github.com/zdharma/zinit.git ~/.zinit/bin"
+    echo "$ git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin"
     exit
   fi
 
@@ -44,7 +44,7 @@ load_zinit() {
     atload"!_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions \
     atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-    zdharma/fast-syntax-highlighting
+    zdharma-continuum/fast-syntax-highlighting
 
   if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
     zinit ice as"command" pick"bin/*" atclone'./_utils/download_files.sh' \
