@@ -2,20 +2,20 @@
 
 To install:
 ```zsh
+# clone
+git clone https://github.com/twindagger/dotfiles
 # Add zprofile export that points to this directory
+cd dotfiles
 echo "export DOTFILES=$(pwd)" > ~/.zprofile
-# include iterm integration and exports from this directory
+
+# set up zprofile & zshrc
 cat example/zprofile >> ~/.zprofile
-# Add zshrc that references _main.zsh
 cp example/zshrc ~/.zshrc
 
 # include .gitconfig from this directory
 git config --global include.path "$(pwd)/gitconfig"
 git config --global core.excludesfile "$(pwd)/gitignore-global"
 
-# set up nvi
-mkdir -p ~/.config/nvim/ftplugin
+# set up init.vim for nvim
 cp example/init.vim ~/.config/nvim/
-cp example/ftplugin-go.vim ~/.config/nvim/ftplugin/go.vim
-cp coc-settings.json ~/.config/nvim/
 ```

@@ -1,1 +1,1 @@
-source "${DOTFILES}/_main.zsh"
+source "${DOTFILES}/zsh/_main.zsh"

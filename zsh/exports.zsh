@@ -34,5 +34,5 @@ export KEYTIMEOUT=1
 export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
 export FZF_DEFAULT_COMMAND="rg --files"
 
-[[ -e ${DOTFILES}/exports.local.zsh ]] && source ${DOTFILES}/exports.local.zsh
+[[ -e ${DOTFILES}/zsh/exports.local.zsh ]] && source ${DOTFILES}/zsh/exports.local.zsh
 

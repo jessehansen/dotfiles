@@ -58,15 +58,15 @@ load_zinit() {
 
 
 load_all() {
-  source "$DOTFILES/plugin_config.zsh"
-  source "$DOTFILES/history.zsh"
-  source "$DOTFILES/setopt.zsh"
-  source "$DOTFILES/exports.zsh"
-  source "$DOTFILES/aliases.zsh"
-  source "$DOTFILES/bindkeys.zsh"
-  source "$DOTFILES/functions.zsh"
+  source "$DOTFILES/zsh/plugin_config.zsh"
+  source "$DOTFILES/zsh/history.zsh"
+  source "$DOTFILES/zsh/setopt.zsh"
+  source "$DOTFILES/zsh/exports.zsh"
+  source "$DOTFILES/zsh/aliases.zsh"
+  source "$DOTFILES/zsh/bindkeys.zsh"
+  source "$DOTFILES/zsh/functions.zsh"
 
-  [[ -e ${DOTFILES}/_local.zsh ]] && source ${DOTFILES}/_local.zsh
+  [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
 }
 
 reload() {
@@ -131,8 +131,8 @@ if (( ! $+commands[delta] )); then
   [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install delta"
 fi
 
-source "$DOTFILES/p10k.zsh"
+source "$DOTFILES/zsh/p10k.zsh"
 
 # some aliases need to be set again because they are overridden by zsh
 # plugins. Always prefer our aliases
-source "$DOTFILES/aliases.zsh"
+source "$DOTFILES/zsh/aliases.zsh"

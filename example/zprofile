@@ -1,2 +1,1 @@
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-test -e "${DOTFILES}/exports.zsh" && source "${DOTFILES}/exports.zsh"
+test -e "${DOTFILES}/zsh/exports.zsh" && source "${DOTFILES}/zsh/exports.zsh"

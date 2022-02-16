@@ -1,1 +1,1 @@
-source $DOTFILES . "/init.vim"
+source $DOTFILES . "/nvim/_main.vim"
