@@ -6,7 +6,7 @@ endif
 
 " Coc handles plugins differently. Define them here instead of relying on its
 " internal store
-let g:coc_config_home = $DOTFILES
+let g:coc_config_home = $DOTFILES . "/nvim"
 let g:coc_global_extensions = ['coc-json']
 
 " vim-plug
