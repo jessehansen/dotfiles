@@ -7,14 +7,48 @@ endif
 " vim-plug
 call plug#begin(stdpath('data') . './plugged')
 
+" dir tree support
+" I don't use CHADTree yet because it doesn't have a NERDTreeFind equivalent
+Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+" fuzzy finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+" find in files plugin (configured to use ripgrep)
+Plug 'mileszs/ack.vim'
+" minimal status bar
+Plug 'itchyny/lightline.vim'
+" git integration
+Plug 'tpope/vim-fugitive'
+" show plus/minus indicators in gutter
+Plug 'mhinz/vim-signify'
+" highlight what was just yanked
+Plug 'machakann/vim-highlightedyank'
+" adds a line for open buffers at the top (I don't use tabs)
+Plug 'mengelbrecht/lightline-bufferline'
+" use .editorconfig files
+Plug 'editorconfig/editorconfig-vim'
+" my preferred color scheme
+Plug 'patstockwell/vim-monokai-tasty'
+" close multiple buffers - I delete hidden buffers frequently
+Plug 'Asheq/close-buffers.vim'
+" comment/uncomment lines & regions
+Plug 'scrooloose/nerdcommenter'
+" split/join lines semantically
+Plug 'AndrewRadev/splitjoin.vim'
+" surround with brackets, quotes, etc.
+Plug 'tpope/vim-surround'
+" plural-aware find and replace
+Plug 'tpope/vim-abolish'
+
+" lsp support
+Plug 'neovim/nvim-lspconfig'
+" autocomplete
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+
 " language-specific plugins
 
 if g:jesse_lang_go
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
-  " Use gofumpt
-  let g:go_fmt_command="gopls"
-  let g:go_gopls_gofumpt=1
 endif
 
 if g:jesse_lang_rust
@@ -32,37 +66,12 @@ if g:jesse_lang_js
   Plug 'jparise/vim-graphql'
 endif
 
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
-Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'machakann/vim-highlightedyank'
-Plug 'mengelbrecht/lightline-bufferline'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'patstockwell/vim-monokai-tasty'
-Plug 'tpope/vim-eunuch'
-Plug 'Asheq/close-buffers.vim'
-Plug 'scrooloose/nerdcommenter'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-abolish'
-Plug 'svermeulen/vim-subversive'
-if has('nvim') || has('patch-8.0.902')
-  Plug 'mhinz/vim-signify'
-else
-  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-endif
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 
 " load plugins only on this machine (not checked into dotfiles repo)
 " note - add Coc extensions using
 call SourceMy ("plugs.local.vim")
 
-" include my personal dotfiles plugin
+" include my personal dotfiles plugin (easy way to check in ftplugin)
 execute "Plug '" . g:dotfiles_nvim . "/plug'"
 
 call plug#end()

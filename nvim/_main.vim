@@ -10,8 +10,6 @@ endfunction
 " detect which langugages should be supported
 " - should set g:jesse_lang_xxxx = true
 call SourceMy ("langs.vim")
-" override in _langs.local.vim
-call SourceMy ("langs.local.vim")
 
 " load plugins first so they can be overridden
 call SourceMy ("plugs.vim")

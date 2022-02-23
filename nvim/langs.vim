@@ -16,3 +16,6 @@ endif
 
 " always load lua
 let g:jesse_lang_lua = v:true
+
+" override in langs.local.vim
+call SourceMy ("langs.local.vim")

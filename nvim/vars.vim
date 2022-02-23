@@ -51,3 +51,6 @@ set showtabline=2
 " Don't require jsx extension for jsx features
 let g:jsx_ext_required = 0
 
+" Use gofumpt
+let g:go_fmt_command="gopls"
+let g:go_gopls_gofumpt=1
