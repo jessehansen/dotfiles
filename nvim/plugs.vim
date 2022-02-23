@@ -8,10 +8,8 @@ endif
 call plug#begin(stdpath('data') . './plugged')
 
 " language-specific plugins
-" I should probably come up with a better way of doing this
 
-" golang
-if !empty($GOPATH)
+if g:jesse_lang_go
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
   " Use gofumpt
@@ -19,14 +17,13 @@ if !empty($GOPATH)
   let g:go_gopls_gofumpt=1
 endif
 
-" rust
-if isdirectory($HOME . "/.cargo")
+if g:jesse_lang_rust
   Plug 'rust-lang/rust.vim'
   Plug 'simrat39/rust-tools.nvim'
 endif
 
 " javascript
-if executable('node')
+if g:jesse_lang_js
   Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
   Plug 'mxw/vim-jsx'

@@ -1,0 +1,14 @@
+if !empty($GOPATH)
+  let g:jesse_lang_go = v:true
+endif
+
+if isdirectory($HOME . "/.cargo")
+  let g:jesse_lang_rust = v:true
+endif
+
+if executable('node')
+  let g:jesse_lang_js = v:true
+endif
+
+" always load lua
+let g:jesse_lang_lua = v:true

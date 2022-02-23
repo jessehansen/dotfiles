@@ -7,9 +7,16 @@ function! SourceMy(relativePath)
   endif
 endfunction
 
+" detect which langugages should be supported
+" - should set g:jesse_lang_xxxx = true
+call SourceMy ("langs.vim")
+" override in _langs.local.vim
+call SourceMy ("langs.local.vim")
+
 " load plugins first so they can be overridden
 call SourceMy ("plugs.vim")
 
+" set up lsp servers
 call SourceMy ("lsp.lua")
 
 " variables
@@ -20,5 +27,7 @@ call SourceMy ("autocmds.vim")
 call SourceMy ("colors.vim")
 " lightline config
 call SourceMy ("lightline.vim")
+" coq config
+call SourceMy ("coq.lua")
 " mappings
 call SourceMy ("maps.vim")
