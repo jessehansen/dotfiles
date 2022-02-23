@@ -51,6 +51,15 @@ if (vim.g.jesse_lang_rust) then
   }
 end
 
+if (vim.g.jesse_lang_python) then
+  require('lspconfig').pylsp.setup {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150
+    }
+  }
+end
+
 if (vim.g.jesse_lang_lua) then
   local runtime_path = vim.split(package.path, ';')
   table.insert(runtime_path, "lua/?.lua")

@@ -10,5 +10,9 @@ if executable('node')
   let g:jesse_lang_js = v:true
 endif
 
+if executable('python3')
+  let g:jesse_lang_python = v:true
+endif
+
 " always load lua
 let g:jesse_lang_lua = v:true
