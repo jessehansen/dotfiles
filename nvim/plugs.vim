@@ -4,11 +4,6 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
-" Coc handles plugins differently. Define them here instead of relying on its
-" internal store
-let g:coc_config_home = $DOTFILES . "/nvim"
-let g:coc_global_extensions = ['coc-json']
-
 " vim-plug
 call plug#begin(stdpath('data') . './plugged')
 
@@ -18,23 +13,16 @@ call plug#begin(stdpath('data') . './plugged')
 " golang
 if !empty($GOPATH)
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-  let g:coc_global_extensions = g:coc_global_extensions + ['coc-go']
 
   " Use gofumpt
   let g:go_fmt_command="gopls"
   let g:go_gopls_gofumpt=1
-
 endif
 
 " rust
 if isdirectory($HOME . "/.cargo")
   Plug 'rust-lang/rust.vim'
-  let g:coc_global_extensions = g:coc_global_extensions + ['coc-rls']
-endif
-
-" python
-if executable('python3')
-  let g:coc_global_extensions = g:coc_global_extensions + ['@yaegassy/coc-pylsp']
+  Plug 'simrat39/rust-tools.nvim'
 endif
 
 " javascript
@@ -45,22 +33,17 @@ if executable('node')
   Plug 'ianks/vim-tsx'
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'jparise/vim-graphql'
-  let g:coc_global_extensions = g:coc_global_extensions + ['coc-eslint', 'coc-tsserver']
-  " Don't require jsx extension for jsx features
-  let g:jsx_ext_required = 0
 endif
 
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-airline/vim-airline'
 Plug 'mileszs/ack.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'patstockwell/vim-monokai-tasty'
 Plug 'tpope/vim-eunuch'
 Plug 'Asheq/close-buffers.vim'
@@ -75,9 +58,11 @@ else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 endif
 
+Plug 'neovim/nvim-lspconfig'
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+
 " load plugins only on this machine (not checked into dotfiles repo)
 " note - add Coc extensions using
-" let g:coc_global_extensions= g:coc_global_extensions + ['my-extension']
 call SourceMy ("plugs.local.vim")
 
 " include my personal dotfiles plugin

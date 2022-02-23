@@ -48,4 +48,7 @@ let g:fzf_history_dir = '~/.local/share/fzf-history'
 " always show tab line so that buffers are always available
 set showtabline=2
 
+" Don't require jsx extension for jsx features
+let g:jsx_ext_required = 0
 
+let g:coq_settings = { 'auto_start': v:true }

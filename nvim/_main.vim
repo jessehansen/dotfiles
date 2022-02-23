@@ -7,9 +7,10 @@ function! SourceMy(relativePath)
   endif
 endfunction
 
-" load plugins and coc config first so they can be overridden
+" load plugins first so they can be overridden
 call SourceMy ("plugs.vim")
-call SourceMy ("coc.vim")
+
+call SourceMy ("lsp.lua")
 
 " variables
 call SourceMy ("vars.vim")
