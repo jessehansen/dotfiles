@@ -38,7 +38,6 @@ let g:NERDTreeDirArrowCollapsible = ' '
 
 " use ripgrep for fzf and Ack if avialable
 if executable('rg')
-  let g:ackprg = 'rg --vimgrep --no-heading --hidden'
   set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
 

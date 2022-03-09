@@ -13,8 +13,6 @@ Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
 " fuzzy finder
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" find in files plugin (configured to use ripgrep)
-Plug 'mileszs/ack.vim'
 " minimal status bar
 Plug 'itchyny/lightline.vim'
 " git integration

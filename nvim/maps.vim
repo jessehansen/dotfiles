@@ -44,7 +44,9 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 "quickfix navigation
 nnoremap <leader>> :cn<CR>
+nnoremap <leader>. :cn<CR>
 nnoremap <leader>< :cp<CR>
+nnoremap <leader>, :cp<CR>
 
 " show dir tree/ find current file in dir tree
 nnoremap <leader>d :NERDTreeToggle<CR>
@@ -60,6 +62,8 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " clear current search highlight
 map <leader>/ :noh<CR>
 " close other buffers
+" Bwipeout actually deletes the buffers instead of just hiding them. It's rare
+" that I want to keep a buffer around but hidden
 map <leader>q :Bwipeout hidden<CR>
 
 " close location list and quick fix windows
@@ -82,6 +86,11 @@ nmap <leader>8 <Plug>lightline#bufferline#go(8)
 nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
+" This used to just be :bp and :bn, but I didn't like quickfix and dir-list
+" windows showing up when I was trying to tab through windows. Also the order
+" was based on when the window was opened, not the lightline buffer ordinal.
+" This function only opens buffers that have lightline ordinals and uses the
+" current ordinal to determine next/prev, fixing both issues
 function! GoToRelativeBuffer(delta)
   let l:next_buf_ord = lightline#bufferline#get_ordinal_number_for_buffer(bufnr('%'))+a:delta
   let l:next_buf_nr = lightline#bufferline#get_buffer_for_ordinal_number(l:next_buf_ord)
