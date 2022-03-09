@@ -1,6 +1,9 @@
+local lsp = require "lspconfig"
+local coq = require "coq"
+
 local opts = { noremap=true, silent=true }
 
-local on_attach = function(client, bufnr)
+local function set_common(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -14,50 +17,70 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  if client.resolved_capabilities.document_highlight then
+    vim.cmd [[
+      hi! LspReferenceRead ctermbg=DarkGray
+      hi! LspReferenceText ctermbg=DarkGray
+      hi! LspReferenceWrite ctermbg=DarkGray
+      augroup lsp_document_highlight
+        autocmd! * <buffer>
+        autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+    ]]
+  end
+end
+
+local function set_common_and_autoformat(client, bufnr)
+  set_common(client, bufnr)
   vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
 end
 
 if (vim.g.jesse_lang_go) then
-  require('lspconfig').gopls.setup {
-    on_attach = on_attach,
+  lsp.gopls.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
-  }
+  }))
 end
 
 if (vim.g.jesse_lang_rust) then
-  require('lspconfig').rust_analyzer.setup {
+  lsp.rust_analyzer.setup(coq.lsp_ensure_capabilities({
     cmd = { 'rustup', 'run', 'nightly', 'rust-analyzer' },
-    on_attach = on_attach,
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
-  }
+  }))
 end
 
-if (vim.g.jesse_lang_rust) then
-  require('lspconfig').eslint.setup {
-    on_attach = on_attach,
+if (vim.g.jesse_lang_js) then
+  lsp.eslint.setup(coq.lsp_ensure_capabilities({
+    on_attach = function(client, bufnr)
+      set_common(client, bufnr)
+      -- use eslint to autoformat javascript instead of lsp.buf.formatting
+      vim.cmd[[autocmd BufWritePre <buffer> EslintFixAll]]
+    end,
     flags = {
       debounce_text_changes = 150
     }
-  }
-  require('lspconfig').tsserver.setup {
-    on_attach = on_attach,
+  }))
+  lsp.tsserver.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common,
     flags = {
       debounce_text_changes = 150
     }
-  }
+  }))
 end
 
 if (vim.g.jesse_lang_python) then
-  require('lspconfig').pylsp.setup {
-    on_attach = on_attach,
+  lsp.pylsp.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
-  }
+  }))
 end
 
 if (vim.g.jesse_lang_lua) then
@@ -65,8 +88,8 @@ if (vim.g.jesse_lang_lua) then
   table.insert(runtime_path, "lua/?.lua")
   table.insert(runtime_path, "lua/?/init.lua")
 
-  require'lspconfig'.sumneko_lua.setup {
-    on_attach = on_attach,
+  require'lspconfig'.sumneko_lua.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     },
@@ -87,5 +110,5 @@ if (vim.g.jesse_lang_lua) then
         },
       },
     },
-  }
+  }))
 end

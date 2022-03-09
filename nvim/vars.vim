@@ -1,7 +1,7 @@
 " contains variables and default config
 
 " better update time for async
-set updatetime=100
+set updatetime=600
 
 syntax enable
 

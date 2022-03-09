@@ -31,12 +31,16 @@ nnoremap <leader>m :Maps<CR>
 map <M-f> :Rg
 " Find word under cursor
 noremap <leader>g :Rg<space><C-r><C-w><CR>
+" (Visual mode) find selection - replaces whitespace with '\s+'
+xnoremap <leader>g :<C-U>
+  \<CR>
+  \gv"zy:Rg <C-R><C-R>=substitute(
+  \escape(@z, '\.*$^~['), '\_s\+', '\\s+', 'g')<CR><CR>
 
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
-
 
 "quickfix navigation
 nnoremap <leader>> :cn<CR>
@@ -56,7 +60,7 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 " clear current search highlight
 map <leader>/ :noh<CR>
 " close other buffers
-map <leader>q :Bdelete hidden<CR>
+map <leader>q :Bwipeout hidden<CR>
 
 " close location list and quick fix windows
 nnoremap <leader>x :ccl <bar> lcl<CR>
@@ -78,9 +82,17 @@ nmap <leader>8 <Plug>lightline#bufferline#go(8)
 nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
+function! GoToRelativeBuffer(delta)
+  let l:next_buf_ord = lightline#bufferline#get_ordinal_number_for_buffer(bufnr('%'))+a:delta
+  let l:next_buf_nr = lightline#bufferline#get_buffer_for_ordinal_number(l:next_buf_ord)
+  if l:next_buf_nr > 0
+    exec l:next_buf_nr . "b"
+  endif
+endfunction
+
 "go to next/prev buffer
-nnoremap <Leader>h :bp<CR>
-nnoremap <Leader>l :bn<CR>
+nnoremap <silent> <Leader>h :call GoToRelativeBuffer(-1)<CR>
+nnoremap <silent> <Leader>l :call GoToRelativeBuffer(1)<CR>
 
 " ,w = close current buffer, switch to another
 nmap <Leader>w :b#<bar>bd#<CR>

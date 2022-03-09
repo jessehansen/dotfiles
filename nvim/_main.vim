@@ -11,9 +11,11 @@ endfunction
 " - should set g:jesse_lang_xxxx = true
 call SourceMy ("langs.vim")
 
-" load plugins first so they can be overridden
+" load plugins
 call SourceMy ("plugs.vim")
 
+" coq config
+call SourceMy ("coq.lua")
 " set up lsp servers
 call SourceMy ("lsp.lua")
 
@@ -25,7 +27,5 @@ call SourceMy ("autocmds.vim")
 call SourceMy ("colors.vim")
 " lightline config
 call SourceMy ("lightline.vim")
-" coq config
-call SourceMy ("coq.lua")
 " mappings
 call SourceMy ("maps.vim")
