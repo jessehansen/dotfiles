@@ -8,8 +8,7 @@ endif
 call plug#begin(stdpath('data') . './plugged')
 
 " dir tree support
-" I don't use CHADTree yet because it doesn't have a NERDTreeFind equivalent
-Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 " fuzzy finder
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'

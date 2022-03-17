@@ -13,6 +13,7 @@ load_zinit() {
   fi
 
   # oh-my-zsh plugins/libs
+  #   OMZL::functions.zsh - OMZ common functions - including this fixes an issue in apple terminal that resulted in command not found: omz_urlencode
   #   OMZL::git.zsh - git common functions
   #   OMZP::git - git aliases
   #   OMZP::bgnotify - notifier when commands run long
@@ -22,6 +23,7 @@ load_zinit() {
   #       all history instead of just the last 30
   #   OMZL::termsupport - imported so tab title gets set correctly
   zinit wait lucid for \
+    OMZL::functions.zsh \
     OMZL::git.zsh \
     OMZP::git \
     OMZP::bgnotify \
@@ -75,10 +77,6 @@ reload() {
 }
 
 load_all
-
-if [[ "$TERM" = "xterm-kitty" ]]; then
-  kitty + complete setup zsh | source /dev/stdin
-fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   if [[ -e /usr/share/autojump/autojump.sh ]]; then

@@ -2280,7 +2280,7 @@ Clear Buffer</string>
 			<key>Normal Font</key>
 			<string>SauceCodeProNerdFontComplete-Regular 12</string>
 			<key>Option Key Sends</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
 			<false/>
 			<key>Prompt Before Closing 2</key>

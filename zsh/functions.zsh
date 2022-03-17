@@ -120,3 +120,47 @@ rmake () {
     cd $origdir
 }
 alias m=rmake
+
+jwtdump () {
+  target="all"
+  raw=""
+  while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -H|--header) target="header" ;;
+        -p|--payload) target="payload" ;;
+        -a|--all) target="all" ;;
+        -r|--raw) raw="-cM" ;;
+        -h|--help)
+          echo "JWT dump tool - takes input from stdin"
+          echo
+          echo "Syntax: jwtdump [-H|--header|-p|--payload|-a|--all] [-r|--raw] <string>"
+          echo "options:"
+          echo "h|help     Print this Help."
+          echo "H|header   Print JWT header contents."
+          echo "p|payload  Print JWT payload contents."
+          echo "a|all      Print header, payload, and signature."
+          echo "r|raw      Don't pretty-print the output."
+          echo
+          return;;
+        *) echo "Unknown parameter passed: $1"; return 1;;
+    esac
+    shift
+  done
+  jwtParts=`\cat`
+  if [[ $target == "all" ]]; then
+    echo "Header:"
+  fi
+  if [[ $target == "all" ]] || [[ $target == "header" ]]; then
+    echo -n "${jwtParts%%.*}" | base64 --decode | jq $raw
+  fi
+  if [[ $target == "all" ]]; then
+    echo "Payload:"
+  fi
+  if [[ $target == "all" ]] || [[ $target == "payload" ]]; then
+    echo -n "${${jwtParts%.*}#*.}" | base64 --decode | jq $raw
+  fi
+  if [[ $target == "all" ]]; then
+    echo "Signature:"
+    echo "${jwtParts##*.}"
+  fi
+}

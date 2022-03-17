@@ -48,11 +48,12 @@ nnoremap <leader>. :cn<CR>
 nnoremap <leader>< :cp<CR>
 nnoremap <leader>, :cp<CR>
 
-" show dir tree/ find current file in dir tree
-nnoremap <leader>d :NERDTreeToggle<CR>
-nnoremap <leader>e :NERDTreeFind<CR>
+" show dir tree
+nnoremap <leader>d :CHADopen<CR>
+" hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
+nnoremap <leader>e :lua CHAD.Toggle_follow(false);CHAD.Open({'--always-focus'});CHAD.Toggle_follow(false)<CR>
 
-" edit init.vim (or vertically split with init.vim)
+" edit _main.vim (or vertically split with _main.vim)
 nnoremap <leader>rc :execute "e " . g:dotfiles_nvim . "_main.vim"<CR>
 nnoremap <leader>vr :execute "vsp " . g:dotfiles_nvim . "_main.vim"<CR>
 
@@ -70,7 +71,7 @@ map <leader>q :Bwipeout hidden<CR>
 nnoremap <leader>x :ccl <bar> lcl<CR>
 
 " ,y = copy to clipboard
-nnoremap <leader>y "+y
+xnoremap <leader>y "+y
 
 " Buffer navigation
 
@@ -113,9 +114,11 @@ nnoremap <C-a> ggVG
 " ,p = copy current buffer name to system clipboard
 nnoremap <leader>p :let @+ = expand("%")<cr>
 
-" visual mode indentation should work as expected
+" visual mode indentation should not clear selection
 vmap <Tab> >gv
 vmap <S-Tab> <gv
+vnoremap > >gv
+vnoremap < <gv
 
 " ctrl-s saves in insert mode
 imap <C-s> <ESC>:w<CR>a

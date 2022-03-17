@@ -1,5 +1,8 @@
 " contains variables and default config
 
+" use gui colors in term
+set termguicolors
+
 " better update time for async
 set updatetime=600
 
