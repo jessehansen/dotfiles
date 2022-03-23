@@ -3,7 +3,7 @@ alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 
 if (( $+commands[exa] )); then
-  alias ls="exa"
+  alias ls='exa'
   alias ll='ls -Fla'
   alias la='ls -aF'
 else
@@ -12,12 +12,12 @@ else
 fi
 
 if (( $+commands[bat] )); then
-  alias cat="bat"
+  alias cat='bat'
 fi
 
 alias l='ls -F'
 alias lh='ls -d .*'
-alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
+alias lr='ls -R | grep ':$' | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
 alias ..='cd ../'                           # Go back 1 directory level
 alias ...='cd ../../'                       # Go back 2 directory levels
@@ -26,13 +26,13 @@ alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
 alias edit='nvim'                           # edit:         Opens any file in preferred editor
-alias ~="cd ~"                              # ~:            Go Home
+alias ~='cd ~'                              # ~:            Go Home
 alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
 alias grep='grep --color'
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
-  alias ss="/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &"
+  alias ss='/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &'
 fi
 
 
@@ -42,25 +42,43 @@ alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
 alias xit='exit'
 
 # Git aliases
+# Outputs the name of the current branch
+# Usage example: git pull origin $(git_current_branch)
+# Using '--quiet' with 'symbolic-ref' will not cause a fatal error (128) if
+# it's not a symbolic ref, but in a Git repo.
+function git_current_branch() {
+  local ref
+  ref=$(__git_prompt_git symbolic-ref --quiet HEAD 2> /dev/null)
+  local ret=$?
+  if [[ $ret != 0 ]]; then
+    [[ $ret == 128 ]] && return  # no git repo.
+    ref=$(__git_prompt_git rev-parse --short HEAD 2> /dev/null) || return
+  fi
+  echo ${ref#refs/heads/}
+}
 
-alias gcn="git commit --amend --no-edit --date=now"
-alias gcan="git commit -a --amend --no-edit --date=now"
-alias gst="git status -s"
-alias gpb="git prune-branches-ok"
-alias gs="git status -s"
-alias gdc="git diff --cached"
-
-# master -> main
-alias gcm="git checkout main"
-alias gcms="git checkout master"
-alias gbda='git branch --no-color --merged | command grep -vE "^(\+|\*|\s*(master|main|develop|dev)\s*$)" | command xargs -n 1 git branch -d'
-alias glum='git pull upstream main'
-alias glums='git pull upstream master'
-alias gmom='git merge origin/main'
-alias gmoms='git merge origin/master'
-alias gmum='git merge upstream/main'
-alias gmums='git merge upstream/master'
+alias g='git'
+alias ga='git add'
+alias gaa='git add --all'
+alias gb='git branch'
+alias gc='git commit'
+alias gcn='git commit --amend --no-edit --date=now'
+alias gcan='git commit -a --amend --no-edit --date=now'
+alias gst='git status -s'
+alias gs='git status -s'
+alias gss='git status -s'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gpb='git prune-branches-ok'
+alias gco='git checkout'
+alias gcm='git checkout main'
+alias gcms='git checkout master'
+alias grb='git rebase'
 alias grbm='git rebase main'
 alias grbms='git rebase master'
-alias grbom="git fetch && git rebase origin/main"
-alias grboms="git fetch && git rebase origin/master"
+alias grbom='git fetch && git rebase origin/main'
+alias grboms='git fetch && git rebase origin/master'
+alias gf='git fetch'
+alias gp='git push'
+alias gpf='git push --force-with-lease'
+alias gpsup='git push --set-upstream origin $(git_current_branch)'
