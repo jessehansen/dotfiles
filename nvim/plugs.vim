@@ -14,19 +14,19 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " minimal status bar
 Plug 'itchyny/lightline.vim'
+" adds a line for open buffers at the top (I don't use tabs)
+Plug 'mengelbrecht/lightline-bufferline'
 " git integration
 Plug 'tpope/vim-fugitive'
 " show plus/minus indicators in gutter
 Plug 'mhinz/vim-signify'
 " highlight what was just yanked
 Plug 'machakann/vim-highlightedyank'
-" adds a line for open buffers at the top (I don't use tabs)
-Plug 'mengelbrecht/lightline-bufferline'
 " use .editorconfig files
 Plug 'editorconfig/editorconfig-vim'
 " my preferred color scheme
 Plug 'patstockwell/vim-monokai-tasty'
-" close multiple buffers - I delete hidden buffers frequently
+" close multiple buffers - I use Bwipeout to remove hidden buffers
 Plug 'Asheq/close-buffers.vim'
 " comment/uncomment lines & regions
 Plug 'scrooloose/nerdcommenter'
@@ -66,7 +66,6 @@ endif
 
 
 " load plugins only on this machine (not checked into dotfiles repo)
-" note - add Coc extensions using
 call SourceMy ("plugs.local.vim")
 
 " include my personal dotfiles plugin (easy way to check in ftplugin)

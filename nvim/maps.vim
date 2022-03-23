@@ -122,3 +122,8 @@ vnoremap < <gv
 
 " ctrl-s saves in insert mode
 imap <C-s> <ESC>:w<CR>a
+
+" terminal mode mappings
+
+" Esc exits
+tnoremap <Esc> <C-\><C-n>

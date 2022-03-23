@@ -10,17 +10,26 @@ function! SetTestFileMappings()
   endif
 endfunction
 
+function! RunInRightTerminal(cmd_to_run)
+  vertical rightbelow new
+  call termopen(a:cmd_to_run)
+  au BufDelete <buffer> wincmd p " switch back to last window
+  startinsert
+endfunction
+
 function! RunPythonTests()
   let l:path_without_api = @%[4:]
-  exec('echo "Running Tests in '. l:path_without_api . '"')
-  exec('terminal docker compose run --rm web ./manage.py test ' . l:path_without_api)
+  echo 'Running Tests in '
+  echon l:path_without_api
+  call RunInRightTerminal('docker compose run --rm web ./manage.py test ' . l:path_without_api)
 endfunction
 
 function! PythonSnapshotUpdate()
   let l:path_without_api = expand('%')[4:]
   let l:snap_path = expand('%:h') . '/snapshots/snap_' . expand('%:t')
-  exec('echo "Updating Snapshots in '. l:path_without_api . '"')
-  exec('terminal docker compose run --rm web ./manage.py test --snapshot-update --no-input --run-once ' . l:path_without_api . ' && black ' . l:snap_path)
+  echo 'Updating Snapshots in '
+  echon l:path_without_api
+  call RunInRightTerminal('docker compose run --rm web ./manage.py test --snapshot-update --no-input --run-once ' . l:path_without_api . ' && black ' . l:snap_path)
 endfunction
 
 augroup python_test_file_mappings

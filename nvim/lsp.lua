@@ -112,3 +112,5 @@ if (vim.g.jesse_lang_lua) then
     },
   }))
 end
+
+vim.fn.SourceMy("lsp.local.vim")
