@@ -26,7 +26,8 @@ load_zinit() {
     OMZP::vi-mode \
     OMZP::fzf \
     OMZL::history.zsh \
-    OMZL::termsupport.zsh
+    OMZL::termsupport.zsh \
+    OMZP::nvm
 
   # p10k theme
   zinit ice depth=1; zinit light romkatv/powerlevel10k
@@ -68,7 +69,6 @@ load_all() {
 }
 
 reload() {
-  clear
   load_all
 }
 

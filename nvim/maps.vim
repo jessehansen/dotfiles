@@ -121,7 +121,7 @@ vnoremap > >gv
 vnoremap < <gv
 
 " ctrl-s saves in insert mode
-imap <C-s> <ESC>:w<CR>a
+inoremap <C-s> <ESC>:w<CR>a
 
 " terminal mode mappings
 

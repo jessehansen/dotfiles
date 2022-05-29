@@ -1,6 +1,7 @@
-alias cp='cp -iv'                           # Preferred 'cp' implementation
-alias mv='mv -iv'                           # Preferred 'mv' implementation
-alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias mkdir='mkdir -pv'
+alias grep='grep --color'
 
 if (( $+commands[exa] )); then
   alias ls='exa'
@@ -21,14 +22,16 @@ alias lr='ls -R | grep ':$' | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\
 alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
 alias ..='cd ../'                           # Go back 1 directory level
 alias ...='cd ../../'                       # Go back 2 directory levels
+alias .2='cd ../../'                        # Go back 2 directory levels - for consistency
 alias .3='cd ../../../'                     # Go back 3 directory levels
 alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
-alias edit='nvim'                           # edit:         Opens any file in preferred editor
-alias ~='cd ~'                              # ~:            Go Home
-alias path='echo -e ${PATH//:/\\n}'         # path:         Echo all executable Paths
-alias grep='grep --color'
+
+alias edit='nvim'
+alias ~='cd ~'
+
+alias path='echo -e ${PATH//:/\\n}'
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
@@ -48,11 +51,11 @@ alias xit='exit'
 # it's not a symbolic ref, but in a Git repo.
 function git_current_branch() {
   local ref
-  ref=$(__git_prompt_git symbolic-ref --quiet HEAD 2> /dev/null)
+  ref=$(git symbolic-ref --quiet HEAD 2> /dev/null)
   local ret=$?
   if [[ $ret != 0 ]]; then
     [[ $ret == 128 ]] && return  # no git repo.
-    ref=$(__git_prompt_git rev-parse --short HEAD 2> /dev/null) || return
+    ref=$(git rev-parse --short HEAD 2> /dev/null) || return
   fi
   echo ${ref#refs/heads/}
 }
@@ -71,14 +74,21 @@ alias gd='git diff'
 alias gdc='git diff --cached'
 alias gpb='git prune-branches-ok'
 alias gco='git checkout'
+alias gcb='git checkout -b'
 alias gcm='git checkout main'
 alias gcms='git checkout master'
+alias gcp='git cherry-pick'
 alias grb='git rebase'
 alias grbm='git rebase main'
 alias grbms='git rebase master'
 alias grbom='git fetch && git rebase origin/main'
 alias grboms='git fetch && git rebase origin/master'
 alias gf='git fetch'
+alias gup='git pull --rebase'
 alias gp='git push'
 alias gpf='git push --force-with-lease'
 alias gpsup='git push --set-upstream origin $(git_current_branch)'
+alias gpt='git push --tags'
+alias gbrn='git branch -m'
+alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
+alias gunwip='git log -n 1 | grep -q -c -- "--wip--" && git reset HEAD~1'
