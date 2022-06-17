@@ -18,6 +18,8 @@ call SourceMy ("plugs.vim")
 call SourceMy ("coq.lua")
 " CHADtree config
 call SourceMy ("chadtree.lua")
+" Trouble config
+call SourceMy ("trouble.lua")
 " set up lsp servers
 call SourceMy ("lsp.lua")
 

@@ -73,6 +73,9 @@ nnoremap <leader>x :ccl <bar> lcl<CR>
 " ,y = copy to clipboard
 xnoremap <leader>y "+y
 
+" when pasting over in visual mode, keep pasted test in register
+xnoremap p pgv"@=v:register.'y'<cr>
+
 " Buffer navigation
 
 "go to xth buffer
