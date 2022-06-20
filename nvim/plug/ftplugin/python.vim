@@ -23,7 +23,7 @@ function! RunPythonTests(path_prefix)
   call RunInRightTerminal('docker compose run --rm --workdir ' . l:workdir . ' web ./manage.py test ' . l:path_without_prefix)
 endfunction
 
-function! PythonSnapshotUpdate()
+function! PythonSnapshotUpdate(path_prefix)
   let l:path_without_prefix = @%[len(a:path_prefix)+1:]
   let l:workdir = '/usr/local/cedar/' . a:path_prefix
   echo 'Updating Snapshots in '
