@@ -12,10 +12,8 @@ Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 " fuzzy finder
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" minimal status bar
-Plug 'itchyny/lightline.vim'
-" adds a line for open buffers at the top (I don't use tabs)
-Plug 'mengelbrecht/lightline-bufferline'
+" statusbar & buffer line
+Plug 'nvim-lualine/lualine.nvim'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'

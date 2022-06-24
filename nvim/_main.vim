@@ -30,6 +30,6 @@ call SourceMy ("autocmds.vim")
 " colorscheme
 call SourceMy ("colors.vim")
 " lightline config
-call SourceMy ("lightline.vim")
+call SourceMy ("lualine.lua")
 " mappings
 call SourceMy ("maps.vim")

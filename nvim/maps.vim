@@ -79,46 +79,20 @@ xnoremap p pgv"@=v:register.'y'<cr>
 " Buffer navigation
 
 "go to xth buffer
-nmap <leader>1 <Plug>lightline#bufferline#go(1)
-nmap <leader>2 <Plug>lightline#bufferline#go(2)
-nmap <leader>3 <Plug>lightline#bufferline#go(3)
-nmap <leader>4 <Plug>lightline#bufferline#go(4)
-nmap <leader>5 <Plug>lightline#bufferline#go(5)
-nmap <leader>6 <Plug>lightline#bufferline#go(6)
-nmap <leader>7 <Plug>lightline#bufferline#go(7)
-nmap <leader>8 <Plug>lightline#bufferline#go(8)
-nmap <leader>9 <Plug>lightline#bufferline#go(9)
-nmap <leader>0 <Plug>lightline#bufferline#go(10)
-
-function! s:get_bufline_len()
-  # this can be slow, but it's the only exposed way to get the number of current buffers in bufferline
-  let l:flat_bufs = reduce(lightline#bufferline#buffers(), { acc, val -> type(val) == 3 ? extend(acc, val) : add(acc, val)})
-  return len(l:flat_bufs)
-endfunction
-
-" This used to just be :bp and :bn, but I didn't like quickfix and dir-list
-" windows showing up when I was trying to tab through windows. Also the order
-" was based on when the window was opened, not the lightline buffer ordinal.
-" This function only opens buffers that have lightline ordinals and uses the
-" current ordinal to determine next/prev, fixing both issues. Now supports
-" wrapping!
-function! GoToRelativeBuffer(delta)
-  let l:buffer_len = s:get_bufline_len()
-  let l:next_buf_ord = lightline#bufferline#get_ordinal_number_for_buffer(bufnr('%'))+a:delta
-  if l:next_buf_ord < 1
-    let l:next_buf_ord = l:buffer_len
-  elseif l:next_buf_ord > l:buffer_len
-    let l:next_buf_ord = 1
-  endif
-
-  echo "going to " . l:next_buf_ord
-
-  call lightline#bufferline#go(l:next_buf_ord)
-endfunction
+nmap <silent> <leader>1 :LualineBuffersJump 1<cr>
+nmap <silent> <leader>2 :LualineBuffersJump 2<cr>
+nmap <silent> <leader>3 :LualineBuffersJump 3<cr>
+nmap <silent> <leader>4 :LualineBuffersJump 4<cr>
+nmap <silent> <leader>5 :LualineBuffersJump 5<cr>
+nmap <silent> <leader>6 :LualineBuffersJump 6<cr>
+nmap <silent> <leader>7 :LualineBuffersJump 7<cr>
+nmap <silent> <leader>8 :LualineBuffersJump 8<cr>
+nmap <silent> <leader>9 :LualineBuffersJump 9<cr>
+nmap <silent> <leader>0 :LualineBuffersJump $<cr>
 
 "go to next/prev buffer
-nnoremap <silent> <Leader>h :call GoToRelativeBuffer(-1)<CR>
-nnoremap <silent> <Leader>l :call GoToRelativeBuffer(1)<CR>
+nnoremap <silent> <Leader>h :bp<cr>
+nnoremap <silent> <Leader>l :bn<cr>
 
 " ,w = close current buffer, switch to another
 nmap <Leader>w :b#<bar>bd#<CR>
