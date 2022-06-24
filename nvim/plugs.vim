@@ -18,6 +18,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 " git integration
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 " show plus/minus indicators in gutter
 Plug 'mhinz/vim-signify'
 " highlight what was just yanked

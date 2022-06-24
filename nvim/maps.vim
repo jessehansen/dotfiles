@@ -90,17 +90,30 @@ nmap <leader>8 <Plug>lightline#bufferline#go(8)
 nmap <leader>9 <Plug>lightline#bufferline#go(9)
 nmap <leader>0 <Plug>lightline#bufferline#go(10)
 
+function! s:get_bufline_len()
+  # this can be slow, but it's the only exposed way to get the number of current buffers in bufferline
+  let l:flat_bufs = reduce(lightline#bufferline#buffers(), { acc, val -> type(val) == 3 ? extend(acc, val) : add(acc, val)})
+  return len(l:flat_bufs)
+endfunction
+
 " This used to just be :bp and :bn, but I didn't like quickfix and dir-list
 " windows showing up when I was trying to tab through windows. Also the order
 " was based on when the window was opened, not the lightline buffer ordinal.
 " This function only opens buffers that have lightline ordinals and uses the
-" current ordinal to determine next/prev, fixing both issues
+" current ordinal to determine next/prev, fixing both issues. Now supports
+" wrapping!
 function! GoToRelativeBuffer(delta)
+  let l:buffer_len = s:get_bufline_len()
   let l:next_buf_ord = lightline#bufferline#get_ordinal_number_for_buffer(bufnr('%'))+a:delta
-  let l:next_buf_nr = lightline#bufferline#get_buffer_for_ordinal_number(l:next_buf_ord)
-  if l:next_buf_nr > 0
-    exec l:next_buf_nr . "b"
+  if l:next_buf_ord < 1
+    let l:next_buf_ord = l:buffer_len
+  elseif l:next_buf_ord > l:buffer_len
+    let l:next_buf_ord = 1
   endif
+
+  echo "going to " . l:next_buf_ord
+
+  call lightline#bufferline#go(l:next_buf_ord)
 endfunction
 
 "go to next/prev buffer
@@ -114,8 +127,20 @@ nmap <Leader>w :b#<bar>bd#<CR>
 nnoremap <leader>a ggVG
 nnoremap <C-a> ggVG
 
+" copies a:value to system clipboard and " register, then echoes that
+function! CopySystem(value)
+  let @+ = a:value
+  echo "Copied '" . a:value . "' to system clipboard"
+endfunction
+
 " ,p = copy current buffer name to system clipboard
-nnoremap <leader>p :let @+ = expand("%")<cr>
+nnoremap <silent> <leader>p :call CopySystem(expand("%"))<cr>
+" ,P = copy github link to current file
+nnoremap <silent> <leader>P :GBrowse!<cr>
+" ,L = copy github link to current line
+nnoremap <silent> <leader>L :'<GBrowse!<cr>
+" same, but for selected range (& keep it selected)
+xnoremap <silent> <leader>L :GBrowse!<cr>gv"@=v:register.'y'
 
 " visual mode indentation should not clear selection
 vmap <Tab> >gv
