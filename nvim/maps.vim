@@ -99,7 +99,6 @@ nmap <Leader>w :b#<bar>bd#<CR>
 
 " ,a = select all
 nnoremap <leader>a ggVG
-nnoremap <C-a> ggVG
 
 " copies a:value to system clipboard and " register, then echoes that
 function! CopySystem(value)
