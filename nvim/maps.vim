@@ -112,7 +112,7 @@ nnoremap <silent> <leader>p :call CopySystem(expand("%"))<cr>
 " ,P = copy github link to current file
 nnoremap <silent> <leader>P :GBrowse!<cr>
 " ,L = copy github link to current line
-nnoremap <silent> <leader>L :'<GBrowse!<cr>
+nnoremap <silent> <leader>L :.GBrowse!<cr>
 " same, but for selected range (& keep it selected)
 xnoremap <silent> <leader>L :GBrowse!<cr>gv"@=v:register.'y'
 
