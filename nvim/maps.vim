@@ -49,9 +49,9 @@ nnoremap <leader>< :cp<CR>
 nnoremap <leader>, :cp<CR>
 
 " show dir tree
-nnoremap <leader>d :CHADopen<CR>
-" hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
-nnoremap <leader>e :lua CHAD.Toggle_follow(false);CHAD.Open({'--always-focus'});CHAD.Toggle_follow(false)<CR>
+nnoremap <leader>d :CHADopen<CR> " hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
+" jump to current file in tree
+nmap <leader>e :lua CHAD.Open({'--always-focus'});CHAD.Jump_to_current(true)<CR>
 
 " edit _main.vim (or vertically split with _main.vim)
 nnoremap <leader>rc :execute "e " . g:dotfiles_nvim . "_main.vim"<CR>
