@@ -72,6 +72,9 @@ nnoremap <leader>x :ccl <bar> lcl<CR>
 
 " ,y = copy to clipboard
 xnoremap <leader>y "+y
+" <c-y> = copy to clipboard
+xnoremap <C-y> "+y
+nnoremap <C-y> "+yy
 
 " when pasting over in visual mode, keep pasted test in register
 xnoremap p pgv"@=v:register.'y'<cr>
