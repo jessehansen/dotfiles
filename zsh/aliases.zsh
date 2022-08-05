@@ -33,6 +33,8 @@ alias ~='cd ~'
 
 alias path='echo -e ${PATH//:/\\n}'
 
+alias utc='date -u -I seconds'
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
   alias ss='/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &'
