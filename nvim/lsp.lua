@@ -1,7 +1,7 @@
 local lsp = require "lspconfig"
 local coq = require "coq"
 
-local opts = { noremap=true, silent=true }
+local opts = { noremap = true, silent = true }
 
 local function set_common(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -11,7 +11,8 @@ local function set_common(client, bufnr)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl',
+    '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -33,7 +34,7 @@ end
 
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
-  vim.cmd[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+  vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
 end
 
 if (vim.g.jesse_lang_go) then
@@ -60,7 +61,7 @@ if (vim.g.jesse_lang_js) then
     on_attach = function(client, bufnr)
       set_common(client, bufnr)
       -- use eslint to autoformat javascript instead of lsp.buf.formatting
-      vim.cmd[[autocmd BufWritePre <buffer> EslintFixAll]]
+      vim.cmd [[autocmd BufWritePre <buffer> EslintFixAll]]
     end,
     flags = {
       debounce_text_changes = 150
@@ -68,6 +69,18 @@ if (vim.g.jesse_lang_js) then
   }))
   lsp.tsserver.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common,
+    flags = {
+      debounce_text_changes = 150
+    }
+  }))
+  lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common,
+    flags = {
+      debounce_text_changes = 150
+    }
+  }))
+  lsp.prismals.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
@@ -100,7 +113,7 @@ if (vim.g.jesse_lang_lua) then
           path = runtime_path,
         },
         diagnostics = {
-          globals = {'vim'},
+          globals = { 'vim' },
         },
         workspace = {
           library = vim.api.nvim_get_runtime_file("", true),

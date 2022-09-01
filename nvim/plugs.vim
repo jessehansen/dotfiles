@@ -65,6 +65,7 @@ if g:jesse_lang_js
   Plug 'ianks/vim-tsx'
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'jparise/vim-graphql'
+  Plug 'pantharshit00/vim-prisma'
 endif
 
 

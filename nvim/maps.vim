@@ -12,7 +12,6 @@ map <C-l> <C-w>l
 " window sizing
 map <C-w>. <C-w>>
 map <C-w>, <C-w><
-
 " FZF Mappings
 
 " find a file
@@ -49,9 +48,9 @@ nnoremap <leader>< :cp<CR>
 nnoremap <leader>, :cp<CR>
 
 " show dir tree
-nnoremap <leader>d :CHADopen<CR> " hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
-" jump to current file in tree
-nmap <leader>e :lua CHAD.Open({'--always-focus'});CHAD.Jump_to_current(true)<CR>
+nnoremap <leader>d :CHADopen<CR>
+" hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
+ nnoremap <leader>e :lua CHAD.Toggle_follow(false);CHAD.Open({'--always-focus'});CHAD.Toggle_follow(false)<CR>
 
 " edit _main.vim (or vertically split with _main.vim)
 nnoremap <leader>rc :execute "e " . g:dotfiles_nvim . "_main.vim"<CR>
@@ -131,3 +130,11 @@ inoremap <C-s> <ESC>:w<CR>a
 
 " Esc exits
 tnoremap <Esc> <C-\><C-n>
+
+" Trouble mappings
+" nnoremap <leader>xx <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
