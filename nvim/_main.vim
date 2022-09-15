@@ -14,6 +14,9 @@ call SourceMy ("langs.vim")
 " load plugins
 call SourceMy ("plugs.vim")
 
+" colorscheme
+call SourceMy ("colors.lua")
+
 " coq config
 call SourceMy ("coq.lua")
 " CHADtree config
@@ -30,8 +33,6 @@ call SourceMy ("treesitter.lua")
 call SourceMy ("vars.vim")
 " autocommands
 call SourceMy ("autocmds.vim")
-" colorscheme
-call SourceMy ("colors.lua")
 " lightline config
 call SourceMy ("lualine.lua")
 " mappings

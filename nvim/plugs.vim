@@ -24,7 +24,7 @@ Plug 'machakann/vim-highlightedyank'
 " use .editorconfig files
 Plug 'editorconfig/editorconfig-vim'
 " my preferred color scheme
-Plug 'tanvirtin/monokai.nvim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 " close multiple buffers - I use Bwipeout to remove hidden buffers
 Plug 'Asheq/close-buffers.vim'
 " comment/uncomment lines & regions
