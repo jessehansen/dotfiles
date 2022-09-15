@@ -37,7 +37,14 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 
 " lsp support
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jayp0521/mason-null-ls.nvim'
 Plug 'neovim/nvim-lspconfig'
+
+" treesitter
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " autocomplete
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
@@ -66,6 +73,7 @@ if g:jesse_lang_js
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'jparise/vim-graphql'
   Plug 'pantharshit00/vim-prisma'
+  Plug 'nvim-lua/plenary.nvim'
 endif
 
 

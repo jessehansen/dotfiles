@@ -1,6 +1,17 @@
 local lsp = require "lspconfig"
 local coq = require "coq"
 
+require("mason").setup()
+require("mason-lspconfig").setup({
+  automatic_installation = true,
+})
+require("mason-null-ls").setup({
+  ensure_installed = { "prettierd" },
+  automatic_installation = true,
+  auto_update = true,
+})
+require("mason-null-ls").check_install(true)
+
 local opts = { noremap = true, silent = true }
 
 local function set_common(client, bufnr)
@@ -57,24 +68,14 @@ if (vim.g.jesse_lang_rust) then
 end
 
 if (vim.g.jesse_lang_js) then
-  lsp.eslint.setup(coq.lsp_ensure_capabilities({
-    on_attach = function(client, bufnr)
-      set_common(client, bufnr)
-      -- use eslint to autoformat javascript instead of lsp.buf.formatting
-      vim.cmd [[autocmd BufWritePre <buffer> EslintFixAll]]
-    end,
-    flags = {
-      debounce_text_changes = 150
-    }
-  }))
   lsp.tsserver.setup(coq.lsp_ensure_capabilities({
-    on_attach = set_common,
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
   }))
   lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
-    on_attach = set_common,
+    on_attach = set_common_and_autoformat,
     flags = {
       debounce_text_changes = 150
     }
@@ -85,6 +86,15 @@ if (vim.g.jesse_lang_js) then
       debounce_text_changes = 150
     }
   }))
+  require("null-ls").setup({
+    sources = {
+      require("null-ls").builtins.formatting.eslint_d,
+      require("null-ls").builtins.formatting.prettierd,
+    },
+    options = {
+      on_attach = set_common_and_autoformat,
+    }
+  })
 end
 
 if (vim.g.jesse_lang_python) then
