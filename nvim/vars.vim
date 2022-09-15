@@ -6,8 +6,6 @@ set termguicolors
 " better update time for async
 set updatetime=600
 
-syntax enable
-
 " NERDCommenter defaults
 let g:NERDSpaceDelims = 1
 
@@ -21,7 +19,7 @@ set hidden
 set novisualbell
 " always show line numbers
 set nu
-" Duplicated in lightline
+" lualine covers this
 set noshowmode
 " live substitution
 set inccommand=nosplit
@@ -34,10 +32,6 @@ endif
 
 " disable background color erase (helps kitty and tmux)
 let &t_ut=''
-
-" let g:chadtree_settings = { "theme.text_colour_set": "nerdtree_syntax_dark"}
-let g:NERDTreeDirArrowExpandable = ' '
-let g:NERDTreeDirArrowCollapsible = ' '
 
 " use ripgrep for fzf and Ack if avialable
 if executable('rg')

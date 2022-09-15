@@ -23,12 +23,15 @@ call SourceMy ("trouble.lua")
 " set up lsp servers
 call SourceMy ("lsp.lua")
 
+" treesitter config
+call SourceMy ("treesitter.lua")
+
 " variables
 call SourceMy ("vars.vim")
 " autocommands
 call SourceMy ("autocmds.vim")
 " colorscheme
-call SourceMy ("colors.vim")
+call SourceMy ("colors.lua")
 " lightline config
 call SourceMy ("lualine.lua")
 " mappings

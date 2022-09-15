@@ -82,14 +82,14 @@ xnoremap p pgv"@=v:register.'y'<cr>
 
 "go to xth buffer
 nmap <silent> <leader>1 :LualineBuffersJump 1<cr>
-nmap <silent> <leader>2 :LualineBuffersJump 2<cr>
-nmap <silent> <leader>3 :LualineBuffersJump 3<cr>
-nmap <silent> <leader>4 :LualineBuffersJump 4<cr>
-nmap <silent> <leader>5 :LualineBuffersJump 5<cr>
-nmap <silent> <leader>6 :LualineBuffersJump 6<cr>
-nmap <silent> <leader>7 :LualineBuffersJump 7<cr>
-nmap <silent> <leader>8 :LualineBuffersJump 8<cr>
-nmap <silent> <leader>9 :LualineBuffersJump 9<cr>
+nmap <silent> <leader>2 :LualineBuffersJump! 2<cr>
+nmap <silent> <leader>3 :LualineBuffersJump! 3<cr>
+nmap <silent> <leader>4 :LualineBuffersJump! 4<cr>
+nmap <silent> <leader>5 :LualineBuffersJump! 5<cr>
+nmap <silent> <leader>6 :LualineBuffersJump! 6<cr>
+nmap <silent> <leader>7 :LualineBuffersJump! 7<cr>
+nmap <silent> <leader>8 :LualineBuffersJump! 8<cr>
+nmap <silent> <leader>9 :LualineBuffersJump! 9<cr>
 nmap <silent> <leader>0 :LualineBuffersJump $<cr>
 
 "go to next/prev buffer
