@@ -10,7 +10,6 @@ require("mason-null-ls").setup({
   automatic_installation = true,
   auto_update = true,
 })
-require("mason-null-ls").check_install(true)
 
 local opts = { noremap = true, silent = true }
 
@@ -20,10 +19,9 @@ local function set_common(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl',
-    '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -68,8 +66,23 @@ if (vim.g.jesse_lang_rust) then
 end
 
 if (vim.g.jesse_lang_js) then
+  local function organize_imports()
+    local params = {
+      command = "_typescript.organizeImports",
+      arguments = { vim.api.nvim_buf_get_name(0) },
+      title = ""
+    }
+    vim.lsp.buf.execute_command(params)
+  end
+
   lsp.tsserver.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
+    commands = {
+      OrganizeImports = {
+        organize_imports,
+        description = "Organize Imports"
+      }
+    },
     flags = {
       debounce_text_changes = 150
     }
