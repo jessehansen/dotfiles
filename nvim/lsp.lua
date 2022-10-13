@@ -11,6 +11,10 @@ require("mason-null-ls").setup({
   auto_update = true,
 })
 
+require('dd').setup({
+  -- timeout = 1000
+})
+
 local opts = { noremap = true, silent = true }
 
 local function set_common(client, bufnr)
@@ -27,7 +31,7 @@ local function set_common(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.cmd [[
       hi! LspReferenceRead ctermbg=DarkGray
       hi! LspReferenceText ctermbg=DarkGray
@@ -43,7 +47,11 @@ end
 
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
-  vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+  vim.cmd [[
+  augroup lsp_autoformat
+    autocmd! BufWritePre <buffer> lua vim.lsp.buf.format()
+  augroup END
+  ]]
 end
 
 if (vim.g.jesse_lang_go) then

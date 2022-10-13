@@ -57,6 +57,9 @@ Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 " linting error list
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
+" trouble diagnostics update too frequently, this plugin allows a timeout for
+" updating
+Plug 'https://gitlab.com/yorickpeterse/nvim-dd.git'
 
 " language-specific plugins
 
