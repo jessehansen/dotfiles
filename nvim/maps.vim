@@ -1,6 +1,7 @@
 " contains custom mappings
 " additional mappings present in plug/ftplugin for specific file types
 
+
 let mapleader=","
 
 " window navigation
@@ -12,34 +13,44 @@ map <C-l> <C-w>l
 " window sizing
 map <C-w>. <C-w>>
 map <C-w>, <C-w><
-" FZF Mappings
+" Telescope Mappings
 
 " find a file
-map <C-p> :Files<CR>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+map <C-p> :Telescope find_files<CR>
 " find a command
-map <M-p> :Commands<CR>
+map <M-p> :Telescope commands<CR>
 " find a changed file
-map <C-s> :GFiles?<CR>
+map <C-s> :Telescope git_status<CR>
 " find a git-tracked file
-map <M-s> :GFiles<CR>
+map <M-s> :Telescope git_files<CR>
 " find a recently opened file
-map <C-e> :History<CR>
+map <C-e> :Telescope oldfiles<CR>
 " find a mapping
-nnoremap <leader>m :Maps<CR>
+nnoremap <leader>m :Telescope keymaps<CR>
+" Mapping selecting mappings
+nmap <leader><tab> :lua require("telescope.builtin").keymaps{modes={"n"}}<CR>
+xmap <leader><tab> :lua require("telescope.builtin").keymaps{modes={"x"}}<CR>
+
 " find in current dir
-map <M-f> :Rg
+map <M-f> :Telescope live_grep
 " Find word under cursor
-noremap <leader>g :Rg<space><C-r><C-w><CR>
+noremap <leader>g :Telescope grep_string<space>search=<C-r><C-w><CR>
+
 " (Visual mode) find selection - replaces whitespace with '\s+'
 xnoremap <leader>g :<C-U>
   \<CR>
-  \gv"zy:Rg <C-R><C-R>=substitute(
+  \gv"zy:Telescope grep_string use_regex=true search=<C-R><C-R>=substitute(
   \escape(@z, '\.*$^~['), '\_s\+', '\\s+', 'g')<CR><CR>
 
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
+" fix my :Rg muscle memory
+cabbrev Rg Telescope grep_string
+
+" End Telescope Mappings
 
 "quickfix navigation
 nnoremap <leader>> :cn<CR>
@@ -52,10 +63,6 @@ nnoremap <leader>d :CHADopen<CR>
 " hack to replicate NERDTreeFind - turn follow on, then open & focus, then turn it back off
  nnoremap <leader>e :lua CHAD.Toggle_follow(false);CHAD.Open({'--always-focus'});CHAD.Toggle_follow(false)<CR>
 
-" edit _main.vim (or vertically split with _main.vim)
-nnoremap <leader>rc :execute "e " . g:dotfiles_nvim . "_main.vim"<CR>
-nnoremap <leader>vr :execute "vsp " . g:dotfiles_nvim . "_main.vim"<CR>
-
 " %% in command mode inserts dir of current file
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
@@ -67,7 +74,7 @@ map <leader>/ :noh<CR>
 map <leader>q :Bwipeout hidden<CR>
 
 " close location list and quick fix windows
-nnoremap <leader>x :ccl <bar> lcl<CR>
+nnoremap <leader>x :ccl <bar> lcl <bar> TroubleClose<CR>
 
 " ,y = copy to clipboard
 xnoremap <leader>y "+y

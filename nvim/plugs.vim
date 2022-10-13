@@ -7,11 +7,16 @@ endif
 " vim-plug
 call plug#begin(stdpath('data') . './plugged')
 
+" required for lots of plugins
+Plug 'nvim-lua/plenary.nvim'
+
 " dir tree support
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+
 " fuzzy finder
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+
 " statusbar & buffer line
 Plug 'nvim-lualine/lualine.nvim'
 " git integration
@@ -73,7 +78,6 @@ if g:jesse_lang_js
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'jparise/vim-graphql'
   Plug 'pantharshit00/vim-prisma'
-  Plug 'nvim-lua/plenary.nvim'
 endif
 
 

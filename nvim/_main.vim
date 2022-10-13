@@ -17,6 +17,8 @@ call SourceMy ("plugs.vim")
 " colorscheme
 call SourceMy ("colors.lua")
 
+" telescope config
+call SourceMy ("telescope.lua")
 " coq config
 call SourceMy ("coq.lua")
 " CHADtree config
