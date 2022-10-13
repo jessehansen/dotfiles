@@ -33,7 +33,8 @@ Plug 'ellisonleao/gruvbox.nvim'
 " close multiple buffers - I use Bwipeout to remove hidden buffers
 Plug 'Asheq/close-buffers.vim'
 " comment/uncomment lines & regions
-Plug 'scrooloose/nerdcommenter'
+Plug 'numToStr/Comment.nvim'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " split/join lines semantically
 Plug 'AndrewRadev/splitjoin.vim'
 " surround with brackets, quotes, etc.

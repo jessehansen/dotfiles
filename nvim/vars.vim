@@ -6,9 +6,6 @@ set termguicolors
 " better update time for async
 set updatetime=600
 
-" NERDCommenter defaults
-let g:NERDSpaceDelims = 1
-
 " show hidden chars
 set list
 set ts=4 sts=4 sw=4 noexpandtab

@@ -19,6 +19,8 @@ call SourceMy ("colors.lua")
 
 " telescope config
 call SourceMy ("telescope.lua")
+" commenter config
+call SourceMy ("comment.lua")
 " coq config
 call SourceMy ("coq.lua")
 " CHADtree config
