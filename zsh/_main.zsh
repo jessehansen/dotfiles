@@ -2,6 +2,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+
 load_zinit() {
   if [[ -e "${HOME}/.zinit/bin/zinit.zsh" ]]; then
     source "${HOME}/.zinit/bin/zinit.zsh"
@@ -55,6 +56,21 @@ load_zinit() {
   fi
 }
 
+load_zinit_warp() {
+  if [[ -e "${HOME}/.zinit/bin/zinit.zsh" ]]; then
+    source "${HOME}/.zinit/bin/zinit.zsh"
+  else
+    echo "Install zinit"
+    echo "$ mkdir ~/.zinit"
+    echo "$ git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin"
+    return
+  fi
+
+  zinit wait lucid for \
+    OMZL::history.zsh \
+    OMZP::nvm
+}
+
 
 load_all() {
   source "$DOTFILES/zsh/plugin_config.zsh"
@@ -62,7 +78,11 @@ load_all() {
   source "$DOTFILES/zsh/setopt.zsh"
   source "$DOTFILES/zsh/exports.zsh"
   source "$DOTFILES/zsh/aliases.zsh"
-  source "$DOTFILES/zsh/bindkeys.zsh"
+
+  if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
+    source "$DOTFILES/zsh/bindkeys.zsh"
+  fi
+
   source "$DOTFILES/zsh/functions.zsh"
 
   [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
@@ -84,6 +104,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
   load_zinit
   unset -f load_zinit
+  unset -f load_zinit_warp
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if (( ! $+commands[brew] )); then
     echo "Install brew"
@@ -102,8 +123,15 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Loading zinit must be last, because zsh-syntax-highlighting
     # needs to be loaded after all aliases, plugins, etc
-    load_zinit
-    unset -f load_zinit
+    if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
+      load_zinit
+      unset -f load_zinit
+      unset -f load_zinit_warp
+    else
+      load_zinit_warp
+      unset -f load_zinit
+      unset -f load_zinit_warp
+    fi
   fi
 fi
 if (( ! $+commands[fzf] )); then
@@ -125,7 +153,9 @@ if (( ! $+commands[delta] )); then
   [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install git-delta"
 fi
 
-source "$DOTFILES/zsh/p10k.zsh"
+if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
+  source "$DOTFILES/zsh/p10k.zsh"
+fi
 
 # some aliases need to be set again because they are overridden by zsh
 # plugins. Always prefer our aliases
