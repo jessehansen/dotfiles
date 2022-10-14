@@ -53,4 +53,29 @@ require 'nvim-treesitter.configs'.setup {
       node_decremental = "grm",
     },
   },
+
+  textobjects = {
+    select = {
+      enable = true,
+
+      lookahead = true,
+
+      keymaps = {
+        ["af"] = { query = "@function.outer", desc = "Select entire function declaration" },
+        ["if"] = { query = "@function.inner", desc = "Select function body" },
+        ["ac"] = { query = "@class.outer", desc = "Select class declaration" },
+        ["ic"] = { query = "@class.inner", desc = "Select class body" },
+        ["ap"] = { query = "@parameter.outer", desc = "Select parameter" },
+        ["ip"] = { query = "@parameter.inner", desc = "Select parameter inner" },
+      },
+
+      selection_modes = {
+        ['@parameter.outer'] = 'v', -- charwise
+        ['@function.outer'] = 'V', -- linewise
+        ['@class.outer'] = '<c-v>', -- blockwise
+      },
+
+      include_surrounding_whitespace = false,
+    },
+  },
 }
