@@ -11,10 +11,6 @@ require("mason-null-ls").setup({
   auto_update = true,
 })
 
-require('dd').setup({
-  -- timeout = 1000
-})
-
 local opts = { noremap = true, silent = true }
 
 local function set_common(client, bufnr)

@@ -47,3 +47,12 @@ require('lualine').setup {
   },
   extensions = { 'chadtree', 'fzf', 'fugitive', 'quickfix' }
 }
+
+for i=1, 9 do
+  vim.api.nvim_set_keymap("n", "<leader>"..i, "<cmd>LualineBuffersJump! " .. i .."<cr>",
+    { desc="Jump to buffer "..i, silent=true }
+  )
+end
+vim.api.nvim_set_keymap("n", "<leader>0", "<cmd>LualineBuffersJump $<cr>",
+  { desc="Jump to last buffer ", silent=true }
+)

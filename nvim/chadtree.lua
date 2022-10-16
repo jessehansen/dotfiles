@@ -17,3 +17,10 @@ vim.g.chadtree_settings = {
 		change_focus_up = {},
 	}
 }
+
+vim.keymap.set('n', '<leader>d', ':CHADopen<CR>', {desc="Toggle open directory tree"})
+vim.keymap.set('n', '<leader>e', function()
+  CHAD.Toggle_follow(false)
+  CHAD.Open({'--always-focus'})
+  CHAD.Toggle_follow(false)
+end, {desc="Find current buffer in directory tree"})

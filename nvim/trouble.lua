@@ -4,21 +4,13 @@ require("trouble").setup {
 }
 
 -- key bindings
-vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>",
-  { silent = true, noremap = true }
+vim.keymap.set("n", "<leader>t", "<cmd>TroubleToggle<cr>",
+  { desc="Toggle Trouble Diagnostics Window", silent=true, noremap=true }
 )
-vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble workspace_diagnostics<cr>",
-  { silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble document_diagnostics<cr>",
-  { silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>",
-  { silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<cr>",
-  { silent = true, noremap = true }
-)
-vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>",
-  { silent = true, noremap = true }
+vim.keymap.set("n", "<leader>x", function()
+    vim.cmd('ccl')
+    vim.cmd('lcl')
+    vim.cmd('TroubleClose')
+  end,
+  { desc="Close quickfix, location, and trouble windows" }
 )

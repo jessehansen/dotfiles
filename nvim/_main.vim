@@ -11,33 +11,17 @@ endfunction
 " - should set g:jesse_lang_xxxx = true
 call SourceMy ("langs.vim")
 
-" load plugins
-call SourceMy ("plugs.vim")
-
-" colorscheme
-call SourceMy ("colors.lua")
-
-" telescope config
-call SourceMy ("telescope.lua")
-" commenter config
-call SourceMy ("comment.lua")
-" coq config
-call SourceMy ("coq.lua")
-" CHADtree config
-call SourceMy ("chadtree.lua")
-" Trouble config
-call SourceMy ("trouble.lua")
-" set up lsp servers
-call SourceMy ("lsp.lua")
-
-" treesitter config
-call SourceMy ("treesitter.lua")
-
 " variables
 call SourceMy ("vars.vim")
+
 " autocommands
 call SourceMy ("autocmds.vim")
-" lightline config
-call SourceMy ("lualine.lua")
-" mappings
+
+" global mappings - plugin mappings should be done in specific files
 call SourceMy ("maps.vim")
+
+" load plugins - also loads plugin configs
+call SourceMy ("plugs.lua")
+
+" set up lsp
+call SourceMy ("lsp.lua")
