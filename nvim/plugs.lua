@@ -105,6 +105,11 @@ return require('packer').startup(function(use)
     'neovim/nvim-lspconfig',
   }
 
+  require('packer').use({
+    'weilbith/nvim-code-action-menu',
+    cmd = 'CodeActionMenu',
+  })
+
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',

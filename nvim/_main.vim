@@ -25,3 +25,5 @@ call SourceMy ("plugs.lua")
 
 " set up lsp
 call SourceMy ("lsp.lua")
+
+call SourceMy ("commands.lua")

@@ -46,10 +46,10 @@ vim.keymap.set("n", "<Leader>w", ":b#<bar>bd#<CR>",
 vim.keymap.set("n", "<leader>a", "ggVG", { noremap = true, desc = "Select all in current buffer" })
 vim.keymap.set("n", "zz", "G", { noremap = true, desc = "Go to end of current buffer" })
 
-vim.keymap.set("n", "<silent>", function()
+vim.keymap.set("n", "<leader>p", function()
   local value = vim.fn.expand("%")
   vim.fn.setreg("+", value)
-  vim.cmd.echo("Copied '" .. value .. "' to system clipboard")
+  vim.cmd('echo "Copied \\"' .. value .. '\\" to system clipboard"')
 end, { desc = "Copy current file name to system clipboard" })
 
 -- visual mode indentation should not clear selection
@@ -66,3 +66,7 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit termi
 
 vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, { desc = "Go to previous error" })
 vim.keymap.set('n', ']e', vim.diagnostic.goto_next, { desc = "Go to next error" })
+
+vim.keymap.set("", "<space>ca", "<cmd>CodeActionMenu<CR>", { silent = true, desc = "Execute Code Action" })
+vim.keymap.set("", "<M-a>", "<cmd>CodeActionMenu<CR>",
+  { silent = true, noremap = true, desc = "Execute Code Action" })
