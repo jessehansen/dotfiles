@@ -41,6 +41,8 @@ vim.keymap.set('n', '<leader><tab>', function() builtin.keymaps { modes = { "n" 
   { desc = "Find current mode mappings" })
 vim.keymap.set('x', '<leader><tab>', function() builtin.keymaps { modes = { "x" } } end,
   { desc = "Find current mode mappings" })
+vim.keymap.set('c', '<C-/>', function() builtin.keymaps { modes = { "c" } } end,
+  { desc = "Find current mode mappings" })
 
 vim.keymap.set('n', '<leader>g', function()
   local word = vim.fn.expand('<cword>')

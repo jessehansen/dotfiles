@@ -18,7 +18,7 @@ call SourceMy ("vars.vim")
 call SourceMy ("autocmds.vim")
 
 " global mappings - plugin mappings should be done in specific files
-call SourceMy ("maps.vim")
+call SourceMy ("maps.lua")
 
 " load plugins - also loads plugin configs
 call SourceMy ("plugs.lua")
