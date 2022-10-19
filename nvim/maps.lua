@@ -37,8 +37,8 @@ vim.keymap.set("x", "p", [[pgv"@=v:register.'y'<cr>]],
   { silent = true, noremap = true, desc = "Paste without stomping register" })
 
 -- buffer mappings
-vim.keymap.set("n", "<silent>", "<Leader>h :bp<cr>", { silent = true, noremap = true, desc = "Next Buffer" })
-vim.keymap.set("n", "<silent>", "<Leader>l :bn<cr>", { silent = true, noremap = true, desc = "Previous Buffer" })
+vim.keymap.set("n", "<Leader>h", ":bp<cr>", { silent = true, noremap = true, desc = "Next Buffer" })
+vim.keymap.set("n", "<Leader>l", ":bn<cr>", { silent = true, noremap = true, desc = "Previous Buffer" })
 
 vim.keymap.set("n", "<Leader>w", ":b#<bar>bd#<CR>",
   { silent = true, noremap = true, desc = "Close current buffer and switch to another" })
@@ -59,7 +59,7 @@ vim.keymap.set("v", ">", ">gv", { silent = true, noremap = true, desc = "Increas
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true, desc = "Decrease indent" })
 
 -- ctrl-s saves in insert mode
-vim.keymap.set("i", "<C-s>", "<ESC>:w<CR>a", { noremap = true, desc = "Save current buffer" })
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>a", { noremap = true, desc = "Save current buffer" })
 
 -- terminal mode mappings
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit terminal" })

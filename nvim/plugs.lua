@@ -19,7 +19,7 @@ return require('packer').startup(function(use)
     'ms-jpq/chadtree',
     branch = 'chad',
     run = 'python3 -m chadtree deps',
-    config = function() vim.fn.SourceMy('chadtree.lua') end,
+    config = function() vim.cmd [[SourceMy chadtree.lua]] end,
   }
 
   -- fuzzy finder
@@ -31,14 +31,14 @@ return require('packer').startup(function(use)
     'nvim-telescope/telescope.nvim', branch = '0.1.x',
     requires = { 'nvim-lua/plenary.nvim' },
     after = 'telescope-fzf-native.nvim',
-    config = function() vim.fn.SourceMy('telescope.lua') end,
+    config = function() vim.cmd [[SourceMy telescope.lua]] end,
   }
 
   -- status line/tab bar
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() vim.fn.SourceMy('lualine.lua') end,
+    config = function() vim.cmd [[SourceMy lualine.lua]] end,
   }
 
   -- git integration
@@ -62,7 +62,7 @@ return require('packer').startup(function(use)
   -- theme
   use {
     'ellisonleao/gruvbox.nvim',
-    config = function() vim.fn.SourceMy('colors.lua') end,
+    config = function() vim.cmd [[SourceMy colors.lua]] end,
   }
 
   -- close multiple buffers
@@ -77,7 +77,7 @@ return require('packer').startup(function(use)
   use {
     'numToStr/Comment.nvim',
     requires = { 'JoosepAlviste/nvim-ts-context-commentstring' },
-    config = function() vim.fn.SourceMy('comment.lua') end
+    config = function() vim.cmd [[SourceMy comment.lua]] end
   }
 
   -- Split/Join lines with gS, gJ
@@ -94,7 +94,7 @@ return require('packer').startup(function(use)
 
   -- lsp configs
   --  coq must be configured before plugin loads
-  vim.fn.SourceMy('coq.lua')
+  vim.cmd [[SourceMy coq.lua]]
   use { 'ms-jpq/coq_nvim', branch = 'coq' }
   use { 'ms-jpq/coq.artifacts', branch = 'artifacts', after = 'coq_nvim' }
   use {
@@ -118,7 +118,7 @@ return require('packer').startup(function(use)
   use {
     'nvim-treesitter/nvim-treesitter-textobjects',
     after = 'nvim-treesitter',
-    config = function() vim.fn.SourceMy('treesitter.lua') end,
+    config = function() vim.cmd [[SourceMy treesitter.lua]] end,
   }
 
   -- disable diagnostics during insert mode
@@ -130,7 +130,7 @@ return require('packer').startup(function(use)
   use {
     'folke/trouble.nvim',
     requires = { 'kyazdani42/nvim-web-devicons' },
-    config = function() vim.fn.SourceMy('trouble.lua') end
+    config = function() vim.cmd [[SourceMy trouble.lua]] end
   }
 
   if (vim.g.jesse_lang_go) then
@@ -155,7 +155,7 @@ return require('packer').startup(function(use)
     use 'pantharshit00/vim-prisma'
   end
 
-  vim.fn.SourceMy('plugs.local.lua')
+  vim.cmd [[SourceMy plugs.local.lua]]
 
   use { vim.g.dotfiles_nvim .. "/plug" }
 

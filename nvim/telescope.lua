@@ -4,6 +4,7 @@ require('telescope').setup {
       i = {
         ["<C-j>"] = "move_selection_next",
         ["<C-k>"] = "move_selection_previous",
+        ["<Esc>"] = "close", -- this disables n-mode - I don't find myself needing it very often, and <C-/><C-n> works for those cases
       }
     },
   },
@@ -27,11 +28,11 @@ local builtin = require('telescope.builtin')
 vim.keymap.set('n', 'ff', builtin.find_files, { desc = "Find file" })
 vim.keymap.set('n', 'fg', builtin.live_grep, { desc = "Find string" })
 vim.keymap.set('n', 'fb', builtin.buffers, { desc = "Find buffer" })
-vim.keymap.set('n', 'fh', builtin.help_tags, { desc = "Find help" })
+vim.keymap.set('n', 'fh', builtin.help_tags, { desc = "Find help tags" })
 
 vim.keymap.set('', '<C-p>', builtin.find_files, { desc = "Find file" })
 vim.keymap.set('', '<M-p>', builtin.commands, { desc = "Command Palette" })
-vim.keymap.set('', '<C-s>', builtin.git_status, { desc = "Find Edited File (using `git status`" })
+vim.keymap.set('', '<C-s>', builtin.git_status, { desc = "Find Edited File (using `git status`)" })
 vim.keymap.set('', '<M-s>', builtin.git_files, { desc = "Find git-tracked file" })
 vim.keymap.set('', '<C-e>', builtin.oldfiles, { desc = "Find recently used file" })
 vim.keymap.set('', '<M-f>', builtin.live_grep, { desc = "Find string" })
@@ -70,5 +71,6 @@ vim.keymap.set('x', '<leader>g', function()
   }
 end, { desc = "Search for selected string" })
 
--- fix my :Rg muscle memory
-vim.cmd [[cabbrev Rg Telescope grep_string search=]]
+vim.api.nvim_create_user_command("Rg", function(opts)
+  builtin.grep_string { search = opts.args, use_regex = not opts.bang }
+end, { nargs = "+", bang = true, desc = "Find in files - use :Rg! to disable regex" })
