@@ -9,7 +9,27 @@ end
 
 vim.api.nvim_create_user_command("SourceMy", function(opts)
   SourceMy(opts.args)
-end, { nargs = 1, desc = "Source from my nvim dotfiles" })
+end, {
+  nargs = 1,
+  desc = "Source from my nvim dotfiles",
+  complete = function(arg_lead)
+    local lead_len = string.len(arg_lead)
+    local lead_lower = string.lower(arg_lead)
+    local files = {}
+    local all_files = {}
+
+    for item in vim.fs.dir(vim.g.dotfiles_nvim) do
+      if lead_len == 0 or string.lower(string.sub(item, 1, lead_len)) == lead_lower then
+        table.insert(files, item)
+      end
+      table.insert(all_files, item)
+    end
+    if next(files) ~= nil then
+      return files
+    end
+    return all_files
+  end
+})
 
 -- detect which langugages should be supported
 -- - should set vim.g.jesse_lang_xxxx = true
