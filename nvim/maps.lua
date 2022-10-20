@@ -35,6 +35,7 @@ vim.keymap.set("x", "<C-y>", '"+y', { silent = true, noremap = true, desc = "Cop
 vim.keymap.set("n", "<C-y>", '"+yy', { silent = true, noremap = true, desc = "Copy current line to system keyboard" })
 vim.keymap.set("x", "p", [[pgv"@=v:register.'y'<cr>]],
   { silent = true, noremap = true, desc = "Paste without stomping register" })
+vim.keymap.set("v", "y", "ygv", { silent = true, noremap = true, desc = "Yank without losing selection" })
 
 -- buffer mappings
 vim.keymap.set("n", "<Leader>h", ":bp<cr>", { silent = true, noremap = true, desc = "Next Buffer" })
@@ -57,6 +58,8 @@ vim.keymap.set("v", "<Tab>", ">gv", { silent = true, desc = "Increase indent" })
 vim.keymap.set("v", "<S-Tab>", "<gv", { silent = true, desc = "Decrease indent" })
 vim.keymap.set("v", ">", ">gv", { silent = true, noremap = true, desc = "Increase indent" })
 vim.keymap.set("v", "<", "<gv", { silent = true, noremap = true, desc = "Decrease indent" })
+
+-- yanking in visual mode should not clear selection
 
 -- ctrl-s saves in insert mode
 vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>a", { noremap = true, desc = "Save current buffer" })

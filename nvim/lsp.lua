@@ -14,31 +14,27 @@ require("mason-null-ls").setup({
 local opts = { noremap = true, silent = true }
 
 local function set_common(client, bufnr)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<c-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
+    { buffer = bufnr, desc = "Go to declaration of symbol under cursor" })
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition of symbol under cursor" })
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr, desc = "Show documentation for symbol under cursor" })
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation,
+    { buffer = bufnr, desc = "Go to implementation of symbol under cursor" })
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
+    { buffer = bufnr, desc = "Go to type definition of symbol under cursor" })
+  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol under cursor" })
   -- replaced by CodeActionMenu
-  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-  if client.server_capabilities.document_highlight then
-    vim.cmd [[
-      hi! LspReferenceRead ctermbg=DarkGray
-      hi! LspReferenceText ctermbg=DarkGray
-      hi! LspReferenceWrite ctermbg=DarkGray
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]]
+  -- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, { buffer = bufnr, desc = "Execute Code Action"})
+  vim.keymap.set('n', 'gr', function() require('telescope.builtin').lsp_references() end,
+    { buffer = bufnr, desc = "Find references to symbol under cursor" })
+  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, { buffer = bufnr, desc = "Format current buffer" })
+  if client.server_capabilities.documentHighlightProvider then
+    vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+    -- vim.api.nvim_create_autocmd("*", { buffer = bufnr, group = "lsp_document_highlight" })
+    vim.api.nvim_create_autocmd("CursorHold",
+      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight })
+    vim.api.nvim_create_autocmd("CursorMoved",
+      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references })
   end
 end
 
