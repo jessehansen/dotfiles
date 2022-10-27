@@ -16,6 +16,10 @@ if (( $+commands[bat] )); then
   alias cat='bat'
 fi
 
+if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
+  alias ssh='kitty +kitten ssh'
+fi
+
 alias l='ls -F'
 alias lh='ls -d .*'
 alias lr='ls -R | grep ':$' | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'

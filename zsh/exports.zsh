@@ -30,6 +30,9 @@ fi
 export LESS="-FRX"
 export KEYTIMEOUT=1
 
+# window title
+export ZSH_THEME_TERM_TITLE_IDLE="%~"
+
 #ripgrep config
 export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
 export FZF_DEFAULT_COMMAND="rg --files"

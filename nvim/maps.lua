@@ -35,7 +35,6 @@ vim.keymap.set("x", "<C-y>", '"+y', { silent = true, noremap = true, desc = "Cop
 vim.keymap.set("n", "<C-y>", '"+yy', { silent = true, noremap = true, desc = "Copy current line to system keyboard" })
 vim.keymap.set("x", "p", [[pgv"@=v:register.'y'<cr>]],
   { silent = true, noremap = true, desc = "Paste without stomping register" })
-vim.keymap.set("v", "y", "ygv", { silent = true, noremap = true, desc = "Yank without losing selection" })
 
 -- buffer mappings
 vim.keymap.set("n", "<Leader>h", ":bp<cr>", { silent = true, noremap = true, desc = "Next Buffer" })
@@ -69,8 +68,3 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit termi
 
 vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, { desc = "Go to previous error" })
 vim.keymap.set('n', ']e', vim.diagnostic.goto_next, { desc = "Go to next error" })
-
--- lazy-loaded plugin mappings go here
-vim.keymap.set("", "<space>ca", "<cmd>CodeActionMenu<CR>", { silent = true, desc = "Execute Code Action" })
-vim.keymap.set("", "<M-a>", "<cmd>CodeActionMenu<CR>",
-  { silent = true, noremap = true, desc = "Execute Code Action" })

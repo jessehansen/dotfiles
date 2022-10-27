@@ -20,14 +20,12 @@ load_zinit() {
   #   OMZP::fzf - fzf keybindings
   #   OMSL::history - primarily imported for omz's history command, which prints
   #       all history instead of just the last 30
-  #   OMZL::termsupport - imported so tab title gets set correctly
   zinit wait lucid for \
     OMZL::functions.zsh \
     OMZP::bgnotify \
     OMZP::vi-mode \
     OMZP::fzf \
     OMZL::history.zsh \
-    OMZL::termsupport.zsh \
     OMZP::nvm
 
   # p10k theme

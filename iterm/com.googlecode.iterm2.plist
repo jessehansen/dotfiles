@@ -671,6 +671,17 @@ Clear Buffer</string>
 			<key>Text</key>
 			<string></string>
 		</dict>
+		<key>0xd-0x100000-0x24</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string>a</string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
 		<key>0xd-0x40000</key>
 		<dict>
 			<key>Action</key>
@@ -4656,7 +4667,7 @@ Clear Buffer</string>
 	<key>ShowBookmarkName</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>ShowNewOutputIndicator</key>
 	<true/>
 	<key>ShowPaneTitles</key>

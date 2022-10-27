@@ -11,8 +11,6 @@ require("mason-null-ls").setup({
   auto_update = true,
 })
 
-local opts = { noremap = true, silent = true }
-
 local function set_common(client, bufnr)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
     { buffer = bufnr, desc = "Go to declaration of symbol under cursor" })
@@ -23,14 +21,13 @@ local function set_common(client, bufnr)
   vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
     { buffer = bufnr, desc = "Go to type definition of symbol under cursor" })
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol under cursor" })
-  -- replaced by CodeActionMenu
-  -- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, { buffer = bufnr, desc = "Execute Code Action"})
+  vim.keymap.set('', '<space>ca', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
+  vim.keymap.set('', '<M-a>', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
   vim.keymap.set('n', 'gr', function() require('telescope.builtin').lsp_references() end,
     { buffer = bufnr, desc = "Find references to symbol under cursor" })
   vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, { buffer = bufnr, desc = "Format current buffer" })
   if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-    -- vim.api.nvim_create_autocmd("*", { buffer = bufnr, group = "lsp_document_highlight" })
     vim.api.nvim_create_autocmd("CursorHold",
       { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight })
     vim.api.nvim_create_autocmd("CursorMoved",
@@ -76,12 +73,26 @@ if (vim.g.jesse_lang_js) then
     vim.lsp.buf.execute_command(params)
   end
 
+  local function goto_source_definition()
+    local position_params = vim.lsp.util.make_position_params(0)
+    local params = {
+      command = "_typescript.goToSourceDefinition",
+      arguments = { position_params.textDocument.uri, position_params.position },
+      title = ""
+    }
+    vim.lsp.buf.execute_command(params)
+  end
+
   lsp.tsserver.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
     commands = {
       OrganizeImports = {
         organize_imports,
         description = "Organize Imports"
+      },
+      GoToSourceDefinition = {
+        goto_source_definition,
+        description = "Go to source definition"
       }
     },
     flags = {
