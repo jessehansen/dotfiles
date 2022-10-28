@@ -18,6 +18,7 @@ fi
 
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
   alias ssh='kitty +kitten ssh'
+  alias icat="kitty +kitten icat"
 fi
 
 alias l='ls -F'
