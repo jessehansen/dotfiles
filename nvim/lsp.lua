@@ -1,6 +1,10 @@
 local lsp = require "lspconfig"
 local coq = require "coq"
 
+local K = vim.keymap.set
+local AG = vim.api.nvim_create_augroup
+local AC = vim.api.nvim_create_autocmd
+
 require("mason").setup()
 require("mason-lspconfig").setup({
   automatic_installation = true,
@@ -12,36 +16,36 @@ require("mason-null-ls").setup({
 })
 
 local function set_common(client, bufnr)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
+  K('n', 'gD', vim.lsp.buf.declaration,
     { buffer = bufnr, desc = "Go to declaration of symbol under cursor" })
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition of symbol under cursor" })
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr, desc = "Show documentation for symbol under cursor" })
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation,
+  K('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition of symbol under cursor" })
+  K('n', 'K', vim.lsp.buf.hover, { buffer = bufnr, desc = "Show documentation for symbol under cursor" })
+  K('n', 'gi', vim.lsp.buf.implementation,
     { buffer = bufnr, desc = "Go to implementation of symbol under cursor" })
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
+  K('n', '<space>D', vim.lsp.buf.type_definition,
     { buffer = bufnr, desc = "Go to type definition of symbol under cursor" })
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol under cursor" })
-  vim.keymap.set('', '<space>ca', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
-  vim.keymap.set('', '<M-a>', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
-  vim.keymap.set('n', 'gr', function() require('telescope.builtin').lsp_references() end,
+  K('n', '<space>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol under cursor" })
+  K('', '<space>ca', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
+  K('', '<M-a>', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
+  K('n', 'gr', function() require('telescope.builtin').lsp_references() end,
     { buffer = bufnr, desc = "Find references to symbol under cursor" })
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, { buffer = bufnr, desc = "Format current buffer" })
+  K('n', '<space>f', function() vim.lsp.buf.format() end, { buffer = bufnr, desc = "Format current buffer" })
   if client.server_capabilities.documentHighlightProvider then
-    vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-    vim.api.nvim_create_autocmd("CursorHold",
-      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight })
-    vim.api.nvim_create_autocmd("CursorMoved",
-      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references })
+    AG("lsp_document_highlight", { clear = true })
+    AC("CursorHold",
+      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight,
+        desc = "Highlight symbol under cursor" })
+    AC("CursorMoved",
+      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references,
+        desc = "Clear symbol highlight" })
   end
 end
 
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
-  vim.cmd [[
-  augroup lsp_autoformat
-    autocmd! BufWritePre <buffer> lua vim.lsp.buf.format()
-  augroup END
-  ]]
+  AG("lsp_autoformat", { clear = true })
+  AC("BufWritePre",
+    { buffer = bufnr, group = "lsp_autoformat", callback = function() vim.lsp.buf.format() end, desc = "Format on save" })
 end
 
 if (vim.g.jesse_lang_go) then
@@ -161,4 +165,4 @@ if (vim.g.jesse_lang_lua) then
   }))
 end
 
-vim.cmd [[SourceMy lsp.local.vim]]
+pcall(require, 'dotfiles.lsp_local')

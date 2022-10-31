@@ -1,3 +1,5 @@
 _local.*
 *.local.*
+# work around the weird way lua require works
+*_local.*
 *.zwc

@@ -21,5 +21,4 @@ end
 -- always load lua
 vim.g.jesse_lang_lua = true
 
--- override anything in langs.local.lua
-vim.cmd [[SourceMy langs.local.lua]]
+pcall(require, 'dotfiles.langs_local')
