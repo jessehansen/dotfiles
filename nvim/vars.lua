@@ -6,13 +6,16 @@ vim.opt.termguicolors = true
 -- better update time for async
 vim.opt.updatetime = 600
 
--- show hidden chars
-vim.opt.list = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = false
-vim.opt.listchars = { tab = '▸ ', eol = '¬', space = '·' }
+
+-- note the bullet (space replacement) is U+2219 "∙", not U+00B7 "·"
+-- this prevents "l l" lfrom being rendered as a ligament in some terminal emulators with some fonts
+-- see https://github.com/neovim/neovim/issues/20839
+vim.opt.list = true
+vim.opt.listchars = { tab = '▸ ', eol = '¬', space = '∙' }
 
 -- work with hidden buffers
 vim.opt.hidden = true

@@ -2,8 +2,8 @@ local lsp = require "lspconfig"
 local coq = require "coq"
 
 local K = vim.keymap.set
-local AG = vim.api.nvim_create_augroup
-local AC = vim.api.nvim_create_autocmd
+-- local AG = vim.api.nvim_create_augroup
+-- local AC = vim.api.nvim_create_autocmd
 
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -31,21 +31,35 @@ local function set_common(client, bufnr)
     { buffer = bufnr, desc = "Find references to symbol under cursor" })
   K('n', '<space>f', function() vim.lsp.buf.format() end, { buffer = bufnr, desc = "Format current buffer" })
   if client.server_capabilities.documentHighlightProvider then
-    AG("lsp_document_highlight", { clear = true })
-    AC("CursorHold",
-      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight,
-        desc = "Highlight symbol under cursor" })
-    AC("CursorMoved",
-      { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references,
-        desc = "Clear symbol highlight" })
+    vim.cmd [[
+    augroup lsp_document_highlight
+      autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+      autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    augroup END
+    ]]
+    -- AG("lsp_document_highlight", { clear = true })
+    -- AC("CursorHold",
+    --   { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight,
+    --     desc = "Highlight symbol under cursor" })
+    -- AC("CursorMoved",
+    --   { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references,
+    --     desc = "Clear symbol highlight" })
   end
 end
 
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
-  AG("lsp_autoformat", { clear = true })
-  AC("BufWritePre",
-    { buffer = bufnr, group = "lsp_autoformat", callback = function() vim.lsp.buf.format() end, desc = "Format on save" })
+  -- TODO: This should be in lua, but it doesn't alwas trigger with
+  -- nvim_create_autocmd for some reason (I'm probably doing something wrong)
+  vim.cmd [[
+  augroup lsp_autoformat
+    autocmd! BufWritePre <buffer> lua vim.lsp.buf.format()
+  augroup END
+  ]]
+
+  -- AG("lsp_autoformat", { clear = true })
+  -- AC("BufWritePre",
+  --   { buffer = bufnr, group = "lsp_autoformat", callback = function() vim.lsp.buf.format() end, desc = "Format on save" })
 end
 
 if (vim.g.jesse_lang_go) then

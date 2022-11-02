@@ -16,6 +16,8 @@ if (( $+commands[bat] )); then
   alias cat='bat'
 fi
 
+alias j='zshz 2>&1'
+
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
   alias ssh='kitty +kitten ssh'
   alias icat="kitty +kitten icat"

@@ -28,6 +28,8 @@ load_zinit() {
     OMZL::history.zsh \
     OMZP::nvm
 
+  zinit load agkozak/zsh-z
+
   # p10k theme
   zinit ice depth=1; zinit light romkatv/powerlevel10k
 
@@ -93,13 +95,6 @@ reload() {
 load_all
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  if [[ -e /usr/share/autojump/autojump.sh ]]; then
-    source /usr/share/autojump/autojump.sh
-  else
-    echo "Install autojump"
-    echo "$ sudo apt install autojump"
-  fi
-
   load_zinit
   unset -f load_zinit
   unset -f load_zinit_warp
@@ -108,12 +103,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Install brew"
     echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
   else
-    if [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]]; then
-      source $(brew --prefix)/etc/profile.d/autojump.sh
-    else
-      echo "Install autojump"
-      echo "$ brew install autojump"
-    fi
     if (( ! $+commands[terminal-notifier] )); then
       echo "Install terminal-notifier"
       echo "$ brew install terminal-notifier"
