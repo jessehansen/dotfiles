@@ -46,11 +46,10 @@ return require('packer').startup(function(use)
   use {
     'tpope/vim-rhubarb', -- github stuff
     config = function()
-      vim.api.nvim_set_keymap("n", "<leader>P", "<cmd>GBrowse!<cr>",
-        { desc = "Copy github link to current file", silent = true })
-      vim.api.nvim_set_keymap("n", "<leader>L", "<cmd>.GBrowse!<cr>",
-        { desc = "Copy github link to current line", silent = true })
-      vim.api.nvim_set_keymap("x", "<leader>L", "<cmd>GBrowse!<cr>gv\"@=v:register.'y'",
+      local map = require('dotfiles.maps').map
+      map("n", "<leader>P", "<cmd>GBrowse!<cr>", { desc = "Copy github link to current file", silent = true })
+      map("n", "<leader>L", "<cmd>.GBrowse!<cr>", { desc = "Copy github link to current line", silent = true })
+      map("x", "<leader>L", "<cmd>GBrowse!<cr>gv\"@=v:register.'y'",
         { desc = "Copy github link to current line", silent = true })
     end,
   }
@@ -69,7 +68,8 @@ return require('packer').startup(function(use)
   use {
     'Asheq/close-buffers.vim',
     config = function()
-      vim.api.nvim_set_keymap('', '<leader>q', ':Bwipeout hidden<CR>', { desc = 'Close all hidden buffers' })
+      local map = require('dotfiles.maps').map
+      map('', '<leader>q', ':Bwipeout hidden<CR>', { desc = 'Close all hidden buffers' })
     end
   }
 

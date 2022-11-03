@@ -1,7 +1,8 @@
-local lsp = require "lspconfig"
-local coq = require "coq"
+local lsp = require("lspconfig")
+local coq = require("coq")
+local map = require("dotfiles.maps").map
+local map_many = require("dotfiles.maps").map_many
 
-local K = vim.keymap.set
 -- local AG = vim.api.nvim_create_augroup
 -- local AC = vim.api.nvim_create_autocmd
 
@@ -15,21 +16,21 @@ require("mason-null-ls").setup({
   auto_update = true,
 })
 
-local function set_common(client, bufnr)
-  K('n', 'gD', vim.lsp.buf.declaration,
-    { buffer = bufnr, desc = "Go to declaration of symbol under cursor" })
-  K('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition of symbol under cursor" })
-  K('n', 'K', vim.lsp.buf.hover, { buffer = bufnr, desc = "Show documentation for symbol under cursor" })
-  K('n', 'gi', vim.lsp.buf.implementation,
-    { buffer = bufnr, desc = "Go to implementation of symbol under cursor" })
-  K('n', '<space>D', vim.lsp.buf.type_definition,
-    { buffer = bufnr, desc = "Go to type definition of symbol under cursor" })
-  K('n', '<space>rn', vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol under cursor" })
-  K('', '<space>ca', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
-  K('', '<M-a>', '<cmd>CodeActionMenu<cr>', { buffer = bufnr, desc = "Execute Code Action" })
-  K('n', 'gr', function() require('telescope.builtin').lsp_references() end,
-    { buffer = bufnr, desc = "Find references to symbol under cursor" })
-  K('n', '<space>f', function() vim.lsp.buf.format() end, { buffer = bufnr, desc = "Format current buffer" })
+local function set_common(client) --, bufnr
+  map('n', 'gD', vim.lsp.buf.declaration,
+    { buffer = true, desc = "Go to declaration of symbol under cursor" })
+  map('n', 'gd', vim.lsp.buf.definition, { buffer = true, desc = "Go to definition of symbol under cursor" })
+  map('n', 'K', vim.lsp.buf.hover, { buffer = true, desc = "Show documentation for symbol under cursor" })
+  map('n', 'gi', vim.lsp.buf.implementation,
+    { buffer = true, desc = "Go to implementation of symbol under cursor" })
+  map('n', '<space>D', vim.lsp.buf.type_definition,
+    { buffer = true, desc = "Go to type definition of symbol under cursor" })
+  map('n', '<space>rn', vim.lsp.buf.rename, { buffer = true, desc = "Rename symbol under cursor" })
+  map_many('', { '<space>ca', '<M-a>' }, '<cmd>CodeActionMenu<cr>',
+    { buffer = true, silent = true, desc = "Execute Code Action" })
+  map('n', 'gr', function() require('telescope.builtin').lsp_references() end,
+    { buffer = true, desc = "Find references to symbol under cursor" })
+  map('n', '<space>f', function() vim.lsp.buf.format() end, { buffer = true, desc = "Format current buffer" })
   if client.server_capabilities.documentHighlightProvider then
     vim.cmd [[
     augroup lsp_document_highlight
@@ -47,8 +48,8 @@ local function set_common(client, bufnr)
   end
 end
 
-local function set_common_and_autoformat(client, bufnr)
-  set_common(client, bufnr)
+local function set_common_and_autoformat(client) -- ,bufnr
+  set_common(client)
   -- TODO: This should be in lua, but it doesn't alwas trigger with
   -- nvim_create_autocmd for some reason (I'm probably doing something wrong)
   vim.cmd [[
@@ -59,7 +60,15 @@ local function set_common_and_autoformat(client, bufnr)
 
   -- AG("lsp_autoformat", { clear = true })
   -- AC("BufWritePre",
-  --   { buffer = bufnr, group = "lsp_autoformat", callback = function() vim.lsp.buf.format() end, desc = "Format on save" })
+  --   {
+  --     buffer = bufnr,
+  --     group = "lsp_autoformat",
+  --     callback = function()
+  --       vim.lsp.buf.format()
+  --       return false
+  --     end,
+  --     desc = "Format on save",
+  --   })
 end
 
 if (vim.g.jesse_lang_go) then
@@ -167,6 +176,9 @@ if (vim.g.jesse_lang_lua) then
         },
         diagnostics = {
           globals = { 'vim' },
+          neededFileStatus = {
+            ["codestyle-check"] = "Any",
+          }
         },
         workspace = {
           library = vim.api.nvim_get_runtime_file("", true),

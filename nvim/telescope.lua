@@ -4,17 +4,16 @@ require('telescope').setup {
       i = {
         ["<C-j>"] = "move_selection_next",
         ["<C-k>"] = "move_selection_previous",
-        ["<Esc>"] = "close", -- this disables n-mode - I don't find myself needing it very often, and <C-/><C-n> works for those cases
+        ["<Esc>"] = "close", -- this disables n-mode - <C-/><C-n> works when necessary
       }
     },
   },
   extensions = {
     fzf = {
-      fuzzy = true, -- false will only do exact matching
-      override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true, -- override the file sorter
-      case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-      -- the default case_mode is "smart_case"
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = "smart_case",
     }
   },
   preview = {
@@ -25,36 +24,30 @@ require('telescope').load_extension('fzf')
 
 -- key maps
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', 'ff', builtin.find_files, { desc = "Find file" })
-vim.keymap.set('n', 'fg', builtin.live_grep, { desc = "Find string" })
-vim.keymap.set('n', 'fb', builtin.buffers, { desc = "Find buffer" })
-vim.keymap.set('n', 'fh', builtin.help_tags, { desc = "Find help tags" })
-vim.keymap.set('n', 'fr', builtin.registers, { desc = "Find registers" })
-vim.keymap.set('n', 'fm', builtin.keymaps, { desc = "Find keymapping" })
-vim.keymap.set('n', 'fc', builtin.commands, { desc = "Command Palette" })
-vim.keymap.set('n', 'fs', builtin.git_status, { desc = "Find Edited File (using `git status`)" })
-vim.keymap.set('n', 'fS', builtin.git_files, { desc = "Find git-tracked file" })
-vim.keymap.set('n', 'fe', builtin.oldfiles, { desc = "Find recently used file (oldfiles)" })
-vim.keymap.set('n', 'fl', builtin.current_buffer_fuzzy_find, { desc = "Find line" })
+local map = require('dotfiles.maps').map
+local map_many = require('dotfiles.maps').map_many
+map_many('n', { 'ff', '<C-p>' }, builtin.find_files, { desc = "Find file" })
+map_many('n', { 'fc', '<M-p>' }, builtin.commands, { desc = "Command Palette" })
+map_many('n', { 'fs', '<C-s>' }, builtin.git_status, { desc = "Find Edited File (using `git status`)" })
+map_many('n', { 'fS', '<M-s>' }, builtin.git_files, { desc = "Find git-tracked file" })
+map_many('n', { 'fe', '<C-e>' }, builtin.oldfiles, { desc = "Find recently used file (oldfiles)" })
+map_many('n', { 'fg', '<M-f>' }, builtin.live_grep, { desc = "Find string" })
+map_many('n', { 'fm', '<leader>m' }, builtin.keymaps, { desc = "Find keymapping" })
+map('n', 'fb', builtin.buffers, { desc = "Find buffer" })
+map('n', 'fh', builtin.help_tags, { desc = "Find help tags" })
+map('n', 'fr', builtin.registers, { desc = "Find registers" })
+map('n', 'fl', builtin.current_buffer_fuzzy_find, { desc = "Find line" })
 
-vim.keymap.set('', '<C-p>', builtin.find_files, { desc = "Find file" })
-vim.keymap.set('', '<M-p>', builtin.commands, { desc = "Command Palette" })
-vim.keymap.set('', '<C-s>', builtin.git_status, { desc = "Find Edited File (using `git status`)" })
-vim.keymap.set('', '<M-s>', builtin.git_files, { desc = "Find git-tracked file" })
-vim.keymap.set('', '<C-e>', builtin.oldfiles, { desc = "Find recently used file (oldfiles)" })
-vim.keymap.set('', '<M-f>', builtin.live_grep, { desc = "Find string" })
+map('n', '<leader><tab>', function() builtin.keymaps { modes = { "n" } } end,
+  { desc = "Find normal mode mappings" })
+map('x', '<leader><tab>', function() builtin.keymaps { modes = { "x" } } end,
+  { desc = "Find visual mode mappings" })
+map('o', '<leader><tab>', function() builtin.keymaps { modes = { "o" } } end,
+  { desc = "Find operator mode mappings" })
+map('c', '<C-/>', function() builtin.keymaps { modes = { "c" } } end,
+  { desc = "Find command mode mappings" })
 
-vim.keymap.set('n', '<leader>m', builtin.keymaps, { desc = "Find keymapping" })
-vim.keymap.set('n', '<leader><tab>', function() builtin.keymaps { modes = { "n" } } end,
-  { desc = "Find current mode mappings" })
-vim.keymap.set('x', '<leader><tab>', function() builtin.keymaps { modes = { "x" } } end,
-  { desc = "Find current mode mappings" })
-vim.keymap.set('o', '<leader><tab>', function() builtin.keymaps { modes = { "o" } } end,
-  { desc = "Find current mode mappings" })
-vim.keymap.set('c', '<C-/>', function() builtin.keymaps { modes = { "c" } } end,
-  { desc = "Find current mode mappings" })
-
-vim.keymap.set('n', '<leader>g', function()
+map('n', '<leader>g', function()
   local word = vim.fn.expand('<cword>')
   builtin.grep_string { search = word }
 end, { desc = "Search for word under cursor" })
@@ -68,7 +61,7 @@ local function get_visual_selection()
   return vim.fn.getreg('v')
 end
 
-vim.keymap.set('x', '<leader>g', function()
+map('x', '<leader>g', function()
   local selected_text = get_visual_selection()
   builtin.grep_string {
     use_regex = true,

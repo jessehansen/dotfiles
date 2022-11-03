@@ -3,14 +3,12 @@ require("trouble").setup {
   mode = "document_diagnostics",
 }
 
+local map = require('dotfiles.maps').map
+
 -- key bindings
-vim.keymap.set("n", "<leader>t", "<cmd>TroubleToggle<cr>",
+map("n", "<leader>t", "<cmd>TroubleToggle<cr>",
   { desc = "Toggle Trouble Diagnostics Window", silent = true, noremap = true }
 )
-vim.keymap.set("n", "<leader>x", function()
-  vim.cmd('ccl')
-  vim.cmd('lcl')
-  vim.cmd('TroubleClose')
-end,
+map("n", "<leader>x", ":ccl <bar> lcl <bar> TroubleClose<CR>",
   { desc = "Close quickfix, location, and trouble windows" }
 )
