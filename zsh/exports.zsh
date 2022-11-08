@@ -1,3 +1,7 @@
+if [[ -d "/opt/homebrew/bin" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 export BUILDER_ID_RSA=~/.ssh/id_rsa
 export NPM_AUTH_TOKEN=
 
@@ -30,7 +34,7 @@ fi
 export LESS="-FRX"
 export KEYTIMEOUT=1
 
-#ripgrep config
+# ripgrep config
 export RIPGREP_CONFIG_PATH=$DOTFILES/ripgreprc
 export FZF_DEFAULT_COMMAND="rg --files"
 

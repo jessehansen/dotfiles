@@ -14,14 +14,12 @@ load_zinit() {
   fi
 
   # oh-my-zsh plugins/libs
-  #   OMZL::functions.zsh - OMZ common functions - including this fixes an issue in apple terminal that resulted in command not found: omz_urlencode
   #   OMZP::bgnotify - notifier when commands run long
   #   OMZP::vi-mode - set vi-mode and keybindings
   #   OMZP::fzf - fzf keybindings
   #   OMSL::history - primarily imported for omz's history command, which prints
   #       all history instead of just the last 30
   zinit wait lucid for \
-    OMZL::functions.zsh \
     OMZP::bgnotify \
     OMZP::vi-mode \
     OMZP::fzf \
@@ -56,22 +54,6 @@ load_zinit() {
   fi
 }
 
-load_zinit_warp() {
-  if [[ -e "${HOME}/.zinit/bin/zinit.zsh" ]]; then
-    source "${HOME}/.zinit/bin/zinit.zsh"
-  else
-    echo "Install zinit"
-    echo "$ mkdir ~/.zinit"
-    echo "$ git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin"
-    return
-  fi
-
-  zinit wait lucid for \
-    OMZL::history.zsh \
-    OMZP::nvm
-}
-
-
 load_all() {
   source "$DOTFILES/zsh/plugin_config.zsh"
   source "$DOTFILES/zsh/history.zsh"
@@ -97,28 +79,23 @@ load_all
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   load_zinit
   unset -f load_zinit
-  unset -f load_zinit_warp
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if (( ! $+commands[brew] )); then
     echo "Install brew"
-    echo "/usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\""
+    echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
   else
     if (( ! $+commands[terminal-notifier] )); then
       echo "Install terminal-notifier"
       echo "$ brew install terminal-notifier"
     fi
 
+    # include homebrew completions
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
     # Loading zinit must be last, because zsh-syntax-highlighting
     # needs to be loaded after all aliases, plugins, etc
-    if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
-      load_zinit
-      unset -f load_zinit
-      unset -f load_zinit_warp
-    else
-      load_zinit_warp
-      unset -f load_zinit
-      unset -f load_zinit_warp
-    fi
+    load_zinit
+    unset -f load_zinit
   fi
 fi
 if (( ! $+commands[fzf] )); then
@@ -140,9 +117,8 @@ if (( ! $+commands[delta] )); then
   [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install git-delta"
 fi
 
-if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
-  source "$DOTFILES/zsh/p10k.zsh"
-fi
+# load p10k config
+source "$DOTFILES/zsh/p10k.zsh"
 
 # some aliases need to be set again because they are overridden by zsh
 # plugins. Always prefer our aliases

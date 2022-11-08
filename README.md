@@ -3,13 +3,13 @@
 To install:
 ```zsh
 # clone
-git clone https://github.com/twindagger/dotfiles
-# Add zprofile export that points to this directory
+git clone https://github.com/jessehansen/dotfiles
+# Add zshenv export that points to this directory
 cd dotfiles
-echo "export DOTFILES=$(pwd)" > ~/.zprofile
+echo "export DOTFILES=$(pwd)" > ~/.zshenv
 
-# set up zprofile & zshrc
-cat example/zprofile >> ~/.zprofile
+# set up zshenv & zshrc
+cat example/zshenv >> ~/.zshenv
 cp example/zshrc ~/.zshrc
 
 # include .gitconfig from this directory
