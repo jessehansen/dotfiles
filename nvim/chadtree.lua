@@ -25,3 +25,11 @@ map('n', '<leader>e', function()
   CHAD.Open({ '--always-focus' })
   CHAD.Toggle_follow(false)
 end, { desc = "Find current buffer in directory tree" })
+
+vim.api.nvim_create_augroup("dotfiles_chadtree", { clear = true })
+-- I don't know why this doesn't work for FileType events (it runs without "sticking"), but BufEnter works
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*",
+  command = "if &filetype=='CHADTree' | set nospell | endif",
+  group = "dotfiles_chadtree",
+})
