@@ -1,4 +1,4 @@
-require('lualine').setup {
+require('lualine').setup({
   options = {
     icons_enabled = true,
     theme = 'auto',
@@ -15,18 +15,18 @@ require('lualine').setup {
       'diff',
       {
         'diagnostics',
-        sources = { 'nvim_diagnostic', 'nvim_lsp' }
-      }
+        sources = { 'nvim_diagnostic', 'nvim_lsp' },
+      },
     },
     lualine_c = {
       {
         'filename',
-        path = 1
-      }
+        path = 1,
+      },
     },
     lualine_x = { 'encoding', 'fileformat', 'filetype' },
     lualine_y = {},
-    lualine_z = { 'location' }
+    lualine_z = { 'location' },
   },
   -- probably not used since globalstatus is on
   inactive_sections = {
@@ -35,26 +35,27 @@ require('lualine').setup {
     lualine_c = { 'filename' },
     lualine_x = { 'location' },
     lualine_y = {},
-    lualine_z = {}
+    lualine_z = {},
   },
   tabline = {
     lualine_a = {
       {
         'buffers',
-        mode = 2
-      }
-    }
+        mode = 2,
+      },
+    },
   },
-  extensions = { 'chadtree', 'fzf', 'fugitive', 'quickfix' }
-}
+  extensions = { 'chadtree', 'fzf', 'fugitive', 'quickfix' },
+})
 
 local map = require('dotfiles.maps').map
 
 for i = 1, 9 do
-  map("n", "<leader>" .. i, "<cmd>LualineBuffersJump! " .. i .. "<cr>",
-    { desc = "Jump to buffer " .. i, silent = true }
+  map(
+    'n',
+    '<leader>' .. i,
+    '<cmd>LualineBuffersJump! ' .. i .. '<cr>',
+    { desc = 'Jump to buffer ' .. i, silent = true }
   )
 end
-map("n", "<leader>0", "<cmd>LualineBuffersJump $<cr>",
-  { desc = "Jump to last buffer ", silent = true }
-)
+map('n', '<leader>0', '<cmd>LualineBuffersJump $<cr>', { desc = 'Jump to last buffer ', silent = true })

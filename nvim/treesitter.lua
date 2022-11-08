@@ -1,18 +1,18 @@
 local parsers = {}
 
-if (vim.g.jesse_lang_rust) then
-  table.insert(parsers, "rust")
+if vim.g.jesse_lang_rust then
+  table.insert(parsers, 'rust')
 end
 
-if (vim.g.jesse_lang_js) then
-  table.insert(parsers, "javascript")
-  table.insert(parsers, "typescript")
-  table.insert(parsers, "tsx")
-  table.insert(parsers, "json")
-  table.insert(parsers, "prisma")
+if vim.g.jesse_lang_js then
+  table.insert(parsers, 'javascript')
+  table.insert(parsers, 'typescript')
+  table.insert(parsers, 'tsx')
+  table.insert(parsers, 'json')
+  table.insert(parsers, 'prisma')
 end
 
-require 'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup({
   ensure_installed = parsers,
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -23,9 +23,6 @@ require 'nvim-treesitter.configs'.setup {
 
   -- List of parsers to ignore installing (for "all")
   ignore_install = {},
-
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
 
   highlight = {
     -- `false` will disable the whole extension
@@ -47,10 +44,10 @@ require 'nvim-treesitter.configs'.setup {
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "grc",
-      node_decremental = "grm",
+      init_selection = 'gnn',
+      node_incremental = 'grn',
+      scope_incremental = 'grc',
+      node_decremental = 'grm',
     },
   },
 
@@ -61,12 +58,12 @@ require 'nvim-treesitter.configs'.setup {
       lookahead = true,
 
       keymaps = {
-        ["af"] = { query = "@function.outer", desc = "Select entire function declaration" },
-        ["if"] = { query = "@function.inner", desc = "Select function body" },
-        ["ac"] = { query = "@class.outer", desc = "Select class declaration" },
-        ["ic"] = { query = "@class.inner", desc = "Select class body" },
-        ["ap"] = { query = "@parameter.outer", desc = "Select parameter" },
-        ["ip"] = { query = "@parameter.inner", desc = "Select parameter inner" },
+        ['af'] = { query = '@function.outer', desc = 'Select entire function declaration' },
+        ['if'] = { query = '@function.inner', desc = 'Select function body' },
+        ['ac'] = { query = '@class.outer', desc = 'Select class declaration' },
+        ['ic'] = { query = '@class.inner', desc = 'Select class body' },
+        ['ap'] = { query = '@parameter.outer', desc = 'Select parameter' },
+        ['ip'] = { query = '@parameter.inner', desc = 'Select parameter inner' },
       },
 
       selection_modes = {
@@ -78,4 +75,4 @@ require 'nvim-treesitter.configs'.setup {
       include_surrounding_whitespace = false,
     },
   },
-}
+})

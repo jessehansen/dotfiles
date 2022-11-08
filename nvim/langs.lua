@@ -4,7 +4,7 @@ if vim.fn.empty(vim.env.GOPATH) == 0 then
 end
 
 vim.g.jesse_lang_rust = false
-if vim.fn.isdirectory(vim.env.HOME .. "/.cargo") == 1 then
+if vim.fn.isdirectory(vim.env.HOME .. '/.cargo') == 1 then
   vim.g.jesse_lang_rust = true
 end
 
