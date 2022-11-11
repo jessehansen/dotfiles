@@ -30,25 +30,29 @@ map_many('n', { 'ff', '<C-p>' }, builtin.find_files, { desc = 'Find file' })
 map_many('n', { 'fc', '<M-p>' }, builtin.commands, { desc = 'Command Palette' })
 map_many('n', { 'fs', '<C-s>' }, builtin.git_status, { desc = 'Find Edited File (using `git status`)' })
 map_many('n', { 'fS', '<M-s>' }, builtin.git_files, { desc = 'Find git-tracked file' })
-map_many('n', { 'fe', '<C-e>' }, builtin.oldfiles, { desc = 'Find recently used file (oldfiles)' })
+map_many('n', { 'fe', '<C-e>' }, function()
+  builtin.oldfiles({ cwd_only = true })
+end, { desc = 'Find recently used file (oldfiles)' })
 map_many('n', { 'fg', '<M-f>' }, builtin.live_grep, { desc = 'Find string' })
-map_many('n', { 'fm', '<leader>m' }, builtin.keymaps, { desc = 'Find keymapping' })
+map_many('n', { 'fm', '<leader>m' }, function()
+  builtin.keymaps({ show_plug = false })
+end, { desc = 'Find keymapping' })
 map('n', 'fb', builtin.buffers, { desc = 'Find buffer' })
 map('n', 'fh', builtin.help_tags, { desc = 'Find help tags' })
 map('n', 'fr', builtin.registers, { desc = 'Find registers' })
 map('n', 'fl', builtin.current_buffer_fuzzy_find, { desc = 'Find line' })
 
 map('n', '<leader><tab>', function()
-  builtin.keymaps({ modes = { 'n' } })
+  builtin.keymaps({ modes = { 'n' }, show_plug = false })
 end, { desc = 'Find normal mode mappings' })
 map('x', '<leader><tab>', function()
-  builtin.keymaps({ modes = { 'x' } })
+  builtin.keymaps({ modes = { 'x', show_plug = false } })
 end, { desc = 'Find visual mode mappings' })
 map('o', '<leader><tab>', function()
-  builtin.keymaps({ modes = { 'o' } })
+  builtin.keymaps({ modes = { 'o', show_plug = false } })
 end, { desc = 'Find operator mode mappings' })
 map('c', '<C-/>', function()
-  builtin.keymaps({ modes = { 'c' } })
+  builtin.keymaps({ modes = { 'c', show_plug = false } })
 end, { desc = 'Find command mode mappings' })
 
 map('n', '<leader>g', function()
@@ -69,7 +73,7 @@ map('x', '<leader>g', function()
   local selected_text = get_visual_selection()
   builtin.grep_string({
     use_regex = true,
-    search = vim.fn.substitute( -- replace whitespace with \s+
+    search = vim.fn.substitute(-- replace whitespace with \s+
       vim.fn.escape(selected_text, '\\.*$^~[{'), -- escape special chars
       [[\_s\+]],
       [[\\s+]],

@@ -1,56 +1,27 @@
+# p10k instant prompt support
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
-load_zinit() {
-  if [[ -e "${HOME}/.zinit/bin/zinit.zsh" ]]; then
-    source "${HOME}/.zinit/bin/zinit.zsh"
+load_plugins() {
+  if (( ! $+commands[sheldon] )); then
+    echo "Install sheldon"
+    echo "$ brew|cargo install sheldon"
   else
-    echo "Install zinit"
-    echo "$ mkdir ~/.zinit"
-    echo "$ git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin"
-    return
-  fi
+    # plugins contained in $DOTFILES/zsh/plugins.toml
+    if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
+      export SHELDON_PROFILE="iterm"
+    fi
+    export SHELDON_CONFIG_DIR=$DOTFILES/zsh
 
-  # oh-my-zsh plugins/libs
-  #   OMZP::bgnotify - notifier when commands run long
-  #   OMZP::vi-mode - set vi-mode and keybindings
-  #   OMZP::fzf - fzf keybindings
-  #   OMSL::history - primarily imported for omz's history command, which prints
-  #       all history instead of just the last 30
-  zinit wait lucid for \
-    OMZP::bgnotify \
-    OMZP::vi-mode \
-    OMZP::fzf \
-    OMZL::history.zsh \
-    OMZP::nvm
-
-  zinit load agkozak/zsh-z
-
-  # p10k theme
-  zinit ice depth=1; zinit light romkatv/powerlevel10k
-
-  # ordering here is deliberate - syntax highlighting must come last or it
-  # complains about widget binding
-  #   zsh-autosuggestions - autosuggest
-  #   zsh-completions - completions library
-  #   fast-syntax-highlighting - easily see syntax errors while typing cmds
-  zinit wait lucid for \
-    blockf \
-    zsh-users/zsh-completions \
-    atload"!_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
-    atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-    zdharma-continuum/fast-syntax-highlighting
-
-  if [[ "$TERM_PROGRAM" = "iTerm.app" ]]; then
-    zinit ice as"command" pick"bin/*" atclone'./_utils/download_files.sh' \
-      atpull'%atclone' if"[[ $+ITERM_PROFILE ]]"
-    zinit light decayofmind/zsh-iterm2-utilities
-
-    # functions
-    zinit snippet 'https://raw.githubusercontent.com/gnachman/iTerm2-shell-integration/main/shell_integration/zsh'
+    autoload -U compaudit compinit zrecompile
+    # some plugins require the compdef function to be available, use compinit to add it here
+    # The -D flag prevents churning of .zcompdump - we don't want to cache this pre-inited
+    # output
+    compinit -D
+    eval "$(sheldon --color always source)"
+    # some plugins change FPATH, reinit (& cache)
+    compinit
   fi
 }
 
@@ -60,11 +31,7 @@ load_all() {
   source "$DOTFILES/zsh/setopt.zsh"
   source "$DOTFILES/zsh/exports.zsh"
   source "$DOTFILES/zsh/aliases.zsh"
-
-  if [[ $TERM_PROGRAM != "WarpTerminal" ]];then
-    source "$DOTFILES/zsh/bindkeys.zsh"
-  fi
-
+  source "$DOTFILES/zsh/bindkeys.zsh"
   source "$DOTFILES/zsh/functions.zsh"
 
   [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
@@ -77,8 +44,8 @@ reload() {
 load_all
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  load_zinit
-  unset -f load_zinit
+  load_plugins
+  unset -f load_plugins
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   if (( ! $+commands[brew] )); then
     echo "Install brew"
@@ -94,8 +61,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Loading zinit must be last, because zsh-syntax-highlighting
     # needs to be loaded after all aliases, plugins, etc
-    load_zinit
-    unset -f load_zinit
+    load_plugins
+    unset -f load_plugins
   fi
 fi
 if (( ! $+commands[fzf] )); then

@@ -1,0 +1,35 @@
+# `sheldon` configuration file
+# See the documentation for more https://github.com/rossmacarthur/sheldon#readme
+shell = "zsh"
+
+[plugins]
+
+[plugins.oh-my-zsh]
+github="ohmyzsh/ohmyzsh"
+use=[
+  "lib/history.zsh",
+  "plugins/vi-mode/*.plugin.zsh",
+  "plugins/fzf/*.plugin.zsh",
+  "plugins/nvm/*.plugin.zsh",
+  "plugins/bgnotify/*.plugin.zsh"
+]
+
+[plugins.zsh-z]
+github="agkozak/zsh-z"
+
+[plugins.powerlevel10k]
+github="romkatv/powerlevel10k"
+
+[plugins.zsh-completions]
+github="zsh-users/zsh-completions"
+
+[plugins.zsh-autosuggestions]
+github="zsh-users/zsh-autosuggestions"
+
+[plugins.iterm-shell-integration]
+remote="https://raw.githubusercontent.com/gnachman/iTerm2-shell-integration/main/shell_integration/zsh"
+profiles=["iterm"]
+
+[plugins.fast-syntax-highlighting]
+github="z-shell/F-Sy-H"
+branch="main"

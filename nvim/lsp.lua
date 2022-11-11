@@ -6,16 +6,6 @@ local map_many = require('dotfiles.maps').map_many
 -- local AG = vim.api.nvim_create_augroup
 -- local AC = vim.api.nvim_create_autocmd
 
-require('mason').setup()
-require('mason-lspconfig').setup({
-  automatic_installation = true,
-})
-require('mason-null-ls').setup({
-  ensure_installed = { 'prettierd', 'stylua' },
-  automatic_installation = true,
-  auto_update = true,
-})
-
 local function set_common(client) --, bufnr
   map('n', 'gD', vim.lsp.buf.declaration, { buffer = true, desc = 'Go to declaration of symbol under cursor' })
   map('n', 'gd', vim.lsp.buf.definition, { buffer = true, desc = 'Go to definition of symbol under cursor' })
@@ -78,6 +68,36 @@ local function set_common_and_autoformat(client) -- ,bufnr
   --     end,
   --     desc = "Format on save",
   --   })
+end
+
+require('mason').setup()
+require('mason-lspconfig').setup({
+  automatic_installation = true,
+})
+local null_ls = require('null-ls')
+local null_ls_sources = {}
+
+if vim.g.jesse_lang_js then
+  table.insert(null_ls_sources, null_ls.builtins.formatting.eslint_d)
+  table.insert(null_ls_sources, null_ls.builtins.diagnostics.eslint_d)
+  table.insert(null_ls_sources, null_ls.builtins.formatting.prettierd)
+end
+if vim.g.jesse_lang_lua then
+  table.insert(null_ls_sources, null_ls.builtins.formatting.stylua)
+end
+
+if next(null_ls_sources) ~= nil then
+  null_ls.setup({
+    debug = true,
+    sources = null_ls_sources,
+    options = {
+      on_attach = set_common_and_autoformat,
+    },
+  })
+  require('mason-null-ls').setup({
+    automatic_installation = true,
+    auto_update = true,
+  })
 end
 
 if vim.g.jesse_lang_go then
@@ -147,16 +167,6 @@ if vim.g.jesse_lang_js then
       debounce_text_changes = 150,
     },
   }))
-  require('null-ls').setup({
-    sources = {
-      require('null-ls').builtins.formatting.eslint_d,
-      require('null-ls').builtins.formatting.prettierd,
-      require('null-ls').builtins.formatting.stylua,
-    },
-    options = {
-      on_attach = set_common_and_autoformat,
-    },
-  })
 end
 
 if vim.g.jesse_lang_python then
