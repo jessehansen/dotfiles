@@ -3,72 +3,8 @@ local coq = require('coq')
 local map = require('dotfiles.maps').map
 local map_many = require('dotfiles.maps').map_many
 
--- local AG = vim.api.nvim_create_augroup
--- local AC = vim.api.nvim_create_autocmd
-
-local function set_common(client) --, bufnr
-  map('n', 'gD', vim.lsp.buf.declaration, { buffer = true, desc = 'Go to declaration of symbol under cursor' })
-  map('n', 'gd', vim.lsp.buf.definition, { buffer = true, desc = 'Go to definition of symbol under cursor' })
-  map('n', 'K', vim.lsp.buf.hover, { buffer = true, desc = 'Show documentation for symbol under cursor' })
-  map('n', 'gi', vim.lsp.buf.implementation, { buffer = true, desc = 'Go to implementation of symbol under cursor' })
-  map(
-    'n',
-    '<space>D',
-    vim.lsp.buf.type_definition,
-    { buffer = true, desc = 'Go to type definition of symbol under cursor' }
-  )
-  map('n', '<space>rn', vim.lsp.buf.rename, { buffer = true, desc = 'Rename symbol under cursor' })
-  map_many(
-    '',
-    { '<space>ca', '<M-a>' },
-    '<cmd>CodeActionMenu<cr>',
-    { buffer = true, silent = true, desc = 'Execute Code Action' }
-  )
-  map('n', 'gr', function()
-    require('telescope.builtin').lsp_references()
-  end, { buffer = true, desc = 'Find references to symbol under cursor' })
-  map('n', '<space>f', function()
-    vim.lsp.buf.format()
-  end, { buffer = true, desc = 'Format current buffer' })
-  if client.server_capabilities.documentHighlightProvider then
-    vim.cmd([[
-    augroup lsp_document_highlight
-      autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-      autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-    augroup END
-    ]])
-    -- AG("lsp_document_highlight", { clear = true })
-    -- AC("CursorHold",
-    --   { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.document_highlight,
-    --     desc = "Highlight symbol under cursor" })
-    -- AC("CursorMoved",
-    --   { buffer = bufnr, group = "lsp_document_highlight", callback = vim.lsp.buf.clear_references,
-    --     desc = "Clear symbol highlight" })
-  end
-end
-
-local function set_common_and_autoformat(client) -- ,bufnr
-  set_common(client)
-  -- TODO: This should be in lua, but it doesn't alwas trigger with
-  -- nvim_create_autocmd for some reason (I'm probably doing something wrong)
-  vim.cmd([[
-  augroup lsp_autoformat
-    autocmd! BufWritePre <buffer> lua vim.lsp.buf.format()
-  augroup END
-  ]])
-
-  -- AG("lsp_autoformat", { clear = true })
-  -- AC("BufWritePre",
-  --   {
-  --     buffer = bufnr,
-  --     group = "lsp_autoformat",
-  --     callback = function()
-  --       vim.lsp.buf.format()
-  --       return false
-  --     end,
-  --     desc = "Format on save",
-  --   })
-end
+local AG = vim.api.nvim_create_augroup
+local AC = vim.api.nvim_create_autocmd
 
 require('mason').setup()
 require('mason-lspconfig').setup({
@@ -77,35 +13,100 @@ require('mason-lspconfig').setup({
 local null_ls = require('null-ls')
 local null_ls_sources = {}
 
-if vim.g.jesse_lang_js then
-  table.insert(null_ls_sources, null_ls.builtins.formatting.eslint_d)
-  table.insert(null_ls_sources, null_ls.builtins.diagnostics.eslint_d)
-  table.insert(null_ls_sources, null_ls.builtins.formatting.prettierd)
-end
-if vim.g.jesse_lang_lua then
-  table.insert(null_ls_sources, null_ls.builtins.formatting.stylua)
+local function hover_diagnostic_or_symbol_doc()
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+  local diag = vim.diagnostic.get(0, { lnum = line - 1 })
+  if next(diag) == nil then
+    vim.lsp.buf.hover()
+  else
+    vim.diagnostic.open_float()
+  end
 end
 
-if next(null_ls_sources) ~= nil then
-  null_ls.setup({
-    debug = true,
-    sources = null_ls_sources,
-    options = {
-      on_attach = set_common_and_autoformat,
-    },
-  })
-  require('mason-null-ls').setup({
-    automatic_installation = true,
-    auto_update = true,
-  })
+local function lsp_references()
+  require('telescope.builtin').lsp_references()
+end
+
+-- wrap vim.lsp.buf.* functions so they don't return true, clearing the autocmd
+local function format_buffer()
+  vim.lsp.buf.format()
+end
+
+local function document_highlight()
+  vim.lsp.buf.document_highlight()
+end
+
+local function clear_references()
+  vim.lsp.buf.clear_references()
+end
+
+local function set_common(client, bufnr)
+  -- multiple LSPs may attach to the same buffer, but we don't need to redefine the keymaps after the first one
+  if vim.b[bufnr].lsp_mapped == nil then
+    map('n', 'gD', vim.lsp.buf.declaration, { buffer = bufnr, desc = 'Go to declaration of symbol under cursor' })
+    map('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = 'Go to definition of symbol under cursor' })
+    map(
+      'n',
+      'K',
+      hover_diagnostic_or_symbol_doc,
+      { buffer = bufnr, desc = 'Show diagnostic for current line, or documentation for symbol under cursor' }
+    )
+    map('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr, desc = 'Go to implementation of symbol under cursor' })
+    map(
+      'n',
+      '<space>D',
+      vim.lsp.buf.type_definition,
+      { buffer = bufnr, desc = 'Go to type definition of symbol under cursor' }
+    )
+    map_many('n', { '<space>rn', '<F2>' }, vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename symbol under cursor' })
+    map_many(
+      '',
+      { '<space>ca', '<M-a>' },
+      '<cmd>CodeActionMenu<cr>',
+      { buffer = bufnr, silent = true, desc = 'Execute Code Action' }
+    )
+    map('n', 'gr', lsp_references, { buffer = bufnr, desc = 'Find references to symbol under cursor' })
+    map('n', '<space>f', format_buffer, { buffer = bufnr, desc = 'Format current buffer' })
+
+    vim.b[bufnr].lsp_mapped = true
+  end
+  if client.server_capabilities.documentHighlightProvider and vim.b[bufnr].lsp_highlight == nil then
+    local group = AG('lsp_document_highlight', { clear = true })
+    AC('CursorHold', {
+      buffer = bufnr,
+      group = group,
+      callback = document_highlight,
+      desc = 'Highlight symbol under cursor',
+    })
+    AC('CursorMoved', {
+      buffer = bufnr,
+      group = group,
+      callback = clear_references,
+      desc = 'Clear symbol highlight',
+    })
+
+    vim.b[bufnr].lsp_highlight = true
+  end
+end
+
+local function set_common_and_autoformat(client, bufnr)
+  set_common(client, bufnr)
+  if vim.b[bufnr].lsp_autoformat == nil then
+    local group = AG('lsp_autoformat', { clear = true })
+    AC('BufWritePre', {
+      buffer = bufnr,
+      group = group,
+      callback = format_buffer,
+      desc = 'Format on save',
+    })
+
+    vim.b[bufnr].lsp_autoformat = true
+  end
 end
 
 if vim.g.jesse_lang_go then
   lsp.gopls.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
   }))
 end
 
@@ -113,9 +114,6 @@ if vim.g.jesse_lang_rust then
   lsp.rust_analyzer.setup(coq.lsp_ensure_capabilities({
     cmd = { 'rustup', 'run', 'nightly', 'rust-analyzer' },
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
   }))
 end
 
@@ -151,30 +149,25 @@ if vim.g.jesse_lang_js then
         description = 'Go to source definition',
       },
     },
-    flags = {
-      debounce_text_changes = 150,
-    },
   }))
   lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
+    -- TODO: Disable code actions associated with this LSP
   }))
   lsp.prismals.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
   }))
+
+  table.insert(null_ls_sources, null_ls.builtins.formatting.prettierd)
+
+  table.insert(null_ls_sources, null_ls.builtins.diagnostics.eslint_d)
+  table.insert(null_ls_sources, null_ls.builtins.formatting.eslint_d)
+  table.insert(null_ls_sources, null_ls.builtins.code_actions.eslint_d)
 end
 
 if vim.g.jesse_lang_python then
   lsp.pylsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
   }))
 end
 
@@ -185,9 +178,6 @@ if vim.g.jesse_lang_lua then
 
   lsp.sumneko_lua.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    flags = {
-      debounce_text_changes = 150,
-    },
     settings = {
       Lua = {
         runtime = {
@@ -209,6 +199,22 @@ if vim.g.jesse_lang_lua then
       },
     },
   }))
+
+  table.insert(null_ls_sources, null_ls.builtins.formatting.stylua)
+  table.insert(null_ls_sources, null_ls.builtins.diagnostics.selene)
+end
+
+-- null ls should be final client setup, so it takes preference over other LSPs (for example, when formatting)
+if next(null_ls_sources) ~= nil then
+  null_ls.setup({
+    debug = true,
+    sources = null_ls_sources,
+    on_attach = set_common_and_autoformat,
+  })
+  require('mason-null-ls').setup({
+    automatic_installation = true,
+    auto_update = true,
+  })
 end
 
 pcall(require, 'dotfiles.lsp_local')

@@ -96,7 +96,18 @@ return require('packer').startup(function(use)
   })
 
   -- Split/Join lines with gS, gJ
-  use('AndrewRadev/splitjoin.vim')
+  use({
+    'Wansmer/treesj',
+    requires = { 'nvim-treesitter' },
+    config = function()
+      require('treesj').setup({
+        use_default_keymaps = true,
+      })
+      local map = require('dotfiles.maps').map
+      map('n', 'gS', ':TSJSplit<CR>', { desc = 'Split current node into multiple lines', silent = true })
+      map('n', 'gJ', ':TSJJoin<CR>', { desc = 'Join current node onto single line', silent = true })
+    end,
+  })
 
   -- change surrounding quotes/brackets/tags/etc.
   use({
@@ -174,6 +185,14 @@ return require('packer').startup(function(use)
     use({ 'styled-components/vim-styled-components', branch = 'main' })
     use('jparise/vim-graphql')
     use('pantharshit00/vim-prisma')
+
+    use({
+      'vuki656/package-info.nvim',
+      requires = 'MunifTanjim/nui.nvim',
+      config = function()
+        require('package-info').setup()
+      end,
+    })
   end
 
   use({ vim.g.dotfiles_nvim .. '/plug' })
