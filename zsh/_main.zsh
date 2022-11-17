@@ -33,6 +33,7 @@ load_all() {
   source "$DOTFILES/zsh/aliases.zsh"
   source "$DOTFILES/zsh/bindkeys.zsh"
   source "$DOTFILES/zsh/functions.zsh"
+  source "$DOTFILES/zsh/notify.zsh"
 
   [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
 }
@@ -69,12 +70,20 @@ if (( ! $+commands[fzf] )); then
   echo "Install fzf"
   [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install fzf"
   [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install fzf"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  source "$(brew --prefix fzf)/shell/completion.zsh"
+  source "$(brew --prefix fzf)/shell/key-bindings.zsh"
+else
+  source "/usr/share/doc/fzf/examples/completion.zsh"
+  source "/usr/share/doc/fzf/examples/key-bindings.zsh"
 fi
+
 if (( ! $+commands[rg] )); then
   echo "Install ripgrep"
   [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install ripgrep"
   [[ "$OSTYPE" == "darwin"* ]] && echo "$ brew install ripgrep"
 fi
+
 if (( ! $+commands[delta] )); then
   echo "Install delta"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then

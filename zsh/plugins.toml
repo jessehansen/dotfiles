@@ -9,9 +9,7 @@ github="ohmyzsh/ohmyzsh"
 use=[
   "lib/history.zsh",
   "plugins/vi-mode/*.plugin.zsh",
-  "plugins/fzf/*.plugin.zsh",
   "plugins/nvm/*.plugin.zsh",
-  "plugins/bgnotify/*.plugin.zsh"
 ]
 
 [plugins.zsh-z]
