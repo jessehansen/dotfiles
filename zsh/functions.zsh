@@ -164,3 +164,10 @@ jwtdump () {
     echo "${jwtParts##*.}"
   fi
 }
+
+nofont () {
+  typeset -g POWERLEVEL9K_MODE=powerline
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs newline)
+  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\UE0A0 '
+  p10k reload
+}

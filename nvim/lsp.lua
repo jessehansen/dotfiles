@@ -71,16 +71,13 @@ local function set_common(client, bufnr)
     vim.b[bufnr].lsp_mapped = true
   end
   if client.server_capabilities.documentHighlightProvider and vim.b[bufnr].lsp_highlight == nil then
-    local group = AG('lsp_document_highlight', { clear = true })
     AC('CursorHold', {
       buffer = bufnr,
-      group = group,
       callback = document_highlight,
       desc = 'Highlight symbol under cursor',
     })
     AC('CursorMoved', {
       buffer = bufnr,
-      group = group,
       callback = clear_references,
       desc = 'Clear symbol highlight',
     })
@@ -92,10 +89,8 @@ end
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
   if vim.b[bufnr].lsp_autoformat == nil then
-    local group = AG('lsp_autoformat', { clear = true })
     AC('BufWritePre', {
       buffer = bufnr,
-      group = group,
       callback = format_buffer,
       desc = 'Format on save',
     })

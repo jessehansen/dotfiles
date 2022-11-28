@@ -59,26 +59,26 @@ map_many(
 
 map('c', '%%', "<C-R>=fnameescape(expand('%:h'))<CR>/", { desc = 'Insert current file directory' })
 
-map('', '<leader>/', ':noh<CR>', { silent = true, desc = 'Clear search highlight' })
+map('', '<leader>/', ':nohlsearch<CR>', { silent = true, desc = 'Clear search highlight' })
 
 -- clipboard mappings
-map_many('x', { '<leader>y', '<C-y>' }, '"+y', { silent = true, noremap = true, desc = 'Copy to system keyboard' })
-map('n', '<C-y>', '"+yy', { silent = true, noremap = true, desc = 'Copy current line to system keyboard' })
-map('x', 'p', [[pgv"@=v:register.'y'<cr>]], { silent = true, noremap = true, desc = 'Paste without stomping register' })
+map_many('x', { '<leader>y', '<C-y>' }, '"+y', { silent = true, remap = false, desc = 'Copy to system keyboard' })
+map('n', '<C-y>', '"+yy', { silent = true, remap = false, desc = 'Copy current line to system keyboard' })
+map('x', 'p', [[pgv"@=v:register.'y'<cr>]], { silent = true, remap = false, desc = 'Paste without stomping register' })
 
 -- buffer mappings
-map('n', '<Leader>h', ':bp<cr>', { silent = true, noremap = true, desc = 'Next Buffer' })
-map('n', '<Leader>l', ':bn<cr>', { silent = true, noremap = true, desc = 'Previous Buffer' })
+map('n', '<Leader>h', ':bp<cr>', { silent = true, remap = false, desc = 'Next Buffer' })
+map('n', '<Leader>l', ':bn<cr>', { silent = true, remap = false, desc = 'Previous Buffer' })
 
 map(
   'n',
   '<Leader>w',
   ':b#<bar>bd#<CR>',
-  { silent = true, noremap = true, desc = 'Close current buffer and switch to another' }
+  { silent = true, remap = false, desc = 'Close current buffer and switch to another' }
 )
 
-map('n', '<leader>a', 'ggVG', { noremap = true, desc = 'Select all in current buffer' })
-map('n', 'zz', 'G', { noremap = true, desc = 'Go to end of current buffer' })
+map('n', '<leader>a', 'ggVG', { remap = false, desc = 'Select all in current buffer' })
+map('n', 'zz', 'G', { remap = false, desc = 'Go to end of current buffer' })
 
 map('n', '<leader>p', function()
   local value = vim.fn.expand('%')
@@ -87,16 +87,17 @@ map('n', '<leader>p', function()
 end, { desc = 'Copy current file name to system clipboard' })
 
 -- visual mode indentation should not clear selection
-map_many('v', { '<Tab>', '>' }, '>gv', { silent = true, noremap = true, desc = 'Increase indent' })
-map_many('v', { '<S-Tab>', '<' }, '<gv', { silent = true, noremap = true, desc = 'Decrease indent' })
+map_many('v', { '<Tab>', '>' }, '>gv', { silent = true, remap = false, desc = 'Increase indent' })
+map_many('v', { '<S-Tab>', '<' }, '<gv', { silent = true, remap = false, desc = 'Decrease indent' })
 
 -- yanking in visual mode should not clear selection
 
 -- ctrl-s saves in insert mode
-map('i', '<C-s>', '<Esc>:w<CR>a', { noremap = true, desc = 'Save current buffer' })
+map('i', '<C-s>', '<Esc>:w<CR>a', { remap = false, desc = 'Save current buffer' })
+map('i', '<C-r>', '<C-r><C-o>', { remap = false, desc = 'Insert register without indentation' })
 
 -- terminal mode mappings
-map('t', '<Esc>', '<C-\\><C-n>', { noremap = true, desc = 'Exit terminal' })
+map('t', '<Esc>', '<C-\\><C-n>', { remap = false, desc = 'Exit terminal' })
 
 map('n', '[e', vim.diagnostic.goto_prev, { desc = 'Go to previous error' })
 map('n', ']e', vim.diagnostic.goto_next, { desc = 'Go to next error' })
