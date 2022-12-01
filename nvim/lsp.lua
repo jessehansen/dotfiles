@@ -51,6 +51,7 @@ local function set_common(client, bufnr)
       hover_diagnostic_or_symbol_doc,
       { buffer = bufnr, desc = 'Show diagnostic for current line, or documentation for symbol under cursor' }
     )
+    map('n', 'L', vim.lsp.buf.hover, { buffer = bufnr, desc = 'Show documentation for symbol under cursor' })
     map('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr, desc = 'Go to implementation of symbol under cursor' })
     map(
       'n',
@@ -107,7 +108,7 @@ end
 
 if vim.g.jesse_lang_rust then
   lsp.rust_analyzer.setup(coq.lsp_ensure_capabilities({
-    cmd = { 'rustup', 'run', 'nightly', 'rust-analyzer' },
+    cmd = { 'rustup', 'run', 'stable', 'rust-analyzer' },
     on_attach = set_common_and_autoformat,
   }))
 end
