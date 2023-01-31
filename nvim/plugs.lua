@@ -14,8 +14,8 @@ local packer_bootstrap = ensure_packer()
 return require('packer').startup(function(use)
   use('wbthomason/packer.nvim')
 
-  if vim.env.TERM == "xterm-kitty" then
-    use("fladson/vim-kitty")
+  if vim.env.TERM == 'xterm-kitty' then
+    use('fladson/vim-kitty')
   end
 
   -- dir tree
@@ -178,7 +178,7 @@ return require('packer').startup(function(use)
 
   if vim.g.jesse_lang_rust then
     use('rust-lang/rust.vim')
-    use('simrat39/rust-tools.nvim')
+    use('vim-test/vim-test')
   end
 
   if vim.g.jesse_lang_js then
@@ -199,7 +199,7 @@ return require('packer').startup(function(use)
     })
   end
 
-  use({ vim.g.dotfiles_nvim .. '/plug' })
+  use({ vim.g.dotfiles_nvim .. 'plug' })
 
   pcall(require, 'dotfiles.plugs_local')
 

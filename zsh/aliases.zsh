@@ -16,6 +16,11 @@ if (( $+commands[bat] )); then
   alias cat='bat'
 fi
 
+if (( $+commands[docker] )); then
+  alias dc='docker compose'
+  alias dce='docker compose exec'
+fi
+
 alias j='zshz 2>&1'
 
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then

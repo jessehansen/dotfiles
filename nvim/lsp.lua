@@ -27,17 +27,8 @@ local function lsp_references()
   require('telescope.builtin').lsp_references()
 end
 
--- wrap vim.lsp.buf.* functions so they don't return true, clearing the autocmd
 local function format_buffer()
   vim.lsp.buf.format()
-end
-
-local function document_highlight()
-  vim.lsp.buf.document_highlight()
-end
-
-local function clear_references()
-  vim.lsp.buf.clear_references()
 end
 
 local function set_common(client, bufnr)
@@ -71,33 +62,23 @@ local function set_common(client, bufnr)
 
     vim.b[bufnr].lsp_mapped = true
   end
-  if client.server_capabilities.documentHighlightProvider and vim.b[bufnr].lsp_highlight == nil then
-    AC('CursorHold', {
-      buffer = bufnr,
-      callback = document_highlight,
-      desc = 'Highlight symbol under cursor',
-    })
-    AC('CursorMoved', {
-      buffer = bufnr,
-      callback = clear_references,
-      desc = 'Clear symbol highlight',
-    })
-
-    vim.b[bufnr].lsp_highlight = true
+  if client.server_capabilities.documentHighlightProvider then
+    vim.cmd([[
+    augroup lsp_document_highlight
+      autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+      autocmd! CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    augroup END
+    ]])
   end
 end
 
 local function set_common_and_autoformat(client, bufnr)
   set_common(client, bufnr)
-  if vim.b[bufnr].lsp_autoformat == nil then
-    AC('BufWritePre', {
-      buffer = bufnr,
-      callback = format_buffer,
-      desc = 'Format on save',
-    })
-
-    vim.b[bufnr].lsp_autoformat = true
-  end
+  vim.cmd([[
+  augroup lsp_autoformat
+    autocmd! BufWritePre <buffer> lua vim.lsp.buf.format()
+  augroup END
+  ]])
 end
 
 if vim.g.jesse_lang_go then
@@ -108,7 +89,13 @@ end
 
 if vim.g.jesse_lang_rust then
   lsp.rust_analyzer.setup(coq.lsp_ensure_capabilities({
-    cmd = { 'rustup', 'run', 'stable', 'rust-analyzer' },
+    settings = {
+      ['rust-analyzer'] = {
+        checkOnSave = {
+          command = 'clippy',
+        },
+      },
+    },
     on_attach = set_common_and_autoformat,
   }))
 end
