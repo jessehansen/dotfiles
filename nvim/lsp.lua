@@ -190,7 +190,7 @@ end
 -- null ls should be final client setup, so it takes preference over other LSPs (for example, when formatting)
 if next(null_ls_sources) ~= nil then
   null_ls.setup({
-    debug = true,
+    debug = false,
     sources = null_ls_sources,
     on_attach = set_common_and_autoformat,
   })
