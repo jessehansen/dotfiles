@@ -159,19 +159,15 @@ if vim.g.jesse_lang_lua then
   table.insert(runtime_path, 'lua/?.lua')
   table.insert(runtime_path, 'lua/?/init.lua')
 
-  lsp.sumneko_lua.setup(coq.lsp_ensure_capabilities({
+  lsp.lua_ls.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
     settings = {
       Lua = {
         runtime = {
           version = 'LuaJIT',
-          path = runtime_path,
         },
         diagnostics = {
           globals = { 'vim' },
-          neededFileStatus = {
-            ['codestyle-check'] = 'Any',
-          },
         },
         workspace = {
           library = vim.api.nvim_get_runtime_file('', true),
