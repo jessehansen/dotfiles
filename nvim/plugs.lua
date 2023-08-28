@@ -1,60 +1,50 @@
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    vim.cmd([[packadd packer.nvim]])
-    return true
-  end
-  return false
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
+    lazypath,
+  })
 end
+vim.opt.rtp:prepend(lazypath)
 
-local packer_bootstrap = ensure_packer()
+local lazy_config = { lockfile = vim.g.dotfiles_nvim .. 'lazy-lock.json' }
 
-return require('packer').startup(function(use)
-  use('wbthomason/packer.nvim')
-
-  if vim.env.TERM == 'xterm-kitty' then
-    use('fladson/vim-kitty')
-  end
-
+local lazy_plugins = {
+  { 'fladson/vim-kitty', enabled = vim.env.TERM == 'xterm-kitty' },
   -- dir tree
-  use({
+  {
     'ms-jpq/chadtree',
     branch = 'chad',
-    run = 'python3 -m chadtree deps',
+    build = 'python3 -m chadtree deps',
     config = function()
       require('dotfiles.chadtree')
     end,
-  })
-
-  -- fuzzy finder
-  use({
+  },
+  {
     'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'make',
-  })
-  use({
+    build = 'make',
+  },
+  {
     'nvim-telescope/telescope.nvim',
     branch = '0.1.x',
-    requires = { 'nvim-lua/plenary.nvim' },
-    after = 'telescope-fzf-native.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       require('dotfiles.telescope')
     end,
-  })
-
-  -- status line/tab bar
-  use({
+  },
+  {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
+    dependencies = { 'kyazdani42/nvim-web-devicons' },
     config = function()
       require('dotfiles.lualine')
     end,
-  })
-
-  -- git integration
-  use('tpope/vim-fugitive') -- git stuff
-  use({
+  },
+  'tpope/vim-fugitive',
+  {
     'tpope/vim-rhubarb', -- github stuff
     config = function()
       local map = require('dotfiles.maps').map
@@ -67,42 +57,39 @@ return require('packer').startup(function(use)
         { desc = 'Copy github link to current line', silent = true }
       )
     end,
-  })
-  use('mhinz/vim-signify') -- gutter
-
+  },
+  'mhinz/vim-signify', -- gutter
   -- support .editorconfig
-  use('gpanders/editorconfig.nvim')
-
+  'gpanders/editorconfig.nvim',
   -- theme
-  use({
+  {
     'ellisonleao/gruvbox.nvim',
+    priority = 1000,
     config = function()
       require('dotfiles.colors')
     end,
-  })
-
+  },
   -- close multiple buffers
-  use({
+  {
     'Asheq/close-buffers.vim',
     config = function()
       local map = require('dotfiles.maps').map
       map('', '<leader>q', ':Bwipeout hidden<CR>', { desc = 'Close all hidden buffers' })
     end,
-  })
-
+  },
   -- Smart comment/uncomment
-  use({
+  {
     'numToStr/Comment.nvim',
-    requires = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     config = function()
       require('dotfiles.comment')
     end,
-  })
-
+  },
   -- Split/Join lines with gS, gJ
-  use({
+  {
     'Wansmer/treesj',
-    requires = { 'nvim-treesitter' },
+    keys = { '<space>m', '<space>j', '<space>s', 'gS', 'gJ' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     config = function()
       require('treesj').setup({
         use_default_keymaps = true,
@@ -111,99 +98,84 @@ return require('packer').startup(function(use)
       map('n', 'gS', ':TSJSplit<CR>', { desc = 'Split current node into multiple lines', silent = true })
       map('n', 'gJ', ':TSJJoin<CR>', { desc = 'Join current node onto single line', silent = true })
     end,
-  })
-
+  },
   -- change surrounding quotes/brackets/tags/etc.
-  use({
+  {
     'tpope/vim-surround',
-    requires = { 'tpope/vim-repeat' },
-  })
-
+    dependencies = { 'tpope/vim-repeat' },
+  },
   -- plural-aware find and replace
-  use('tpope/vim-abolish')
-
+  'tpope/vim-abolish',
   -- lsp configs
-  --  coq must be configured before plugin loads
-  require('dotfiles.coq')
-  use({ 'ms-jpq/coq_nvim', branch = 'coq' })
-  use({ 'ms-jpq/coq.artifacts', branch = 'artifacts', after = 'coq_nvim' })
-  use({
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-    'jose-elias-alvarez/null-ls.nvim',
-    'jayp0521/mason-null-ls.nvim',
-    'neovim/nvim-lspconfig',
-  })
-
-  require('packer').use({
+  { 'ms-jpq/coq_nvim', branch = 'coq' },
+  { 'ms-jpq/coq.artifacts', branch = 'artifacts', after = 'coq_nvim' },
+  'williamboman/mason.nvim',
+  'williamboman/mason-lspconfig.nvim',
+  'jose-elias-alvarez/null-ls.nvim',
+  'jayp0521/mason-null-ls.nvim',
+  'neovim/nvim-lspconfig',
+  {
     'weilbith/nvim-code-action-menu',
     cmd = 'CodeActionMenu',
-  })
-
-  -- treesitter
-  use({
+  },
+  {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
-  })
-  use({
+    build = ':TSUpdate',
+  },
+  {
     'nvim-treesitter/nvim-treesitter-textobjects',
     after = 'nvim-treesitter',
     config = function()
       require('dotfiles.treesitter')
     end,
-  })
-
+  },
   -- disable diagnostics during insert mode
-  use({
+  {
     'https://gitlab.com/yorickpeterse/nvim-dd.git',
     config = function()
       require('dd').setup()
     end,
-  })
+  },
   -- diagnostics window
-  use({
+  {
     'folke/trouble.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons' },
+    dependencies = { 'kyazdani42/nvim-web-devicons' },
     config = function()
       require('dotfiles.trouble')
     end,
-  })
+  },
+  {
+    'fatih/vim-go',
+    build = ':GoUpdateBinaries',
+    enabled = vim.g.jesse_lang_go,
+  },
+  {
+    'rust-lang/rust.vim',
+    enabled = vim.g.jesse_lang_rust,
+  },
+  {
+    'vim-test/vim-test',
+    enabled = vim.g.jesse_lang_rust,
+  },
+  { 'pangloss/vim-javascript', enabled = vim.g.jesse_lang_js },
+  { 'leafgarland/typescript-vim', enabled = vim.g.jesse_lang_js },
+  { 'mxw/vim-jsx', enabled = vim.g.jesse_lang_js },
+  { 'ianks/vim-tsx', enabled = vim.g.jesse_lang_js },
+  { 'styled-components/vim-styled-components', branch = 'main', enabled = vim.g.jesse_lang_js },
+  { 'jparise/vim-graphql', enabled = vim.g.jesse_lang_js },
+  { 'pantharshit00/vim-prisma', enabled = vim.g.jesse_lang_js },
+  {
+    'vuki656/package-info.nvim',
+    dependencies = { 'MunifTanjim/nui.nvim' },
+    config = function()
+      require('package-info').setup()
+    end,
+    enabled = vim.g.jesse_lang_js,
+  },
+  { dir = vim.g.dotfiles_nvim .. 'plug' },
+}
 
-  if vim.g.jesse_lang_go then
-    use({
-      'fatih/vim-go',
-      run = ':GoUpdateBinaries',
-    })
-  end
+--  coq must be configured before plugins load
+require('dotfiles.coq')
 
-  if vim.g.jesse_lang_rust then
-    use('rust-lang/rust.vim')
-    use('vim-test/vim-test')
-  end
-
-  if vim.g.jesse_lang_js then
-    use('pangloss/vim-javascript')
-    use('leafgarland/typescript-vim')
-    use('mxw/vim-jsx')
-    use('ianks/vim-tsx')
-    use({ 'styled-components/vim-styled-components', branch = 'main' })
-    use('jparise/vim-graphql')
-    use('pantharshit00/vim-prisma')
-
-    use({
-      'vuki656/package-info.nvim',
-      requires = 'MunifTanjim/nui.nvim',
-      config = function()
-        require('package-info').setup()
-      end,
-    })
-  end
-
-  use({ vim.g.dotfiles_nvim .. 'plug' })
-
-  pcall(require, 'dotfiles.plugs_local')
-
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+require('lazy').setup(lazy_plugins, lazy_config)
