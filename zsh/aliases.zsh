@@ -74,6 +74,8 @@ function git_current_branch() {
   echo ${ref#refs/heads/}
 }
 
+alias yanr='yarn'
+
 alias g='git'
 alias ga='git add'
 alias gaa='git add --all'
