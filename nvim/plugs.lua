@@ -64,6 +64,7 @@ local lazy_plugins = {
   -- theme
   {
     'ellisonleao/gruvbox.nvim',
+    lazy = false,
     priority = 1000,
     config = function()
       require('dotfiles.colors')
