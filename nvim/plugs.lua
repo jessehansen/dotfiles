@@ -107,8 +107,8 @@ local lazy_plugins = {
   -- plural-aware find and replace
   'tpope/vim-abolish',
   -- lsp configs
-  { 'ms-jpq/coq_nvim', branch = 'coq' },
-  { 'ms-jpq/coq.artifacts', branch = 'artifacts', after = 'coq_nvim' },
+  { 'ms-jpq/coq_nvim', branch = 'coq', build = ':COQdeps' },
+  { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
   'williamboman/mason.nvim',
   'williamboman/mason-lspconfig.nvim',
   'jose-elias-alvarez/null-ls.nvim',
@@ -124,7 +124,6 @@ local lazy_plugins = {
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
-    after = 'nvim-treesitter',
     config = function()
       require('dotfiles.treesitter')
     end,
