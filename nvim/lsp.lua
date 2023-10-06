@@ -3,9 +3,6 @@ local coq = require('coq')
 local map = require('dotfiles.maps').map
 local map_many = require('dotfiles.maps').map_many
 
-local AG = vim.api.nvim_create_augroup
-local AC = vim.api.nvim_create_autocmd
-
 require('mason').setup()
 require('mason-lspconfig').setup({
   automatic_installation = true,
@@ -62,6 +59,7 @@ local function set_common(client, bufnr)
 
     vim.b[bufnr].lsp_mapped = true
   end
+
   if client.server_capabilities.documentHighlightProvider then
     vim.cmd([[
     augroup lsp_document_highlight

@@ -102,8 +102,13 @@ map('t', '<Esc>', '<C-\\><C-n>', { remap = false, desc = 'Exit terminal' })
 map('n', '[e', vim.diagnostic.goto_prev, { desc = 'Go to previous error' })
 map('n', ']e', vim.diagnostic.goto_next, { desc = 'Go to next error' })
 
---12d0737b-8c04-4b7a-89e0-349c0aaa828e
 map('n', ',u', "a<c-r>=tolower(trim(system('uuidgen')))<CR><Esc>", { remap = false, desc = 'Insert UUID after cursor' })
+map(
+  'v',
+  ',u',
+  "c<c-r>=tolower(trim(system('uuidgen')))<CR><Esc>",
+  { remap = false, desc = 'Overwrite selection with UUID' }
+)
 map(
   'n',
   ',U',

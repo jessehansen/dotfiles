@@ -3,13 +3,13 @@ alias mv='mv -iv'
 alias mkdir='mkdir -pv'
 alias grep='grep --color'
 
-if (( $+commands[exa] )); then
-  alias ls='exa'
-  alias ll='ls -Fla'
-  alias la='ls -aF'
+if (( $+commands[lsd] )); then
+  alias ls='lsd --group-directories-first'
+  alias ll='lsd -la --group-directories-first'
+  alias la='lsd -a --group-directories-first'
 else
-  alias ll='ls -FGlAhp'
-  alias la='ls -AF'
+  alias ll='ls -FGlAhp --group-directories-first'
+  alias la='ls -AF --group-directories-first'
 fi
 
 if (( $+commands[bat] )); then

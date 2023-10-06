@@ -13,6 +13,8 @@ if vim.g.jesse_lang_js then
 end
 
 require('nvim-treesitter.configs').setup({
+  modules = {},
+
   ensure_installed = parsers,
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -44,10 +46,10 @@ require('nvim-treesitter.configs').setup({
   incremental_selection = {
     enable = true,
     keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
+      -- init_selection = 'gnn',
+      node_incremental = 'v',
+      -- scope_incremental = 'grc',
+      node_decremental = 'V',
     },
   },
 
