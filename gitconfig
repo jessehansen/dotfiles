@@ -9,6 +9,7 @@
 	cmd = smerge mergetool \"$BASE\" \"$REMOTE\" \"$LOCAL\" -o \"$MERGED\"
 [push]
 	default = simple
+  autoSetupRemote = true
 [alias]
 	ls = log --pretty=format:\"%C(yellow)%h%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn]\" --decorate
 	ll = log --pretty=format:\"%C(yellow)%h%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn]\" --decorate --numstat
@@ -27,7 +28,6 @@
 	co = checkout
 	unstage = reset HEAD --
 	f = "!git ls-files | grep -i"
-	push-up = "!gitbranchname() { git symbolic-ref --short HEAD; }; gitpushupstream() { git push --set-upstream origin `gitbranchname`; }; gitpushupstream"
 	push-tags = "!gitbranchname() { git symbolic-ref --short HEAD; }; gitpushtags() { git push origin `gitbranchname` --tags; }; gitpushtags"
 	pushf = push --force-with-lease
 	push-force = push --force-with-lease
