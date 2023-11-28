@@ -112,8 +112,8 @@ local lazy_plugins = {
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
   'williamboman/mason.nvim',
   'williamboman/mason-lspconfig.nvim',
-  'jose-elias-alvarez/null-ls.nvim',
-  'jayp0521/mason-null-ls.nvim',
+  'nvimtools/none-ls.nvim',
+  'jay-babu/mason-null-ls.nvim',
   'neovim/nvim-lspconfig',
   {
     'weilbith/nvim-code-action-menu',
