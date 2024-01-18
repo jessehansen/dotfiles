@@ -71,10 +71,21 @@ require('nvim-treesitter.configs').setup({
       selection_modes = {
         ['@parameter.outer'] = 'v', -- charwise
         ['@function.outer'] = 'V', -- linewise
-        ['@class.outer'] = '<c-v>', -- blockwise
+        ['@class.outer'] = 'V', -- linewise
       },
 
       include_surrounding_whitespace = false,
+    },
+    swap = {
+      enable = true,
+      swap_next = {
+        ['<C-S-D-Right>'] = '@parameter.inner',
+        ['<C-S-D-Down>'] = '@function.outer',
+      },
+      swap_previous = {
+        ['<C-S-D-Left>'] = '@parameter.inner',
+        ['<C-S-D-Up>'] = '@function.outer',
+      },
     },
   },
 })
