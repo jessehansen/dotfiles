@@ -33,7 +33,7 @@ load_all() {
   source "$DOTFILES/zsh/aliases.zsh"
   source "$DOTFILES/zsh/bindkeys.zsh"
   source "$DOTFILES/zsh/functions.zsh"
-  source "$DOTFILES/zsh/notify.zsh"
+  # source "$DOTFILES/zsh/notify.zsh"
 
   [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
 }

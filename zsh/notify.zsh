@@ -65,13 +65,13 @@ function bgnotify_formatted {
 
 # for macOS, output is "app ID, window ID" (com.googlecode.iterm2, 116)
 function bgnotify_appid {
-  if (( ${+commands[osascript]} )); then
-    osascript -e 'tell application (path to frontmost application as text) to get the {id, id of front window}' 2>/dev/null
-  elif (( ${+commands[xprop]} )); then
-    xprop -root _NET_ACTIVE_WINDOW 2>/dev/null | cut -d' ' -f5
-  else
+  # if (( ${+commands[osascript]} )); then
+  #   osascript -e 'tell application "System Events" to get name of application processes whose frontmost is true and visible is true' 2>/dev/null
+  # elif (( ${+commands[xprop]} )); then
+  #   xprop -root _NET_ACTIVE_WINDOW 2>/dev/null | cut -d' ' -f5
+  # else
     echo $EPOCHSECONDS
-  fi
+  # fi
 }
 
 function bgnotify {
