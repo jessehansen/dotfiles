@@ -131,6 +131,9 @@ if vim.g.jesse_lang_js then
       },
     },
   }))
+  lsp.eslint.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
+  }))
   lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
     -- TODO: Disable code actions associated with this LSP
@@ -140,10 +143,6 @@ if vim.g.jesse_lang_js then
   }))
 
   table.insert(null_ls_sources, null_ls.builtins.formatting.prettierd)
-
-  table.insert(null_ls_sources, null_ls.builtins.diagnostics.eslint_d)
-  table.insert(null_ls_sources, null_ls.builtins.formatting.eslint_d)
-  table.insert(null_ls_sources, null_ls.builtins.code_actions.eslint_d)
 end
 
 if vim.g.jesse_lang_python then
@@ -190,6 +189,7 @@ if next(null_ls_sources) ~= nil then
   })
   require('mason-null-ls').setup({
     automatic_installation = true,
+    ensure_installed = {},
     auto_update = true,
   })
 end
