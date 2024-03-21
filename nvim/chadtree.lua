@@ -14,7 +14,7 @@ vim.g.chadtree_settings = {
     h_split = { 'W', '<C-X>' },
     change_dir = {},
     change_focus = {},
-    change_focus_up = {},
+    change_focus_up = { '<C-K>' },
   },
 }
 local map = require('dotfiles.maps').map
