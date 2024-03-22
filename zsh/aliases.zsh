@@ -17,6 +17,10 @@ if (( $+commands[bat] )); then
 fi
 
 if (( $+commands[docker] )); then
+  alias d='docker'
+  alias dps='docker ps'
+  alias dpsa='docker ps -a'
+  alias di='docker images'
   alias dc='docker compose'
   alias dce='docker compose exec'
 fi

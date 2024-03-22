@@ -171,3 +171,25 @@ nofont () {
   typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\UE0A0 '
   p10k reload
 }
+
+if (( $+commands[op] )); then
+  pass () {
+    if [ "$1" = "" ]; then
+      echo "Usage: pass [Service]"
+    else
+      op item get $1 --fields password
+    fi
+  }
+
+  passf () {
+    if [ "$1" = "" ]; then
+      echo "Usage: passf [search str]"
+    else
+      for acct in `op account list --format json | jq -r '.[].url'`; do
+        for item in `op item list --account $acct | grep -i $1 | cut -d ' ' -f 1`; do
+          op item get $item --account $acct
+        done
+      done
+    fi
+  }
+fi
