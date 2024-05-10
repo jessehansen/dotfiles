@@ -177,7 +177,7 @@ if vim.g.jesse_lang_lua then
   }))
 
   table.insert(null_ls_sources, null_ls.builtins.formatting.stylua)
-  table.insert(null_ls_sources, null_ls.builtins.diagnostics.selene)
+  -- table.insert(null_ls_sources, null_ls.builtins.diagnostics.selene)
 end
 
 -- null ls should be final client setup, so it takes preference over other LSPs (for example, when formatting)

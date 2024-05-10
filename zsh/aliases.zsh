@@ -25,6 +25,10 @@ if (( $+commands[docker] )); then
   alias dce='docker compose exec'
 fi
 
+if (( $+commands[gh] )) && gh copilot 2>&1 > /dev/null; then
+  eval "$(gh copilot alias -- zsh)"
+fi
+
 alias j='zshz 2>&1'
 
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
