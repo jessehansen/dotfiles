@@ -107,6 +107,19 @@ local lazy_plugins = {
   },
   -- plural-aware find and replace
   'tpope/vim-abolish',
+  -- copilot must be before coq.thirdparty, so it doesn't stop key maps
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+        expr = true,
+        replace_keycodes = false,
+      })
+      vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+
+      vim.g.copilot_no_tab_map = true
+    end,
+  },
   -- lsp configs
   { 'ms-jpq/coq_nvim', branch = 'coq', build = ':COQdeps' },
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
@@ -114,7 +127,7 @@ local lazy_plugins = {
     'ms-jpq/coq.thirdparty',
     config = function()
       require('coq_3p')({
-        { src = 'copilot', short_name = 'COP', accept_key = '<C-J>' },
+        { src = 'copilot', short_name = 'COP', accept_key = '<c-f>' },
       })
     end,
   },
@@ -179,18 +192,6 @@ local lazy_plugins = {
       require('package-info').setup()
     end,
     enabled = vim.g.jesse_lang_js,
-  },
-  {
-    'github/copilot.vim',
-    config = function()
-      vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
-        expr = true,
-        replace_keycodes = false,
-      })
-      vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
-
-      vim.g.copilot_no_tab_map = true
-    end,
   },
   { dir = vim.g.dotfiles_nvim .. 'plug' },
 }

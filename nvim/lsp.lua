@@ -141,6 +141,9 @@ if vim.g.jesse_lang_js then
   lsp.prismals.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
   }))
+  lsp.graphql.setup(coq.lsp_ensure_capabilities({
+    on_attach = set_common_and_autoformat,
+  }))
 
   table.insert(null_ls_sources, null_ls.builtins.formatting.prettierd)
 end
