@@ -186,14 +186,6 @@ local lazy_plugins = {
       require('dd').setup()
     end,
   },
-  -- diagnostics window
-  {
-    'folke/trouble.nvim',
-    dependencies = { 'kyazdani42/nvim-web-devicons' },
-    config = function()
-      require('dotfiles.trouble')
-    end,
-  },
   {
     'fatih/vim-go',
     build = ':GoUpdateBinaries',
