@@ -1,4 +1,4 @@
-local parsers = {}
+local parsers = { 'lua', 'xml', 'http' }
 
 if vim.g.jesse_lang_rust then
   table.insert(parsers, 'rust')
@@ -9,6 +9,7 @@ if vim.g.jesse_lang_js then
   table.insert(parsers, 'typescript')
   table.insert(parsers, 'tsx')
   table.insert(parsers, 'json')
+  table.insert(parsers, 'graphql')
   table.insert(parsers, 'prisma')
 end
 

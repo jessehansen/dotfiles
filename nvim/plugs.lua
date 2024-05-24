@@ -1,5 +1,5 @@
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
     'git',
     'clone',
@@ -111,11 +111,13 @@ local lazy_plugins = {
   {
     'github/copilot.vim',
     config = function()
-      vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+      vim.keymap.set('i', '<C-J>', 'copilot#Accept("")', {
         expr = true,
         replace_keycodes = false,
       })
       vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+      vim.keymap.set('i', '<M-q>', '<ESC>:Copilot panel<CR>')
+      vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
 
       vim.g.copilot_no_tab_map = true
     end,
@@ -137,8 +139,35 @@ local lazy_plugins = {
   'jay-babu/mason-null-ls.nvim',
   'neovim/nvim-lspconfig',
   {
-    'weilbith/nvim-code-action-menu',
-    cmd = 'CodeActionMenu',
+    'luckasRanarison/clear-action.nvim',
+    config = function()
+      local ca = require('clear-action')
+      local map_many = require('dotfiles.maps').map_many
+      ca.setup({ signs = { enable = false } })
+
+      map_many('', { '<space>ca', '<M-a>' }, function()
+        ca.code_action({
+          filter = function(action)
+            -- filter out undesired actions
+            -- print(vim.inspect(action))
+
+            -- This never does what I want
+            if action.kind == 'refactor.move' then
+              return false
+            end
+            -- This action is useless and I do it accidentally too much
+            if action.title == 'Convert named export to default export' then
+              return false
+            end
+            -- usually duplicated with eslint actions in my setup
+            if vim.startswith(action.title, 'Disable stylelint rule') then
+              return false
+            end
+            return true
+          end,
+        })
+      end, { desc = 'Show code actions' })
+    end,
   },
   {
     'nvim-treesitter/nvim-treesitter',
@@ -182,7 +211,7 @@ local lazy_plugins = {
   { 'leafgarland/typescript-vim', enabled = vim.g.jesse_lang_js },
   { 'mxw/vim-jsx', enabled = vim.g.jesse_lang_js },
   { 'ianks/vim-tsx', enabled = vim.g.jesse_lang_js },
-  { 'styled-components/vim-styled-components', branch = 'main', enabled = vim.g.jesse_lang_js },
+  { 'styled-components/vim-styled-components', enabled = vim.g.jesse_lang_js, branch = 'main' },
   { 'jparise/vim-graphql', enabled = vim.g.jesse_lang_js },
   { 'pantharshit00/vim-prisma', enabled = vim.g.jesse_lang_js },
   {

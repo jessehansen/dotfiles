@@ -10,6 +10,7 @@ require('mason-lspconfig').setup({
 local null_ls = require('null-ls')
 local null_ls_sources = {}
 
+-- don't make functions inside closure
 local function hover_diagnostic_or_symbol_doc()
   local line = vim.api.nvim_win_get_cursor(0)[1]
   local diag = vim.diagnostic.get(0, { lnum = line - 1 })
@@ -48,12 +49,6 @@ local function set_common(client, bufnr)
       { buffer = bufnr, desc = 'Go to type definition of symbol under cursor' }
     )
     map_many('n', { '<space>rn', '<F2>' }, vim.lsp.buf.rename, { buffer = bufnr, desc = 'Rename symbol under cursor' })
-    map_many(
-      '',
-      { '<space>ca', '<M-a>' },
-      '<cmd>CodeActionMenu<cr>',
-      { buffer = bufnr, silent = true, desc = 'Execute Code Action' }
-    )
     map('n', 'gr', lsp_references, { buffer = bufnr, desc = 'Find references to symbol under cursor' })
     map('n', '<space>f', format_buffer, { buffer = bufnr, desc = 'Format current buffer' })
 
@@ -61,6 +56,7 @@ local function set_common(client, bufnr)
   end
 
   if client.server_capabilities.documentHighlightProvider then
+    -- I don't have good luck with defining auto commands in lua, so just use a vim.cmd
     vim.cmd([[
     augroup lsp_document_highlight
       autocmd! CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -136,7 +132,6 @@ if vim.g.jesse_lang_js then
   }))
   lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
-    -- TODO: Disable code actions associated with this LSP
   }))
   lsp.prismals.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
