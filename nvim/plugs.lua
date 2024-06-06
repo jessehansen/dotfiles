@@ -107,7 +107,6 @@ local lazy_plugins = {
   },
   -- plural-aware find and replace
   'tpope/vim-abolish',
-  -- copilot must be before coq.thirdparty, so it doesn't stop key maps
   {
     'github/copilot.vim',
     config = function()
@@ -120,19 +119,12 @@ local lazy_plugins = {
       vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
 
       vim.g.copilot_no_tab_map = true
+      vim.g.copilot_hide_during_completion = false
     end,
   },
   -- lsp configs
   { 'ms-jpq/coq_nvim', branch = 'coq', build = ':COQdeps' },
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
-  {
-    'ms-jpq/coq.thirdparty',
-    config = function()
-      require('coq_3p')({
-        { src = 'copilot', short_name = 'COP', accept_key = '<c-f>' },
-      })
-    end,
-  },
   'williamboman/mason.nvim',
   'williamboman/mason-lspconfig.nvim',
   'nvimtools/none-ls.nvim',
@@ -199,12 +191,6 @@ local lazy_plugins = {
     'vim-test/vim-test',
     enabled = vim.g.jesse_lang_rust,
   },
-  { 'pangloss/vim-javascript', enabled = vim.g.jesse_lang_js },
-  { 'leafgarland/typescript-vim', enabled = vim.g.jesse_lang_js },
-  { 'mxw/vim-jsx', enabled = vim.g.jesse_lang_js },
-  { 'ianks/vim-tsx', enabled = vim.g.jesse_lang_js },
-  { 'styled-components/vim-styled-components', enabled = vim.g.jesse_lang_js, branch = 'main' },
-  { 'jparise/vim-graphql', enabled = vim.g.jesse_lang_js },
   { 'pantharshit00/vim-prisma', enabled = vim.g.jesse_lang_js },
   {
     'vuki656/package-info.nvim',

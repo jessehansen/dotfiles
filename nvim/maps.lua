@@ -116,4 +116,6 @@ map(
   { remap = false, desc = 'Insert UUID before cursor' }
 )
 
+map('i', '<C-u>', "<c-r>=tolower(trim(system('uuidgen')))<cr>", { desc = 'Insert UUID' })
+
 return M
