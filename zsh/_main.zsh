@@ -95,6 +95,13 @@ fi
 
 # load p10k config
 source "$DOTFILES/zsh/p10k.zsh"
+# support platforms without nerd fonts
+if [[ "$JESSE_NOFONT" == "1" ]]; then
+  typeset -g POWERLEVEL9K_MODE=powerline
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs newline)
+  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON='\UE0A0 '
+  p10k reload
+fi
 
 # some aliases need to be set again because they are overridden by zsh
 # plugins. Always prefer our aliases

@@ -8,8 +8,10 @@ export NPM_AUTH_TOKEN=
 # EDITOR
 if (( $+commands[nvim] )); then
   export EDITOR='nvim'
+  export SUDO_EDITOR=$(which nvim)
 elif (( $+commands[vim] )); then
   export EDITOR='vim'
+  export SUDO_EDITOR=$(which vim)
 fi
 
 # go exports
