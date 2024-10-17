@@ -63,6 +63,9 @@ fi
 
 alias curl='curl -sS'
 alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
+alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
+alias now='date +"%T"'
+alias utcnow='date -u +"%T"'
 
 alias xit='exit'
 

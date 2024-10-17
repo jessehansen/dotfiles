@@ -114,7 +114,7 @@ if vim.g.jesse_lang_js then
     vim.lsp.buf.execute_command(params)
   end
 
-  lsp.tsserver.setup(coq.lsp_ensure_capabilities({
+  lsp.ts_ls.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
     commands = {
       OrganizeImports = {

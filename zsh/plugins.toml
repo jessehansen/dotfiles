@@ -4,13 +4,12 @@ shell = "zsh"
 
 [plugins]
 
-[plugins.oh-my-zsh]
-github="ohmyzsh/ohmyzsh"
-use=[
-  "lib/history.zsh",
-  "plugins/vi-mode/*.plugin.zsh",
-  "plugins/nvm/*.plugin.zsh",
-]
+# [plugins.oh-my-zsh]
+# github="ohmyzsh/ohmyzsh"
+# use=[
+#   "plugins/vi-mode/*.plugin.zsh",
+#   "plugins/nvm/*.plugin.zsh",
+# ]
 
 [plugins.zsh-z]
 github="agkozak/zsh-z"

@@ -21,12 +21,17 @@ local map = require('dotfiles.maps').map
 
 map('n', '<leader>d', ':CHADopen<CR>', { silent = true, desc = 'Toggle open directory tree' })
 map('n', '<leader>e', function()
-  CHAD.Toggle_follow(false)
   CHAD.Open({ '--always-focus' })
-  CHAD.Toggle_follow(false)
+  -- At some point, CHAD started waiting to load the tree after open was called,
+  -- so my previous hack to toggle follow/unfollow stopped working.
+  -- Instead, Jump_to_current is called after a delay to give the tree time to load
+  vim.defer_fn(function()
+    CHAD.Jump_to_current(true)
+  end, 100)
 end, { desc = 'Find current buffer in directory tree' })
 
 vim.api.nvim_create_augroup('dotfiles_chadtree', { clear = true })
+
 -- I don't know why this doesn't work for FileType events (it runs without "sticking"), but BufEnter works
 vim.api.nvim_create_autocmd('BufEnter', {
   pattern = '*',
