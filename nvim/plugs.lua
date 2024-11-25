@@ -107,21 +107,21 @@ local lazy_plugins = {
   },
   -- plural-aware find and replace
   'tpope/vim-abolish',
-  {
-    'github/copilot.vim',
-    config = function()
-      vim.keymap.set('i', '<C-J>', 'copilot#Accept("")', {
-        expr = true,
-        replace_keycodes = false,
-      })
-      vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
-      vim.keymap.set('i', '<M-q>', '<ESC>:Copilot panel<CR>')
-      vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
-
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_hide_during_completion = false
-    end,
-  },
+  -- {
+  --   'github/copilot.vim',
+  --   config = function()
+  --     vim.keymap.set('i', '<C-J>', 'copilot#Accept("")', {
+  --       expr = true,
+  --       replace_keycodes = false,
+  --     })
+  --     vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+  --     vim.keymap.set('i', '<M-q>', '<ESC>:Copilot panel<CR>')
+  --     vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
+  --
+  --     vim.g.copilot_no_tab_map = true
+  --     vim.g.copilot_hide_during_completion = false
+  --   end,
+  -- },
   -- lsp configs
   { 'ms-jpq/coq_nvim', branch = 'coq', build = ':COQdeps' },
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },

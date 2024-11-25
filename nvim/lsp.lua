@@ -146,6 +146,15 @@ end
 if vim.g.jesse_lang_python then
   lsp.pylsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            maxLineLength = 120,
+          },
+        },
+      },
+    },
   }))
 end
 
