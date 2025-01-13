@@ -33,7 +33,11 @@ load_all() {
   source "$DOTFILES/zsh/aliases.zsh"
   source "$DOTFILES/zsh/bindkeys.zsh"
   source "$DOTFILES/zsh/functions.zsh"
-  # source "$DOTFILES/zsh/notify.zsh"
+
+  # kitty has notifications built in
+  if [[ "$TERM" != "xterm-kitty" ]]; then
+    source "$DOTFILES/zsh/notify.zsh"
+  fi
 
   [[ -e ${DOTFILES}/zsh/_local.zsh ]] && source ${DOTFILES}/zsh/_local.zsh
 }
@@ -52,7 +56,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Install brew"
     echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
   else
-    if (( ! $+commands[terminal-notifier] )); then
+    if (( ! $+commands[terminal-notifier] )) && [[ "$TERM" != "xterm-kitty" ]]; then
       echo "Install terminal-notifier"
       echo "$ brew install terminal-notifier"
     fi
@@ -66,6 +70,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     unset -f load_plugins
   fi
 fi
+
 if (( ! $+commands[fzf] )); then
   echo "Install fzf"
   [[ "$OSTYPE" == "linux-gnu"* ]] && echo "$ sudo apt install fzf"

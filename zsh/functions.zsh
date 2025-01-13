@@ -2,7 +2,7 @@ mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and ju
 trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
 ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in MacOS Quicklook Preview
 
-#   extract:  Extract most know archives with one command
+#   extract:  Extract most known archives with one command
 #   ---------------------------------------------------------
 extract () {
     if [ -f $1 ] ; then
@@ -28,25 +28,8 @@ extract () {
     fi
 }
 
-#   cdf:  'Cd's to frontmost window of MacOS Finder
-#   ------------------------------------------------------
-cdf () {
-    currFolderPath=$( /usr/bin/osascript <<EOF
-        tell application "Finder"
-            try
-        set currFolder to (folder of the front window as alias)
-            on error
-        set currFolder to (path to desktop folder as alias)
-    end try
-            POSIX path of currFolder
-        end tell
-EOF
-)
-echo "cd to \"$currFolderPath\""
-cd "$currFolderPath"
-}
-
-httpHeaders () { /usr/bin/curl -I -L $@ ; }             # httpHeaders:      Grabs headers from web page
+# httpHeaders:      Grabs headers from web page
+httpHeaders () { /usr/bin/curl -I -L $@ ; }
 
 # -------------------------------------------------------------------
 # any function from http://onethingwell.org/post/14669173541/any
@@ -141,6 +124,7 @@ jwtdump () {
           echo "a|all      Print header, payload, and signature."
           echo "r|raw      Don't pretty-print the output."
           echo
+          echo " Example: pbpaste | jwtdump -a"
           return;;
         *) echo "Unknown parameter passed: $1"; return 1;;
     esac

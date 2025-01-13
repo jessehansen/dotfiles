@@ -10,7 +10,10 @@ if vim.g.jesse_lang_js then
   table.insert(parsers, 'tsx')
   table.insert(parsers, 'json')
   table.insert(parsers, 'graphql')
-  table.insert(parsers, 'prisma')
+end
+
+if vim.g.jesse_lang_python then
+  table.insert(parsers, 'python')
 end
 
 require('nvim-treesitter.configs').setup({

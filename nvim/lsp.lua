@@ -1,4 +1,5 @@
 local lsp = require('lspconfig')
+local util = require('lspconfig.util')
 local coq = require('coq')
 local map = require('dotfiles.maps').map
 local map_many = require('dotfiles.maps').map_many
@@ -133,9 +134,6 @@ if vim.g.jesse_lang_js then
   lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
   }))
-  lsp.prismals.setup(coq.lsp_ensure_capabilities({
-    on_attach = set_common_and_autoformat,
-  }))
   lsp.graphql.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
   }))
@@ -146,16 +144,60 @@ end
 if vim.g.jesse_lang_python then
   lsp.pylsp.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
+    root_dir = function(fname)
+      -- custom root_dir for some projects I contribute to
+      local root_files = {
+        'pyproject.toml',
+        'setup.py',
+        'setup.cfg',
+        'requirements.txt',
+        'Pipfile',
+      }
+      return vim.fs.root(fname, 'manage.py')
+        or util.root_pattern(unpack(root_files))(fname)
+        or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+    end,
     settings = {
       pylsp = {
         plugins = {
+          black = {
+            enabled = true,
+          },
+          flake8 = {
+            enabled = true,
+          },
+          isort = {
+            enabled = true,
+          },
+          mypy = {
+            enabled = false,
+          },
+          rope_autoimport = {
+            enabled = true,
+            memory = true,
+            code_actions = {
+              enabled = true,
+            },
+          },
           pycodestyle = {
-            maxLineLength = 120,
+            maxLineLength = 180,
           },
         },
       },
     },
   }))
+  table.insert(
+    null_ls_sources,
+    null_ls.builtins.diagnostics.mypy.with({
+      extra_args = function(params)
+        local mypy_root = vim.fs.root(params.bufname, 'mypy.ini')
+        if mypy_root then
+          return { '--config-file', mypy_root .. '/mypy.ini' }
+        end
+        return {}
+      end,
+    })
+  )
 end
 
 if vim.g.jesse_lang_lua then

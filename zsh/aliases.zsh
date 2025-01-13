@@ -8,8 +8,8 @@ if (( $+commands[lsd] )); then
   alias ll='lsd -la --group-directories-first'
   alias la='lsd -a --group-directories-first'
 else
-  alias ll='ls -FGlAhp --group-directories-first'
-  alias la='ls -AF --group-directories-first'
+  alias ll='ls -FGlAhp'
+  alias la='ls -AF'
 fi
 
 if (( $+commands[bat] )); then
@@ -21,15 +21,21 @@ if (( $+commands[docker] )); then
   alias dps='docker ps'
   alias dpsa='docker ps -a'
   alias di='docker images'
-  alias dc='docker compose'
-  alias dce='docker compose exec'
+  # alias dc='docker compose'
+  # alias dce='docker compose exec'
 fi
 
-if (( $+commands[gh] )) && gh copilot 2>&1 > /dev/null; then
+if [[ -d "/Applications/Sublime Merge.app" ]]; then
+  alias smerge='"/Applications/Sublime Merge.app/Contents/SharedSupport/bin/smerge"'
+fi
+
+if (( $+commands[gh] )) && gh copilot >/dev/null 2>&1; then
   eval "$(gh copilot alias -- zsh)"
 fi
 
-alias j='zshz 2>&1'
+if (( $+commands[zshz] )); then
+  alias j='zshz 2>&1'
+fi
 
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
   alias ssh='kitty +kitten ssh'
@@ -39,14 +45,17 @@ fi
 alias l='ls -F'
 alias lh='ls -d .*'
 alias lr='ls -R | grep ':$' | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less'
-alias cd..='cd ../'                         # Go back 1 directory level (for fast typers)
-alias ..='cd ../'                           # Go back 1 directory level
-alias ...='cd ../../'                       # Go back 2 directory levels
-alias .2='cd ../../'                        # Go back 2 directory levels - for consistency
-alias .3='cd ../../../'                     # Go back 3 directory levels
-alias .4='cd ../../../../'                  # Go back 4 directory levels
-alias .5='cd ../../../../../'               # Go back 5 directory levels
-alias .6='cd ../../../../../../'            # Go back 6 directory levels
+
+alias cd..='cd ../'
+alias ..='cd ../'
+alias ...='cd ../../'
+
+alias .1='cd ../'
+alias .2='cd ../../'
+alias .3='cd ../../../'
+alias .4='cd ../../../../'
+alias .5='cd ../../../../../'
+alias .6='cd ../../../../../../'
 
 alias edit='nvim'
 alias ~='cd ~'
@@ -60,7 +69,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   alias ss='/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background &'
 fi
 
-
 alias curl='curl -sS'
 alias hstat="curl -o /dev/null --silent --head --write-out '%{http_code}\n'" $1
 alias uuid="uuidgen | tr '[:upper:]' '[:lower:]'"
@@ -68,6 +76,8 @@ alias now='date +"%T"'
 alias utcnow='date -u +"%T"'
 
 alias xit='exit'
+
+alias yanr='yarn'
 
 # Git aliases
 # Outputs the name of the current branch
@@ -84,8 +94,6 @@ function git_current_branch() {
   fi
   echo ${ref#refs/heads/}
 }
-
-alias yanr='yarn'
 
 alias g='git'
 alias ga='git add'
@@ -119,7 +127,6 @@ alias gupb='git pull --rebase && git prune-branches-ok'
 alias ghome='git checkout main && git pull && git prune-branches-ok'
 alias gp='git push'
 alias gpf='git push --force-with-lease'
-alias gpsup='git push --set-upstream origin $(git_current_branch)'
 alias gpt='git push --tags'
 alias gbrn='git branch -m'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
