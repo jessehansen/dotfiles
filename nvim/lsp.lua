@@ -161,20 +161,20 @@ if vim.g.jesse_lang_python then
       pylsp = {
         plugins = {
           black = {
-            enabled = true,
+            enabled = false,
           },
           flake8 = {
-            enabled = true,
+            enabled = false,
           },
           isort = {
-            enabled = true,
+            enabled = false,
           },
           mypy = {
             enabled = false,
           },
           rope_autoimport = {
             enabled = true,
-            memory = true,
+            memory = false,
             code_actions = {
               enabled = true,
             },
@@ -198,6 +198,9 @@ if vim.g.jesse_lang_python then
       end,
     })
   )
+  table.insert(null_ls_sources, null_ls.builtins.formatting.black)
+  table.insert(null_ls_sources, null_ls.builtins.formatting.isort)
+  table.insert(null_ls_sources, require('none-ls.diagnostics.flake8'))
 end
 
 if vim.g.jesse_lang_lua then

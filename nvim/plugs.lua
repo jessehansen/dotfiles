@@ -127,7 +127,7 @@ local lazy_plugins = {
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
   'williamboman/mason.nvim',
   'williamboman/mason-lspconfig.nvim',
-  'nvimtools/none-ls.nvim',
+  { 'nvimtools/none-ls.nvim', dependencies = { 'nvimtools/none-ls-extras.nvim' } },
   'jay-babu/mason-null-ls.nvim',
   'neovim/nvim-lspconfig',
   {

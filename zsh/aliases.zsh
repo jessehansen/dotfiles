@@ -33,9 +33,7 @@ if (( $+commands[gh] )) && gh copilot >/dev/null 2>&1; then
   eval "$(gh copilot alias -- zsh)"
 fi
 
-if (( $+commands[zshz] )); then
-  alias j='zshz 2>&1'
-fi
+alias j='zshz 2>&1'
 
 if [[ "$TERM" == "xterm-kitty" ]] && (( $+commands[kitty] )); then
   alias ssh='kitty +kitten ssh'
