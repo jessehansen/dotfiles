@@ -1,6 +1,10 @@
 local dotfiles_path = vim.env.DOTFILES .. '/nvim/'
 vim.g.dotfiles_nvim = dotfiles_path
 
+-- disable netrw entirely
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 local function ensure_linked()
   if vim.fn.filereadable(vim.fn.stdpath('config') .. '/lua/dotfiles/_main.lua') == 1 then
     return

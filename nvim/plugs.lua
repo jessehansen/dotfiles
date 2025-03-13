@@ -17,13 +17,58 @@ local lazy_plugins = {
   { 'fladson/vim-kitty', enabled = vim.env.TERM == 'xterm-kitty' },
   -- dir tree
   {
-    'ms-jpq/chadtree',
-    branch = 'chad',
-    build = 'python3 -m chadtree deps',
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('dotfiles.chadtree')
+      local map = require('dotfiles.maps').map
+      require('nvim-tree').setup({
+        view = {
+          width = {
+            min = 30,
+            max = 60,
+          },
+        },
+        actions = {
+          open_file = {
+            window_picker = {
+              enable = false,
+            },
+          },
+        },
+        git = {
+          timeout = 4000,
+        },
+        filters = {
+          git_ignored = false,
+          custom = function(path)
+            -- hide .null-ls files
+            local name = vim.fs.basename(path)
+            if string.find(name, '.null-ls') == 0 then
+              return true
+            else
+              return false
+            end
+          end,
+        },
+      })
+
+      local api = require('nvim-tree.api')
+      map('n', '<leader>d', function()
+        api.tree.toggle()
+      end, { desc = 'Toggle open directory tree', silent = true })
+      map('n', '<leader>e', function()
+        api.tree.open({ find_file = true })
+      end, { desc = 'Find current buffer in directory tree', silent = true })
     end,
   },
+  -- {
+  --   'ms-jpq/chadtree',
+  --   branch = 'chad',
+  --   build = 'python3 -m chadtree deps',
+  --   config = function()
+  --     require('dotfiles.chadtree')
+  --   end,
+  -- },
   {
     'nvim-telescope/telescope-fzf-native.nvim',
     build = 'make',
@@ -107,21 +152,21 @@ local lazy_plugins = {
   },
   -- plural-aware find and replace
   'tpope/vim-abolish',
-  -- {
-  --   'github/copilot.vim',
-  --   config = function()
-  --     vim.keymap.set('i', '<C-J>', 'copilot#Accept("")', {
-  --       expr = true,
-  --       replace_keycodes = false,
-  --     })
-  --     vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
-  --     vim.keymap.set('i', '<M-q>', '<ESC>:Copilot panel<CR>')
-  --     vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
-  --
-  --     vim.g.copilot_no_tab_map = true
-  --     vim.g.copilot_hide_during_completion = false
-  --   end,
-  -- },
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.keymap.set('i', '<C-J>', 'copilot#Accept("")', {
+        expr = true,
+        replace_keycodes = false,
+      })
+      vim.keymap.set('i', '<C-L>', '<Plug>(copilot-accept-word)')
+      vim.keymap.set('i', '<M-q>', '<ESC>:Copilot panel<CR>')
+      vim.keymap.set('n', '<M-q>', ':Copilot panel<CR>')
+
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_hide_during_completion = false
+    end,
+  },
   -- lsp configs
   { 'ms-jpq/coq_nvim', branch = 'coq', build = ':COQdeps' },
   { 'ms-jpq/coq.artifacts', branch = 'artifacts' },

@@ -73,7 +73,7 @@ map('x', '<leader>g', function()
   local selected_text = get_visual_selection()
   builtin.grep_string({
     use_regex = true,
-    search = vim.fn.substitute(-- replace whitespace with \s+
+    search = vim.fn.substitute( -- replace whitespace with \s+
       vim.fn.escape(selected_text, '\\.*$^~[{'), -- escape special chars
       [[\_s\+]],
       [[\\s+]],

@@ -129,11 +129,11 @@ if vim.g.jesse_lang_js then
     },
   }))
   lsp.eslint.setup(coq.lsp_ensure_capabilities({
-    on_attach = set_common_and_autoformat,
+    on_attach = set_common,
   }))
-  lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
-    on_attach = set_common_and_autoformat,
-  }))
+  -- lsp.stylelint_lsp.setup(coq.lsp_ensure_capabilities({
+  --   on_attach = set_common_and_autoformat,
+  -- }))
   lsp.graphql.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
   }))
@@ -142,7 +142,51 @@ if vim.g.jesse_lang_js then
 end
 
 if vim.g.jesse_lang_python then
-  lsp.pylsp.setup(coq.lsp_ensure_capabilities({
+  -- lsp.pylsp.setup(coq.lsp_ensure_capabilities({
+  --   on_attach = set_common_and_autoformat,
+  --   root_dir = function(fname)
+  --     -- custom root_dir for some projects I contribute to
+  --     local root_files = {
+  --       'pyproject.toml',
+  --       'setup.py',
+  --       'setup.cfg',
+  --       'requirements.txt',
+  --       'Pipfile',
+  --     }
+  --     return vim.fs.root(fname, 'manage.py')
+  --       or util.root_pattern(unpack(root_files))(fname)
+  --       or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+  --   end,
+  --   settings = {
+  --     pylsp = {
+  --       plugins = {
+  --         black = {
+  --           enabled = false,
+  --         },
+  --         flake8 = {
+  --           enabled = false,
+  --         },
+  --         isort = {
+  --           enabled = false,
+  --         },
+  --         mypy = {
+  --           enabled = false,
+  --         },
+  --         rope_autoimport = {
+  --           enabled = true,
+  --           memory = false,
+  --           code_actions = {
+  --             enabled = true,
+  --           },
+  --         },
+  --         pycodestyle = {
+  --           maxLineLength = 180,
+  --         },
+  --       },
+  --     },
+  --   },
+  -- }))
+  lsp.basedpyright.setup(coq.lsp_ensure_capabilities({
     on_attach = set_common_and_autoformat,
     root_dir = function(fname)
       -- custom root_dir for some projects I contribute to
@@ -158,30 +202,20 @@ if vim.g.jesse_lang_python then
         or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
     end,
     settings = {
-      pylsp = {
-        plugins = {
-          black = {
-            enabled = false,
+      basedpyright = {
+        analysis = {
+          extraPaths = { '/Users/jesse.hansen/src/cedar/python_packages' },
+          stubPath = { '/Users/jesse.hansen/src/__type-stubs' },
+          diagnosticSeverityOverrides = {
+            -- reportUnknownVariableType = 'none',
+            -- reportUnknownMemberType = 'none',
+            -- reportPrivateLocalImportUsage = 'none',
+            -- reportAny = 'none',
+            -- reportDeprecated = 'none',
+            -- reportUnannotatedClassAttribute = 'none',
+            reportUndefinedVariable = 'warning',
           },
-          flake8 = {
-            enabled = false,
-          },
-          isort = {
-            enabled = false,
-          },
-          mypy = {
-            enabled = false,
-          },
-          rope_autoimport = {
-            enabled = true,
-            memory = false,
-            code_actions = {
-              enabled = true,
-            },
-          },
-          pycodestyle = {
-            maxLineLength = 180,
-          },
+          typeCheckingMode = 'off',
         },
       },
     },
